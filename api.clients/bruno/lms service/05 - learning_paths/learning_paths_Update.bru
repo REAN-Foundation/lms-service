@@ -1,0 +1,64 @@
+
+meta {
+  name: Put learning_paths
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{BASE_URL}}/learning-paths/{{LEARNING_PATH_ID}}
+  body: json
+  auth: none
+}
+
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+body:json {
+{
+    "TenantId": "{{TENANT_ID}}",
+    "Name": "George Kuvalis",
+    "Description": "officiis dicta",
+    "ImageUrl": "http://freddy.name",
+    "DurationInDays": 698,
+    "PreferenceWeight": 8935,
+    "Enabled": true
+  }
+}
+
+tests {
+
+    test('Request is successfully', function () {
+        expect(res.getStatus()).to.equal(200);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+
+    test('Learning paths updated successfully', function () {
+        var jsonRes = res.getBody();
+
+        expect(jsonRes.Data).to.have.property('id');
+        
+        expect(jsonRes.Data).to.have.property('TenantId');
+        expect(jsonRes.Data).to.have.property('Name');
+        expect(jsonRes.Data).to.have.property('Description');
+        expect(jsonRes.Data).to.have.property('ImageUrl');
+        expect(jsonRes.Data).to.have.property('DurationInDays');
+        expect(jsonRes.Data).to.have.property('PreferenceWeight');
+        expect(jsonRes.Data).to.have.property('Enabled');
+
+        expect(jsonRes.Data.Name).equals("George Kuvalis");
+        expect(jsonRes.Data.Description).equals("officiis dicta");
+        expect(jsonRes.Data.ImageUrl).equals("http://freddy.name");
+        expect(jsonRes.Data.DurationInDays).equals(698);
+        expect(jsonRes.Data.PreferenceWeight).equals(8935);
+        expect(jsonRes.Data.Enabled).equals(true);
+
+    });
+    
+}

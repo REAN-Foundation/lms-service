@@ -1,0 +1,83 @@
+
+meta {
+  name: Post course_contents
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{BASE_URL}}/course-contents
+  body: json
+  auth: none
+}
+
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+body:json {
+{
+    "CourseId": "{{COURSE_ID}}",
+    "LearningPathId": "{{LEARNING_PATH_ID}}",
+    "CourseModuleId": "{{COURSE_MODULE_ID}}",
+    "Title": "Similique explicabo deleniti.",
+    "Description": "facilis deserunt",
+    "ImageUrl": "https://dashawn.biz",
+    "DurationInMins": 9962,
+    "ContentType": "Text",
+    "ResourceLink": "Aut reprehenderit vel.",
+    "ActionTemplateId": "{{ACTION_TEMPLATE_ID}}",
+    "Sequence": 6595
+  }
+}
+
+tests {
+
+    try {
+        var respData = res.getBody();
+        bru.setEnvVar('COURSE_CONTENT_ID', respData.Data.id);
+    }
+    catch (error) {
+        console.log(error.message);
+    }
+    test('Request is successfully', function () {
+        expect(res.getStatus()).to.equal(201);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+
+    test('Course contents created successfully', function () {
+        var jsonRes = res.getBody();
+
+        expect(jsonRes.Data).to.have.property('id');
+        
+        expect(jsonRes.Data).to.have.property('CourseId');
+        expect(jsonRes.Data).to.have.property('LearningPathId');
+        expect(jsonRes.Data).to.have.property('CourseModuleId');
+        expect(jsonRes.Data).to.have.property('Title');
+        expect(jsonRes.Data).to.have.property('Description');
+        expect(jsonRes.Data).to.have.property('ImageUrl');
+        expect(jsonRes.Data).to.have.property('DurationInMins');
+        expect(jsonRes.Data).to.have.property('ContentType');
+        expect(jsonRes.Data).to.have.property('ResourceLink');
+        expect(jsonRes.Data).to.have.property('ActionTemplateId');
+        expect(jsonRes.Data).to.have.property('Sequence');
+
+        expect(jsonRes.Data.CourseId).equals('{{COURSE_ID}}');
+        expect(jsonRes.Data.LearningPathId).equals('{{LEARNING_PATH_ID}}');
+        expect(jsonRes.Data.CourseModuleId).equals('{{COURSE_MODULE_ID}}');
+        expect(jsonRes.Data.Title).equals("Similique explicabo deleniti.");
+        expect(jsonRes.Data.Description).equals("facilis deserunt");
+        expect(jsonRes.Data.ImageUrl).equals("https://dashawn.biz");
+        expect(jsonRes.Data.DurationInMins).equals(9962);
+        expect(jsonRes.Data.ContentType).equals("Text");
+        expect(jsonRes.Data.ResourceLink).equals("Aut reprehenderit vel.");
+        expect(jsonRes.Data.Sequence).equals(6595);
+
+    });
+    
+}

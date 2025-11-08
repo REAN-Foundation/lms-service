@@ -1,0 +1,36 @@
+
+meta {
+  name: Search user_learnings
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{BASE_URL}}/user-learnings/search?userId=82c1dbcd-6530-3dc8-261c-31da4c7e7304&actionId=36afc4d1-7533-07e6-f480-26b12aa30dad&progressStatus=dolore&percentageCompletion=7061
+  body: json
+  auth: none
+}
+
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+tests {
+
+    test('Request is successfully', function () {
+        expect(res.getStatus()).to.equal(200);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+
+    test('User learnings records retrieved successfully', function () {
+         var jsonRes = res.getBody();
+          expect(jsonRes.Data).to.have.property('Items');
+          expect(jsonRes.Data.Items.length).to.be.at.least(0);
+    });
+    
+}

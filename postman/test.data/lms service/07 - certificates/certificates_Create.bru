@@ -1,0 +1,92 @@
+
+meta {
+  name: Post certificates
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{BASE_URL}}/certificates
+  body: json
+  auth: none
+}
+
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+body:json {
+{
+    "CourseId": "{{COURSE_ID}}",
+    "UserId": "{{USER_ID}}",
+    "CertificateNumber": "At porro qui.",
+    "CertificateName": "Claude Bauch",
+    "CertificateType": "Doloribus aliquid accusantium.",
+    "IssuedDate": "Reprehenderit aliquid sunt.",
+    "ExpiryDate": "2025-01-12T16:39:30",
+    "CertificateUrl": "http://royce.biz",
+    "FinalGrade": 6184.756,
+    "CreditHours": 3950,
+    "Skills": "Consequatur consequatur porro.",
+    "IsVerified": true,
+    "VerificationUrl": "http://kathleen.info",
+    "IssuedBy": "24c29986-82ae-4cfa-5398-acae28ce9c53"
+  }
+}
+
+tests {
+
+    try {
+        var respData = res.getBody();
+        bru.setEnvVar('CERTIFICATES_ID', respData.Data.id);
+    }
+    catch (error) {
+        console.log(error.message);
+    }
+    test('Request is successfully', function () {
+        expect(res.getStatus()).to.equal(201);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+
+    test('Certificates created successfully', function () {
+        var jsonRes = res.getBody();
+
+        expect(jsonRes.Data).to.have.property('id');
+        
+        expect(jsonRes.Data).to.have.property('CourseId');
+        expect(jsonRes.Data).to.have.property('UserId');
+        expect(jsonRes.Data).to.have.property('CertificateNumber');
+        expect(jsonRes.Data).to.have.property('CertificateName');
+        expect(jsonRes.Data).to.have.property('CertificateType');
+        expect(jsonRes.Data).to.have.property('IssuedDate');
+        expect(jsonRes.Data).to.have.property('ExpiryDate');
+        expect(jsonRes.Data).to.have.property('CertificateUrl');
+        expect(jsonRes.Data).to.have.property('FinalGrade');
+        expect(jsonRes.Data).to.have.property('CreditHours');
+        expect(jsonRes.Data).to.have.property('Skills');
+        expect(jsonRes.Data).to.have.property('IsVerified');
+        expect(jsonRes.Data).to.have.property('VerificationUrl');
+        expect(jsonRes.Data).to.have.property('IssuedBy');
+
+        expect(jsonRes.Data.CourseId).equals('{{COURSE_ID}}');
+        expect(jsonRes.Data.CertificateNumber).equals("At porro qui.");
+        expect(jsonRes.Data.CertificateName).equals("Claude Bauch");
+        expect(jsonRes.Data.CertificateType).equals("Doloribus aliquid accusantium.");
+        expect(jsonRes.Data.IssuedDate).equals("Reprehenderit aliquid sunt.");
+        expect(jsonRes.Data.ExpiryDate).equals("2025-01-12T16:39:30");
+        expect(jsonRes.Data.CertificateUrl).equals("http://royce.biz");
+        expect(jsonRes.Data.FinalGrade).equals(6184.756);
+        expect(jsonRes.Data.CreditHours).equals(3950);
+        expect(jsonRes.Data.Skills).equals("Consequatur consequatur porro.");
+        expect(jsonRes.Data.IsVerified).equals(true);
+        expect(jsonRes.Data.VerificationUrl).equals("http://kathleen.info");
+        expect(jsonRes.Data.IssuedBy).equals("24c29986-82ae-4cfa-5398-acae28ce9c53");
+
+    });
+    
+}

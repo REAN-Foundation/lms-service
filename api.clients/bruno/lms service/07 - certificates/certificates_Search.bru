@@ -1,0 +1,36 @@
+
+meta {
+  name: Search certificates
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{BASE_URL}}/certificates/search?userId=24bc660e-f325-763d-a7f3-a4b45edd6b5e&certificateNumber=Est aperiam nihil.&certificateName=Iusto dolor labore.&certificateType=Aut officiis sint.&issuedDate=Omnis molestias velit.&expiryDate=2025-07-06T13:36:44&certificateUrl=Ea omnis est.&finalGrade=5082.987&creditHours=7919&skills=Voluptate natus et.&isVerified=true&verificationUrl=Voluptas et sunt.&issuedBy=498a1867-81d1-5cfe-9f00-333295bc0591
+  body: json
+  auth: none
+}
+
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+tests {
+
+    test('Request is successfully', function () {
+        expect(res.getStatus()).to.equal(200);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+
+    test('Certificates records retrieved successfully', function () {
+         var jsonRes = res.getBody();
+          expect(jsonRes.Data).to.have.property('Items');
+          expect(jsonRes.Data.Items.length).to.be.at.least(0);
+    });
+    
+}

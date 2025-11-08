@@ -1,0 +1,36 @@
+
+meta {
+  name: Search course_modules
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{BASE_URL}}/course-modules/search?name=Quia ut voluptates.&description=Exercitationem laborum autem.&imageUrl=Et facilis sed.&durationInMins=2542&sequence=3074
+  body: json
+  auth: none
+}
+
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+tests {
+
+    test('Request is successfully', function () {
+        expect(res.getStatus()).to.equal(200);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+
+    test('Course modules records retrieved successfully', function () {
+         var jsonRes = res.getBody();
+          expect(jsonRes.Data).to.have.property('Items');
+          expect(jsonRes.Data.Items.length).to.be.at.least(0);
+    });
+    
+}

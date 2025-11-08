@@ -1,0 +1,76 @@
+
+meta {
+  name: Put course_contents
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{BASE_URL}}/course-contents/{{COURSE_CONTENT_ID}}
+  body: json
+  auth: none
+}
+
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+body:json {
+{
+    "CourseId": "{{COURSE_ID}}",
+    "LearningPathId": "{{LEARNING_PATH_ID}}",
+    "CourseModuleId": "{{COURSE_MODULE_ID}}",
+    "Title": "Autem dolore voluptatem.",
+    "Description": "saepe libero",
+    "ImageUrl": "https://kianna.info",
+    "DurationInMins": 8076,
+    "ContentType": "Text",
+    "ResourceLink": "Deleniti blanditiis dolore.",
+    "ActionTemplateId": "{{ACTION_TEMPLATE_ID}}",
+    "Sequence": 9016
+  }
+}
+
+tests {
+
+    test('Request is successfully', function () {
+        expect(res.getStatus()).to.equal(200);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+
+    test('Course contents updated successfully', function () {
+        var jsonRes = res.getBody();
+
+        expect(jsonRes.Data).to.have.property('id');
+        
+        expect(jsonRes.Data).to.have.property('CourseId');
+        expect(jsonRes.Data).to.have.property('LearningPathId');
+        expect(jsonRes.Data).to.have.property('CourseModuleId');
+        expect(jsonRes.Data).to.have.property('Title');
+        expect(jsonRes.Data).to.have.property('Description');
+        expect(jsonRes.Data).to.have.property('ImageUrl');
+        expect(jsonRes.Data).to.have.property('DurationInMins');
+        expect(jsonRes.Data).to.have.property('ContentType');
+        expect(jsonRes.Data).to.have.property('ResourceLink');
+        expect(jsonRes.Data).to.have.property('ActionTemplateId');
+        expect(jsonRes.Data).to.have.property('Sequence');
+
+        expect(jsonRes.Data.CourseId).equals('{{COURSE_ID}}');
+        expect(jsonRes.Data.LearningPathId).equals('{{LEARNING_PATH_ID}}');
+        expect(jsonRes.Data.CourseModuleId).equals('{{COURSE_MODULE_ID}}');
+        expect(jsonRes.Data.Title).equals("Autem dolore voluptatem.");
+        expect(jsonRes.Data.Description).equals("saepe libero");
+        expect(jsonRes.Data.ImageUrl).equals("https://kianna.info");
+        expect(jsonRes.Data.DurationInMins).equals(8076);
+        expect(jsonRes.Data.ContentType).equals("Text");
+        expect(jsonRes.Data.ResourceLink).equals("Deleniti blanditiis dolore.");
+        expect(jsonRes.Data.Sequence).equals(9016);
+
+    });
+    
+}

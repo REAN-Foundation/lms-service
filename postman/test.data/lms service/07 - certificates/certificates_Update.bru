@@ -1,0 +1,85 @@
+
+meta {
+  name: Put certificates
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{BASE_URL}}/certificates/{{CERTIFICATES_ID}}
+  body: json
+  auth: none
+}
+
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+body:json {
+{
+    "CourseId": "{{COURSE_ID}}",
+    "UserId": "{{USER_ID}}",
+    "CertificateNumber": "Quos et et.",
+    "CertificateName": "Clara Kuhn",
+    "CertificateType": "Nisi ea qui.",
+    "IssuedDate": "Eius qui maxime.",
+    "ExpiryDate": "2025-08-19T00:04:07",
+    "CertificateUrl": "https://larissa.com",
+    "FinalGrade": 6249.679,
+    "CreditHours": 8438,
+    "Skills": "Vitae et eos.",
+    "IsVerified": false,
+    "VerificationUrl": "https://furman.net",
+    "IssuedBy": "c7740531-0cd2-af54-e24f-d2779c80081b"
+  }
+}
+
+tests {
+
+    test('Request is successfully', function () {
+        expect(res.getStatus()).to.equal(200);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+
+    test('Certificates updated successfully', function () {
+        var jsonRes = res.getBody();
+
+        expect(jsonRes.Data).to.have.property('id');
+        
+        expect(jsonRes.Data).to.have.property('CourseId');
+        expect(jsonRes.Data).to.have.property('UserId');
+        expect(jsonRes.Data).to.have.property('CertificateNumber');
+        expect(jsonRes.Data).to.have.property('CertificateName');
+        expect(jsonRes.Data).to.have.property('CertificateType');
+        expect(jsonRes.Data).to.have.property('IssuedDate');
+        expect(jsonRes.Data).to.have.property('ExpiryDate');
+        expect(jsonRes.Data).to.have.property('CertificateUrl');
+        expect(jsonRes.Data).to.have.property('FinalGrade');
+        expect(jsonRes.Data).to.have.property('CreditHours');
+        expect(jsonRes.Data).to.have.property('Skills');
+        expect(jsonRes.Data).to.have.property('IsVerified');
+        expect(jsonRes.Data).to.have.property('VerificationUrl');
+        expect(jsonRes.Data).to.have.property('IssuedBy');
+
+        expect(jsonRes.Data.CourseId).equals('{{COURSE_ID}}');
+        expect(jsonRes.Data.CertificateNumber).equals("Quos et et.");
+        expect(jsonRes.Data.CertificateName).equals("Clara Kuhn");
+        expect(jsonRes.Data.CertificateType).equals("Nisi ea qui.");
+        expect(jsonRes.Data.IssuedDate).equals("Eius qui maxime.");
+        expect(jsonRes.Data.ExpiryDate).equals("2025-08-19T00:04:07");
+        expect(jsonRes.Data.CertificateUrl).equals("https://larissa.com");
+        expect(jsonRes.Data.FinalGrade).equals(6249.679);
+        expect(jsonRes.Data.CreditHours).equals(8438);
+        expect(jsonRes.Data.Skills).equals("Vitae et eos.");
+        expect(jsonRes.Data.IsVerified).equals(false);
+        expect(jsonRes.Data.VerificationUrl).equals("https://furman.net");
+        expect(jsonRes.Data.IssuedBy).equals("c7740531-0cd2-af54-e24f-d2779c80081b");
+
+    });
+    
+}

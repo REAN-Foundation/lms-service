@@ -1,0 +1,72 @@
+
+meta {
+  name: Post course_modules
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{BASE_URL}}/course-modules
+  body: json
+  auth: none
+}
+
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+body:json {
+{
+    "CourseId": "{{COURSE_ID}}",
+    "LearningPathId": "{{LEARNING_PATH_ID}}",
+    "Name": "Sharon Beahan",
+    "Description": "at minus",
+    "ImageUrl": "https://ignatius.net",
+    "DurationInMins": 18,
+    "Sequence": 1380
+  }
+}
+
+tests {
+
+    try {
+        var respData = res.getBody();
+        bru.setEnvVar('COURSE_MODULE_ID', respData.Data.id);
+    }
+    catch (error) {
+        console.log(error.message);
+    }
+    test('Request is successfully', function () {
+        expect(res.getStatus()).to.equal(201);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+
+    test('Course modules created successfully', function () {
+        var jsonRes = res.getBody();
+
+        expect(jsonRes.Data).to.have.property('id');
+        
+        expect(jsonRes.Data).to.have.property('CourseId');
+        expect(jsonRes.Data).to.have.property('LearningPathId');
+        expect(jsonRes.Data).to.have.property('Name');
+        expect(jsonRes.Data).to.have.property('Description');
+        expect(jsonRes.Data).to.have.property('ImageUrl');
+        expect(jsonRes.Data).to.have.property('DurationInMins');
+        expect(jsonRes.Data).to.have.property('Sequence');
+
+        expect(jsonRes.Data.CourseId).equals('{{COURSE_ID}}');
+        expect(jsonRes.Data.LearningPathId).equals('{{LEARNING_PATH_ID}}');
+        expect(jsonRes.Data.Name).equals("Sharon Beahan");
+        expect(jsonRes.Data.Description).equals("at minus");
+        expect(jsonRes.Data.ImageUrl).equals("https://ignatius.net");
+        expect(jsonRes.Data.DurationInMins).equals(18);
+        expect(jsonRes.Data.Sequence).equals(1380);
+
+    });
+    
+}

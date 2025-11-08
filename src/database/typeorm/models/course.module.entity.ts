@@ -1,0 +1,80 @@
+// import { IsUrl } from "class-validator";
+import "reflect-metadata";
+import {
+    Column,
+    CreateDateColumn,
+    DeleteDateColumn,
+    Entity,
+    JoinColumn,
+    OneToOne,
+    ManyToOne,
+    OneToMany,
+    ManyToMany,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn,
+    JoinTable,
+} from 'typeorm';
+import { uuid } from "../../../domain.types/miscellaneous/system.types";
+import { IsEmail, Max, Min , IsUrl } from "class-validator";
+import { Course } from './course.entity';
+import { LearningPath } from './learning.path.entity';
+import { CourseContent } from './course.content.entity';
+import { UserLearning } from './user.learning.entity';
+
+
+////////////////////////////////////////////////////////////////////////
+
+@Entity({ name: 'course_modules' })
+export class CourseModule {
+    
+        @PrimaryGeneratedColumn('uuid')
+        id : string;
+
+    	@Column({ type: 'varchar', length: 64, nullable: false,  })
+	@Max(64)
+	@Min(0)
+	Name : string;
+
+	@Column({ type: 'varchar', length: 64, nullable: true,  })
+	@Max(64)
+	@Min(0)
+	Description : string;
+
+	@Column({ type: 'varchar', length: 64, nullable: true,  })
+	@Max(64)
+	@Min(0)
+	ImageUrl : string;
+
+	@Column({ type: 'int', nullable: true,  })
+	@Max(64)
+	@Min(0)
+	DurationInMins : number;
+
+	@Column({ type: 'int', nullable: true,  })
+	@Max(64)
+	@Min(0)
+	Sequence : number;
+
+
+    @ManyToOne(() => Course)
+@JoinColumn({ name: 'CourseId', referencedColumnName: 'id' })
+Course: Course;
+
+@ManyToOne(() => LearningPath)
+@JoinColumn({ name: 'LearningPathId', referencedColumnName: 'id' })
+LearningPath: LearningPath;
+
+
+
+
+    
+    @CreateDateColumn()
+    CreatedAt : Date;
+
+    @UpdateDateColumn()
+    UpdatedAt : Date;
+
+    @DeleteDateColumn()
+    DeletedAt : Date;
+    
+}

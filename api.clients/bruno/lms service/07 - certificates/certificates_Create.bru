@@ -1,0 +1,92 @@
+
+meta {
+  name: Post certificates
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{BASE_URL}}/certificates
+  body: json
+  auth: none
+}
+
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+body:json {
+{
+    "CourseId": "{{COURSE_ID}}",
+    "UserId": "{{USER_ID}}",
+    "CertificateNumber": "Sunt veritatis atque.",
+    "CertificateName": "Jana Stoltenberg",
+    "CertificateType": "Ea perspiciatis expedita.",
+    "IssuedDate": "Ullam delectus enim.",
+    "ExpiryDate": "2025-01-28T21:10:55",
+    "CertificateUrl": "https://elroy.net",
+    "FinalGrade": 9569.969,
+    "CreditHours": 988,
+    "Skills": "Corrupti rerum facilis.",
+    "IsVerified": true,
+    "VerificationUrl": "http://makayla.name",
+    "IssuedBy": "15149e6e-d112-297a-2a63-dcbd19390dfe"
+  }
+}
+
+tests {
+
+    try {
+        var respData = res.getBody();
+        bru.setEnvVar('CERTIFICATES_ID', respData.Data.id);
+    }
+    catch (error) {
+        console.log(error.message);
+    }
+    test('Request is successfully', function () {
+        expect(res.getStatus()).to.equal(201);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+
+    test('Certificates created successfully', function () {
+        var jsonRes = res.getBody();
+
+        expect(jsonRes.Data).to.have.property('id');
+        
+        expect(jsonRes.Data).to.have.property('CourseId');
+        expect(jsonRes.Data).to.have.property('UserId');
+        expect(jsonRes.Data).to.have.property('CertificateNumber');
+        expect(jsonRes.Data).to.have.property('CertificateName');
+        expect(jsonRes.Data).to.have.property('CertificateType');
+        expect(jsonRes.Data).to.have.property('IssuedDate');
+        expect(jsonRes.Data).to.have.property('ExpiryDate');
+        expect(jsonRes.Data).to.have.property('CertificateUrl');
+        expect(jsonRes.Data).to.have.property('FinalGrade');
+        expect(jsonRes.Data).to.have.property('CreditHours');
+        expect(jsonRes.Data).to.have.property('Skills');
+        expect(jsonRes.Data).to.have.property('IsVerified');
+        expect(jsonRes.Data).to.have.property('VerificationUrl');
+        expect(jsonRes.Data).to.have.property('IssuedBy');
+
+        expect(jsonRes.Data.CourseId).equals('{{COURSE_ID}}');
+        expect(jsonRes.Data.CertificateNumber).equals("Sunt veritatis atque.");
+        expect(jsonRes.Data.CertificateName).equals("Jana Stoltenberg");
+        expect(jsonRes.Data.CertificateType).equals("Ea perspiciatis expedita.");
+        expect(jsonRes.Data.IssuedDate).equals("Ullam delectus enim.");
+        expect(jsonRes.Data.ExpiryDate).equals("2025-01-28T21:10:55");
+        expect(jsonRes.Data.CertificateUrl).equals("https://elroy.net");
+        expect(jsonRes.Data.FinalGrade).equals(9569.969);
+        expect(jsonRes.Data.CreditHours).equals(988);
+        expect(jsonRes.Data.Skills).equals("Corrupti rerum facilis.");
+        expect(jsonRes.Data.IsVerified).equals(true);
+        expect(jsonRes.Data.VerificationUrl).equals("http://makayla.name");
+        expect(jsonRes.Data.IssuedBy).equals("15149e6e-d112-297a-2a63-dcbd19390dfe");
+
+    });
+    
+}

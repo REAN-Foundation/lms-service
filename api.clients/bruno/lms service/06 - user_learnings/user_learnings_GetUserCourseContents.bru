@@ -1,0 +1,50 @@
+
+meta {
+  name: Get User Course Contents
+  type: http
+  seq: 8
+}
+
+get {
+  url: {{BASE_URL}}/user-learnings/{{USER_ID}}/course-contents?learningPathId={{LEARNING_PATH_ID}}
+  body: json
+  auth: none
+}
+
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+tests {
+
+    test('Request is successfully', function () {
+        expect(res.getStatus()).to.equal(200);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+
+    test('User course contents retrieved successfully', function () {
+        var jsonRes = res.getBody();
+        
+        expect(jsonRes.Data).to.have.property('UserCourseContents');
+        expect(jsonRes.Data.UserCourseContents).to.be.an('array');
+        
+        if (jsonRes.Data.UserCourseContents.length > 0) {
+            var content = jsonRes.Data.UserCourseContents[0];
+            expect(content).to.have.property('UserId');
+            expect(content).to.have.property('ContentId');
+            expect(content).to.have.property('CourseId');
+            expect(content).to.have.property('ModuleId');
+            expect(content).to.have.property('LearningPathId');
+            expect(content).to.have.property('Content');
+            expect(content).to.have.property('PercentageCompletion');
+        }
+
+    });
+    
+}
+

@@ -40,8 +40,11 @@ export class CourseContentController {
         try {
             var id: uuid = await this._validator.requestParamAsUUID(request, 'id');
             const record = await this._service.getById(id);
+            if (record == null) {
+                ErrorHandler.throwNotFoundError('Course content not found.');
+            }
             const message = 'Course content retrieved successfully!';
-            return ResponseHandler.success(request, response, message, 200, record);
+            return ResponseHandler.success(request, response, message, 200, { CourseContent: record });
         } catch (error) {
             ResponseHandler.handleError(request, response, error);
         }
@@ -76,6 +79,34 @@ export class CourseContentController {
             const result = await this._service.delete(id);
             const message = 'Course content deleted successfully!';
             ResponseHandler.success(request, response, message, 200, {deleted: result});
+        } catch (error) {
+            ResponseHandler.handleError(request, response, error);
+        }
+    };
+
+    getContentsForCourse = async (request: express.Request, response: express.Response): Promise<void> => {
+        try {
+            const courseId: uuid = await this._validator.requestParamAsUUID(request, 'courseId');
+            const courseContents = await this._service.getContentsForCourse(courseId);
+            if (courseContents == null) {
+                ErrorHandler.throwNotFoundError('Course contents not found.');
+            }
+            const message = 'Course contents for course retrieved successfully!';
+            ResponseHandler.success(request, response, message, 200, { CourseContents: courseContents });
+        } catch (error) {
+            ResponseHandler.handleError(request, response, error);
+        }
+    };
+
+    getContentsForLearningPath = async (request: express.Request, response: express.Response): Promise<void> => {
+        try {
+            const learningPathId: uuid = await this._validator.requestParamAsUUID(request, 'learningPathId');
+            const courseContents = await this._service.getContentsForLearningPath(learningPathId);
+            if (courseContents == null) {
+                ErrorHandler.throwNotFoundError('Course contents not found.');
+            }
+            const message = 'Course contents for learning path retrieved successfully!';
+            ResponseHandler.success(request, response, message, 200, { CourseContents: courseContents });
         } catch (error) {
             ResponseHandler.handleError(request, response, error);
         }

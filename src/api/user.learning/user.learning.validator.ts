@@ -160,4 +160,26 @@ export class UserLearningValidator extends BaseValidator {
         return filters;
     };
 
+    public validateUpdateUserLearning = async (request: express.Request) => {
+        try {
+            const userId = await this.requestParamAsUUID(request, 'userId');
+            const contentId = await this.requestParamAsUUID(request, 'contentId');
+            
+            const model: any = {
+                UserId: userId,
+                ContentId: contentId,
+                ActionId: request.body.ActionId || null,
+                LearningPathId: request.body.LearningPathId || null,
+                CourseId: request.body.CourseId || null,
+                ModuleId: request.body.ModuleId || null,
+                ProgressStatus: request.body.ProgressStatus || null,
+                PercentageCompletion: request.body.PercentageCompletion || null
+            };
+            
+            return model;
+        } catch (error) {
+            ErrorHandler.handleValidationError(error);
+        }
+    };
+
 }

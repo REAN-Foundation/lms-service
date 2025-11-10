@@ -1,0 +1,54 @@
+
+meta {
+  name: Update User Learning
+  type: http
+  seq: 6
+}
+
+put {
+  url: {{BASE_URL}}/user-learnings/{{USER_ID}}/contents/{{COURSE_CONTENT_ID}}
+  body: json
+  auth: none
+}
+
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+body:json {
+{
+    "ActionId": "{{ACTION_ID}}",
+    "LearningPathId": "{{LEARNING_PATH_ID}}",
+    "CourseId": "{{COURSE_ID}}",
+    "ModuleId": "{{COURSE_MODULE_ID}}",
+    "ProgressStatus": "InProgress",
+    "PercentageCompletion": 50
+  }
+}
+
+tests {
+
+    test('Request is successfully', function () {
+        expect(res.getStatus()).to.equal(201);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+
+    test('User learning updated successfully', function () {
+        var jsonRes = res.getBody();
+        
+        expect(jsonRes.Data).to.have.property('courseContent');
+        expect(jsonRes.Data.courseContent).to.have.property('id');
+        expect(jsonRes.Data.courseContent).to.have.property('ContentId');
+        expect(jsonRes.Data.courseContent).to.have.property('UserId');
+        expect(jsonRes.Data.courseContent).to.have.property('ProgressStatus');
+        expect(jsonRes.Data.courseContent).to.have.property('PercentageCompletion');
+
+    });
+    
+}
+

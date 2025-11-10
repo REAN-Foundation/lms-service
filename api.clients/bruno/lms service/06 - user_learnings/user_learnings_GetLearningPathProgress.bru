@@ -1,0 +1,41 @@
+
+meta {
+  name: Get Learning Path Progress
+  type: http
+  seq: 9
+}
+
+get {
+  url: {{BASE_URL}}/user-learnings/{{USER_ID}}/learning-paths/{{LEARNING_PATH_ID}}/progress
+  body: json
+  auth: none
+}
+
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+tests {
+
+    test('Request is successfully', function () {
+        expect(res.getStatus()).to.equal(200);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+
+    test('Learning path progress retrieved successfully', function () {
+        var jsonRes = res.getBody();
+        
+        expect(jsonRes.Data).to.have.property('LearningPathProgress');
+        expect(jsonRes.Data.LearningPathProgress).to.be.a('number');
+        expect(jsonRes.Data.LearningPathProgress).to.be.at.least(0);
+        expect(jsonRes.Data.LearningPathProgress).to.be.at.most(1);
+
+    });
+    
+}
+

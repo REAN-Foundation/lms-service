@@ -40,8 +40,11 @@ export class LearningPathController {
         try {
             var id: uuid = await this._validator.requestParamAsUUID(request, 'id');
             const record = await this._service.getById(id);
+            if (record == null) {
+                ErrorHandler.throwNotFoundError('Learning path not found.');
+            }
             const message = 'Learning path retrieved successfully!';
-            return ResponseHandler.success(request, response, message, 200, record);
+            return ResponseHandler.success(request, response, message, 200, { LearningPath: record });
         } catch (error) {
             ResponseHandler.handleError(request, response, error);
         }

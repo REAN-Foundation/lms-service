@@ -78,6 +78,9 @@ CourseModule: true,
 
                 }
             });
+            if (!courseContent) {
+                ErrorHandler.throwNotFoundError('Course content not found!');
+            }
             return CourseContentMapper.toResponseDto(courseContent);
         } catch (error) {
             logger.error(error.message);
@@ -188,6 +191,32 @@ CourseModule: true,
             });
             var result = await this._courseContentRepository.remove(record);
             return result != null;
+        } catch (error) {
+            logger.error(error.message);
+            ErrorHandler.throwInternalServerError(error.message, error);
+        }
+    };
+
+    public getContentsForCourse = async (courseId: uuid): Promise<CourseContentResponseDto[]> => {
+        try {
+            const contents = await this._courseContentRepository.find({
+                where: { Course: { id: courseId } },
+                relations: { Course: true, LearningPath: true, CourseModule: true }
+            });
+            return contents.map(x => CourseContentMapper.toResponseDto(x));
+        } catch (error) {
+            logger.error(error.message);
+            ErrorHandler.throwInternalServerError(error.message, error);
+        }
+    };
+
+    public getContentsForLearningPath = async (learningPathId: uuid): Promise<CourseContentResponseDto[]> => {
+        try {
+            const contents = await this._courseContentRepository.find({
+                where: { LearningPath: { id: learningPathId } },
+                relations: { Course: true, LearningPath: true, CourseModule: true }
+            });
+            return contents.map(x => CourseContentMapper.toResponseDto(x));
         } catch (error) {
             logger.error(error.message);
             ErrorHandler.throwInternalServerError(error.message, error);

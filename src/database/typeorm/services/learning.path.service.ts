@@ -11,10 +11,14 @@ import {
     LearningPathSearchResults,
     LearningPathUpdateModel } from '../../../domain.types/learning.path.types';
 import { LearningPathMapper } from '../mappers/learning.path.mapper';
+import { CourseMapper } from '../mappers/course.mapper';
+import { CourseModuleMapper } from '../mappers/course.module.mapper';
+import { CourseContentMapper } from '../mappers/course.content.mapper';
 import { LearningPathCourses } from '../models/learning.path.courses.entity';
 import { CourseModule } from '../models/course.module.entity';
 import { CourseContent } from '../models/course.content.entity';
 import { UserLearning } from '../models/user.learning.entity';
+import { Course } from '../models/course.entity';
 
 import { LearningPath } from '../models/learning.path.entity';
 
@@ -32,6 +36,7 @@ _courseContentRepository: Repository<CourseContent> = Source.getRepository(Cours
 
 _userLearningRepository: Repository<UserLearning> = Source.getRepository(UserLearning);
 
+_courseRepository: Repository<Course> = Source.getRepository(Course);
 
     _learningPathRepository: Repository<LearningPath> = Source.getRepository(LearningPath);
 
@@ -68,7 +73,40 @@ Enabled : createModel.Enabled,
                     
                 }
             });
-            return LearningPathMapper.toResponseDto(learningPath);
+            if (!learningPath) {
+                ErrorHandler.throwNotFoundError('Learning path not found!');
+            }
+            
+            // Pipeline: Get courses for learning path
+            const learningPathCourses = await this._learningPathCoursesRepository.find({
+                where: { LearningPath: { id: learningPath.id } },
+                relations: { Course: true }
+            });
+            const courses = learningPathCourses.map(lpc => lpc.Course);
+            
+            // Pipeline: For each course, get modules
+            for (const course of courses) {
+                const modules = await this._courseModuleRepository.find({
+                    where: { Course: { id: course.id } },
+                    relations: { Course: true, LearningPath: true }
+                });
+                
+                // Pipeline: For each module, get contents
+                for (const module of modules) {
+                    const contents = await this._courseContentRepository.find({
+                        where: { CourseModule: { id: module.id } },
+                        relations: { Course: true, LearningPath: true, CourseModule: true }
+                    });
+                    module['Contents'] = contents.map(x => CourseContentMapper.toResponseDto(x));
+                }
+                course['Modules'] = modules.map(x => CourseModuleMapper.toResponseDto(x));
+            }
+            
+            // Enrich learning path object
+            const learningPathDto = LearningPathMapper.toResponseDto(learningPath);
+            learningPathDto['Courses'] = courses.map(x => CourseMapper.toResponseDto(x));
+            
+            return learningPathDto;
         } catch (error) {
             logger.error(error.message);
             ErrorHandler.throwInternalServerError(error.message, error);
@@ -143,7 +181,11 @@ Enabled : createModel.Enabled,
             //     learningPath.Client = client;
             // }
             var record = await this._learningPathRepository.save(learningPath);
-            return LearningPathMapper.toResponseDto(record);
+            
+            // Pipeline: Enrich DTO with courses (matching reancare-service updateDto pattern)
+            const dto = LearningPathMapper.toResponseDto(record);
+            const enrichedDto = await this.updateDto(dto);
+            return enrichedDto;
         } catch (error) {
             logger.error(error.message);
             ErrorHandler.throwInternalServerError(error.message, error);
@@ -230,5 +272,20 @@ Enabled: true,
     };
 
     //#endregion
+
+    // Pipeline helper method (matching reancare-service updateDto pattern)
+    private updateDto = async (dto: LearningPathResponseDto): Promise<LearningPathResponseDto> => {
+        if (dto == null) {
+            return null;
+        }
+        // Get courses for learning path
+        const learningPathCourses = await this._learningPathCoursesRepository.find({
+            where: { LearningPath: { id: dto.id } },
+            relations: { Course: true }
+        });
+        const courses = learningPathCourses.map(lpc => lpc.Course);
+        dto['Courses'] = courses.map(x => CourseMapper.toResponseDto(x));
+        return dto;
+    };
 
 }

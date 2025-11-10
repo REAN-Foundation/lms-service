@@ -17,6 +17,8 @@ export const register = (app: express.Application): void => {
     const authMiddleware = verifyToken;
 
     router.post('/', authMiddleware, controller.create);
+    router.get('/by-course/:courseId', authMiddleware, controller.getContentsForCourse);
+    router.get('/by-learning-path/:learningPathId', authMiddleware, controller.getContentsForLearningPath);
     router.get('/search', authMiddleware, controller.search);
     router.get('/:id', authMiddleware, controller.getById);
     router.put('/:id', authMiddleware, controller.update);

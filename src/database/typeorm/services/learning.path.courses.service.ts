@@ -61,6 +61,9 @@ LearningPath: true,
 
                 }
             });
+            if (!learningPathCourses) {
+                ErrorHandler.throwNotFoundError('Learning path courses not found!');
+            }
             return LearningPathCoursesMapper.toResponseDto(learningPathCourses);
         } catch (error) {
             logger.error(error.message);

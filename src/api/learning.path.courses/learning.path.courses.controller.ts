@@ -3,17 +3,16 @@ import { ResponseHandler } from '../../common/handlers/response.handler';
 import { ErrorHandler } from '../../common/error.handling/error.handler';
 import { uuid } from '../../domain.types/miscellaneous/system.types';
 import { LearningPathCoursesValidator } from './learning.path.courses.validator';
-import { LearningPathCoursesService } from '../../database/typeorm/services/learning.path.courses.service'
-import { 
-    LearningPathCoursesCreateModel, 
-    LearningPathCoursesSearchFilters, 
-    LearningPathCoursesUpdateModel 
+import { LearningPathCoursesService } from '../../database/typeorm/services/learning.path.courses.service';
+import {
+    LearningPathCoursesCreateModel,
+    LearningPathCoursesSearchFilters,
+    LearningPathCoursesUpdateModel,
 } from '../../domain.types/learning.path.courses.types';
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
 export class LearningPathCoursesController {
-
     //#region member variables and constructors
 
     _service: LearningPathCoursesService = new LearningPathCoursesService();
@@ -40,8 +39,11 @@ export class LearningPathCoursesController {
         try {
             var id: uuid = await this._validator.requestParamAsUUID(request, 'id');
             const record = await this._service.getById(id);
+            if (record == null) {
+                ErrorHandler.throwNotFoundError('Learning path courses not found.');
+            }
             const message = 'Learning path courses retrieved successfully!';
-            return ResponseHandler.success(request, response, message, 200, record);
+            return ResponseHandler.success(request, response, message, 200, { LearningPathCourses: record });
         } catch (error) {
             ResponseHandler.handleError(request, response, error);
         }
@@ -52,7 +54,7 @@ export class LearningPathCoursesController {
             var filters: LearningPathCoursesSearchFilters = await this._validator.validateSearchRequest(request);
             const searchResults = await this._service.search(filters);
             const message = 'Learning path courses records retrieved successfully!';
-            ResponseHandler.success(request, response, message, 200,  { LearningPathCoursesRecords: searchResults});
+            ResponseHandler.success(request, response, message, 200, { LearningPathCoursesRecords: searchResults });
         } catch (error) {
             ResponseHandler.handleError(request, response, error);
         }
@@ -70,15 +72,14 @@ export class LearningPathCoursesController {
         }
     };
 
-    delete = async (request: express.Request, response: express.Response): Promise < void > => {
+    delete = async (request: express.Request, response: express.Response): Promise<void> => {
         try {
             var id: uuid = await this._validator.requestParamAsUUID(request, 'id');
             const result = await this._service.delete(id);
             const message = 'Learning path courses deleted successfully!';
-            ResponseHandler.success(request, response, message, 200, {deleted: result});
+            ResponseHandler.success(request, response, message, 200, { deleted: result });
         } catch (error) {
             ResponseHandler.handleError(request, response, error);
         }
     };
-
 }

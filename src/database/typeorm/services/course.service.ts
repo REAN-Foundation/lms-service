@@ -11,11 +11,15 @@ import {
     CourseSearchResults,
     CourseUpdateModel } from '../../../domain.types/course.types';
 import { CourseMapper } from '../mappers/course.mapper';
+import { CourseModuleMapper } from '../mappers/course.module.mapper';
+import { CourseContentMapper } from '../mappers/course.content.mapper';
+import { LearningPathMapper } from '../mappers/learning.path.mapper';
 import { CourseModule } from '../models/course.module.entity';
 import { LearningPathCourses } from '../models/learning.path.courses.entity';
 import { CourseContent } from '../models/course.content.entity';
 import { UserLearning } from '../models/user.learning.entity';
 import { Certificates } from '../models/certificates.entity';
+import { LearningPath } from '../models/learning.path.entity';
 
 import { Course } from '../models/course.entity';
 
@@ -35,6 +39,7 @@ _userLearningRepository: Repository<UserLearning> = Source.getRepository(UserLea
 
 _certificatesRepository: Repository<Certificates> = Source.getRepository(Certificates);
 
+_learningPathRepository: Repository<LearningPath> = Source.getRepository(LearningPath);
 
     _courseRepository: Repository<Course> = Source.getRepository(Course);
 
@@ -69,7 +74,38 @@ DurationInDays : createModel.DurationInDays,
                     
                 }
             });
-            return CourseMapper.toResponseDto(course);
+            if (!course) {
+                ErrorHandler.throwNotFoundError('Course not found!');
+            }
+            
+            // Pipeline: Get modules for course
+            const modules = await this._courseModuleRepository.find({
+                where: { Course: { id: course.id } },
+                relations: { Course: true, LearningPath: true }
+            });
+            
+            // Pipeline: For each module, get contents
+            for (const module of modules) {
+                const contents = await this._courseContentRepository.find({
+                    where: { CourseModule: { id: module.id } },
+                    relations: { Course: true, LearningPath: true, CourseModule: true }
+                });
+                module['Contents'] = contents.map(x => CourseContentMapper.toResponseDto(x));
+            }
+            
+            // Pipeline: Get learning paths for course
+            const learningPathCourses = await this._learningPathCoursesRepository.find({
+                where: { Course: { id: course.id } },
+                relations: { LearningPath: true }
+            });
+            const learningPaths = learningPathCourses.map(lpc => lpc.LearningPath);
+            
+            // Enrich course object
+            const courseDto = CourseMapper.toResponseDto(course);
+            courseDto['Modules'] = modules.map(x => CourseModuleMapper.toResponseDto(x));
+            courseDto['LearningPaths'] = learningPaths.map(x => LearningPathMapper.toResponseDto(x));
+            
+            return courseDto;
         } catch (error) {
             logger.error(error.message);
             ErrorHandler.throwInternalServerError(error.message, error);

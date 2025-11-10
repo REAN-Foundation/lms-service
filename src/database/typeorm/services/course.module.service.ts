@@ -11,6 +11,7 @@ import {
     CourseModuleSearchResults,
     CourseModuleUpdateModel } from '../../../domain.types/course.module.types';
 import { CourseModuleMapper } from '../mappers/course.module.mapper';
+import { CourseContentMapper } from '../mappers/course.content.mapper';
 import { Course } from '../models/course.entity';
 import { LearningPath } from '../models/learning.path.entity';
 import { CourseContent } from '../models/course.content.entity';
@@ -72,7 +73,21 @@ LearningPath: true,
 
                 }
             });
-            return CourseModuleMapper.toResponseDto(courseModule);
+            if (!courseModule) {
+                ErrorHandler.throwNotFoundError('Course module not found!');
+            }
+            
+            // Pipeline: Get contents for module
+            const contents = await this._courseContentRepository.find({
+                where: { CourseModule: { id: courseModule.id } },
+                relations: { Course: true, LearningPath: true, CourseModule: true }
+            });
+            
+            // Enrich module object with contents
+            const moduleDto = CourseModuleMapper.toResponseDto(courseModule);
+            moduleDto['Contents'] = contents.map(x => CourseContentMapper.toResponseDto(x));
+            
+            return moduleDto;
         } catch (error) {
             logger.error(error.message);
             ErrorHandler.throwInternalServerError(error.message, error);

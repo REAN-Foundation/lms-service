@@ -41,7 +41,8 @@ export class ConfigurationManager {
                 LogFolder: defaultConfiguration.TemporaryFolders.LogFolder,
                 CleanupEveryMinutes: parseInt(defaultConfiguration.TemporaryFolders.CleanupEveryMinutes.toString(), 10)
             },
-            Telemetry: defaultConfiguration.Telemetry
+            Telemetry: defaultConfiguration.Telemetry,
+            JwtExpiresIn: defaultConfiguration.JwtExpiresIn ? parseInt(defaultConfiguration.JwtExpiresIn.toString(), 10) : 259200
         };
     };
     public static BaseUrl = (): string => {
@@ -81,5 +82,8 @@ export class ConfigurationManager {
     };
     public static MobileNotificationProvider = (): MobileNotificationProvider => {
         return ConfigurationManager._config.MobileNotification.Provider;
+    };
+    public static JwtExpiresIn = (): number => {
+        return ConfigurationManager._config.JwtExpiresIn || 259200;
     };
 }

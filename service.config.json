@@ -23,6 +23,10 @@
     "MobileNotification": {
         "Provider": "Firebase"
     },
+    "Auth": {
+        "Authentication": "Custom",
+        "Authorization": "Custom"
+    },
     "Authentication": {
         "Provider": "Custom"
     },
@@ -30,5 +34,6 @@
         "Provider": "Custom"
     },
     "MaxUploadFileSize": 104857600,
+    "JwtExpiresIn": 259200,
     "Telemetry": false
 }

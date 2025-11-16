@@ -1,0 +1,20 @@
+[
+    "Certificates.Search",
+    "Certificates.GetById",
+    "Course.Search",
+    "Course.GetById",
+    "CourseContent.Search",
+    "CourseContent.GetById",
+    "CourseModule.Search",
+    "CourseModule.GetById",
+    "LearningPath.Search",
+    "LearningPath.GetById",
+    "LearningPathCourses.Search",
+    "LearningPathCourses.GetById",
+    "UserLearning.Create",
+    "UserLearning.Search",
+    "UserLearning.GetById",
+    "UserLearning.Update"
+]
+
+

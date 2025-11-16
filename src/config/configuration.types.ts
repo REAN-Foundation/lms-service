@@ -33,5 +33,6 @@ export interface Configurations {
         CleanupEveryMinutes: number;
     };
     MaxUploadFileSize: number;
+    JwtExpiresIn?: number;
     Telemetry: boolean;
 }

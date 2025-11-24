@@ -1,0 +1,39 @@
+meta {
+  name: Update Content 4.1 - Add Complexity Note
+  type: http
+  seq: 18.2
+}
+
+put {
+  url: {{BASE_URL}}/course-contents/{{CONTENT_4_1_ID}}
+  body: json
+  auth: none
+}
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+body:json {
+  {
+    "Description": "Understanding neurons, layers, propagation - Advanced",
+    "DurationInMins": 50
+  }
+}
+
+tests {
+    test('Request is successfully', function () {
+        expect(res.getStatus()).to.equal(200);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+  
+    test('Content 4.1 updated successfully', function () {
+        var jsonRes = res.getBody();
+        expect(jsonRes.Data.DurationInMins).equals(50);
+    });
+}
+

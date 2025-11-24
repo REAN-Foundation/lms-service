@@ -1,0 +1,32 @@
+meta {
+  name: Get Content 3.1 - K-Means Clustering
+  type: http
+  seq: 15.1
+}
+
+get {
+  url: {{BASE_URL}}/course-contents/{{CONTENT_3_1_ID}}
+  body: none
+  auth: none
+}
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+tests {
+    test('Request is successfully', function () {
+        expect(res.getStatus()).to.equal(200);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+  
+    test('Content 3.1 retrieved successfully', function () {
+        var jsonRes = res.getBody();
+        expect(jsonRes.Data.Title).equals("K-Means Clustering Algorithm");
+    });
+}
+

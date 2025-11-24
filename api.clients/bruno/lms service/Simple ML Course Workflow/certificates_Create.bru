@@ -1,0 +1,106 @@
+meta {
+  name: Post certificates
+  type: http
+  seq: 22
+}
+
+post {
+  url: {{BASE_URL}}/certificates
+  body: json
+  auth: none
+}
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+body:json {
+  {
+    "CourseId": "{{COURSE_ID}}",
+    "UserId": "{{USER_ID}}",
+    "CertificateNumber": "ML-CERT-2024-001",
+    "CertificateName": "Machine Learning Fundamentals Certificate",
+    "CertificateType": "Course Completion",
+    "IssuedDate": "2024-11-20",
+    "ExpiryDate": "2026-11-20",
+    "CertificateUrl": "https://certificates.ml-academy.com/ml-fundamentals-001.pdf",
+    "FinalGrade": 92.5,
+    "CreditHours": 30,
+    "Skills": "ML, Python, Data Analysis, Supervised Learning, Neural Nets",
+    "IsVerified": true,
+    "VerificationUrl": "https://verify.ml-academy.com/ml-cert-001",
+    "IssuedBy": "{{USER_ID}}"
+  }
+}
+
+script:pre-request {
+  // Set a dummy USER_ID if not already set
+  const userId = bru.getEnvVar('USER_ID');
+  if (!userId || userId === '') {
+    bru.setEnvVar('USER_ID', '3b84ad9e-c5ed-48bc-aa99-af7e624e6445');
+  }
+}
+
+script:post-response {
+  try {
+    var respData = res.getBody();
+    bru.setEnvVar('CERTIFICATES_ID', respData.Data.id);
+  }
+  catch (error) {
+    console.log(error.message);
+  }
+}
+
+tests {
+    try {
+        var respData = res.getBody();
+        bru.setEnvVar('CERTIFICATES_ID', respData.Data.id);
+    }
+    catch (error) {
+        console.log(error.message);
+    }
+    test('Request is successfully', function () {
+        expect(res.getStatus()).to.equal(201);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+  
+    test('Certificates created successfully', function () {
+        var jsonRes = res.getBody();
+  
+        expect(jsonRes.Data).to.have.property('id');
+        
+        expect(jsonRes.Data).to.have.property('CourseId');
+        expect(jsonRes.Data).to.have.property('UserId');
+        expect(jsonRes.Data).to.have.property('CertificateNumber');
+        expect(jsonRes.Data).to.have.property('CertificateName');
+        expect(jsonRes.Data).to.have.property('CertificateType');
+        expect(jsonRes.Data).to.have.property('IssuedDate');
+        expect(jsonRes.Data).to.have.property('ExpiryDate');
+        expect(jsonRes.Data).to.have.property('CertificateUrl');
+        expect(jsonRes.Data).to.have.property('FinalGrade');
+        expect(jsonRes.Data).to.have.property('CreditHours');
+        expect(jsonRes.Data).to.have.property('Skills');
+        expect(jsonRes.Data).to.have.property('IsVerified');
+        expect(jsonRes.Data).to.have.property('VerificationUrl');
+        expect(jsonRes.Data).to.have.property('IssuedBy');
+  
+        expect(jsonRes.Data.CourseId).equals('{{COURSE_ID}}');
+        expect(jsonRes.Data.CertificateNumber).equals("ML-CERT-2024-001");
+        expect(jsonRes.Data.CertificateName).equals("Machine Learning Fundamentals Certificate");
+        expect(jsonRes.Data.CertificateType).equals("Course Completion");
+        expect(jsonRes.Data.IssuedDate).equals("2024-11-20");
+        expect(jsonRes.Data.ExpiryDate).equals("2026-11-20");
+        expect(jsonRes.Data.CertificateUrl).equals("https://certificates.ml-academy.com/ml-fundamentals-001.pdf");
+        expect(jsonRes.Data.FinalGrade).equals(92.5);
+        expect(jsonRes.Data.CreditHours).equals(30);
+        expect(jsonRes.Data.Skills).equals("Machine Learning, Python, Data Analysis, Supervised Learning, Neural Networks");
+        expect(jsonRes.Data.IsVerified).equals(true);
+        expect(jsonRes.Data.VerificationUrl).equals("https://verify.ml-academy.com/ml-cert-001");
+  
+    });
+    
+}

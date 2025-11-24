@@ -1,0 +1,60 @@
+meta {
+  name: Content 4.2 - Convolutional Neural Networks
+  type: http
+  seq: 19
+}
+
+post {
+  url: {{BASE_URL}}/course-contents
+  body: json
+  auth: none
+}
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+body:json {
+  {
+    "CourseId": "{{COURSE_ID}}",
+    "LearningPathId": "{{LEARNING_PATH_ID}}",
+    "CourseModuleId": "{{MODULE_4_ID}}",
+    "Title": "Convolutional Neural Networks (CNN)",
+    "Description": "Learn CNNs for image recognition and computer vision",
+    "ImageUrl": "https://images.unsplash.com/photo-1535223289827-42f1e9919769",
+    "DurationInMins": 50,
+    "ContentType": "Text",
+    "ResourceLink": "https://docs.ml-fundamentals.com/cnn",
+    "ActionTemplateId": "00000000-0000-0000-0000-000000000000",
+    "Sequence": 2
+  }
+}
+
+script:post-response {
+  try {
+    var respData = res.getBody();
+    bru.setEnvVar('CONTENT_4_2_ID', respData.Data.id);
+  }
+  catch (error) {
+    console.log(error.message);
+  }
+}
+
+tests {
+    test('Request is successfully', function () {
+        expect(res.getStatus()).to.equal(201);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+  
+    test('Content created successfully', function () {
+        var jsonRes = res.getBody();
+        expect(jsonRes.Data).to.have.property('id');
+        expect(jsonRes.Data.Title).equals("Convolutional Neural Networks (CNN)");
+        expect(jsonRes.Data.Sequence).equals(2);
+    });
+}
+

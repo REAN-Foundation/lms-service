@@ -1,0 +1,67 @@
+meta {
+  name: Module 2 - Supervised Learning
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{BASE_URL}}/course-modules
+  body: json
+  auth: none
+}
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+body:json {
+  {
+    "CourseId": "{{COURSE_ID}}",
+    "LearningPathId": "{{LEARNING_PATH_ID}}",
+    "Name": "Supervised Learning Algorithms",
+    "Description": "Master classification and regression with hands-on examples",
+    "ImageUrl": "https://images.unsplash.com/photo-1551288049-bebda4e38f71",
+    "DurationInMins": 180,
+    "Sequence": 2
+  }
+}
+
+script:post-response {
+  try {
+    var respData = res.getBody();
+    bru.setEnvVar('MODULE_2_ID', respData.Data.id);
+  }
+  catch (error) {
+    console.log(error.message);
+  }
+}
+
+tests {
+    try {
+        var respData = res.getBody();
+        bru.setEnvVar('MODULE_2_ID', respData.Data.id);
+    }
+    catch (error) {
+        console.log(error.message);
+    }
+    test('Request is successfully', function () {
+        expect(res.getStatus()).to.equal(201);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+  
+    test('Module 2 created successfully', function () {
+        var jsonRes = res.getBody();
+  
+        expect(jsonRes.Data).to.have.property('id');
+        expect(jsonRes.Data).to.have.property('Name');
+        expect(jsonRes.Data.Name).equals("Supervised Learning Algorithms");
+        expect(jsonRes.Data.Sequence).equals(2);
+  
+    });
+    
+}
+

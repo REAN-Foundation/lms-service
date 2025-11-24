@@ -1,0 +1,60 @@
+meta {
+  name: Content 2.1 - Linear Regression
+  type: http
+  seq: 12
+}
+
+post {
+  url: {{BASE_URL}}/course-contents
+  body: json
+  auth: none
+}
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+body:json {
+  {
+    "CourseId": "{{COURSE_ID}}",
+    "LearningPathId": "{{LEARNING_PATH_ID}}",
+    "CourseModuleId": "{{MODULE_2_ID}}",
+    "Title": "Linear Regression Explained",
+    "Description": "Master linear regression with practical Python examples",
+    "ImageUrl": "https://images.unsplash.com/photo-1551288049-bebda4e38f71",
+    "DurationInMins": 30,
+    "ContentType": "Video",
+    "ResourceLink": "https://www.youtube.com/watch?v=linear-regression-tutorial",
+    "ActionTemplateId": "00000000-0000-0000-0000-000000000000",
+    "Sequence": 1
+  }
+}
+
+script:post-response {
+  try {
+    var respData = res.getBody();
+    bru.setEnvVar('CONTENT_2_1_ID', respData.Data.id);
+  }
+  catch (error) {
+    console.log(error.message);
+  }
+}
+
+tests {
+    test('Request is successfully', function () {
+        expect(res.getStatus()).to.equal(201);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+  
+    test('Content created successfully', function () {
+        var jsonRes = res.getBody();
+        expect(jsonRes.Data).to.have.property('id');
+        expect(jsonRes.Data.Title).equals("Linear Regression Explained");
+        expect(jsonRes.Data.Sequence).equals(1);
+    });
+}
+

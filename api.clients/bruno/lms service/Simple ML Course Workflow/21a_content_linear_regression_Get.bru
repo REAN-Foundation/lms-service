@@ -1,0 +1,33 @@
+meta {
+  name: Get Content 2.1 - Linear Regression
+  type: http
+  seq: 12.1
+}
+
+get {
+  url: {{BASE_URL}}/course-contents/{{CONTENT_2_1_ID}}
+  body: none
+  auth: none
+}
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+tests {
+    test('Request is successfully', function () {
+        expect(res.getStatus()).to.equal(200);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+  
+    test('Content 2.1 retrieved successfully', function () {
+        var jsonRes = res.getBody();
+        expect(jsonRes.Data.Title).equals("Linear Regression Explained");
+        expect(jsonRes.Data.ContentType).equals("Video");
+    });
+}
+

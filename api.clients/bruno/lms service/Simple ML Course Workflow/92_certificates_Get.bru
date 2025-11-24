@@ -1,0 +1,35 @@
+meta {
+  name: Get Certificate Details
+  type: http
+  seq: 22.1
+}
+
+get {
+  url: {{BASE_URL}}/certificates/{{CERTIFICATES_ID}}
+  body: none
+  auth: none
+}
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+tests {
+    test('Request is successfully', function () {
+        expect(res.getStatus()).to.equal(200);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+  
+    test('Certificate retrieved successfully', function () {
+        var jsonRes = res.getBody();
+        expect(jsonRes.Data).to.have.property('CertificateNumber');
+        expect(jsonRes.Data.CertificateNumber).equals("ML-CERT-2024-001");
+        expect(jsonRes.Data.FinalGrade).equals(92.5);
+        expect(jsonRes.Data.IsVerified).equals(true);
+    });
+}
+

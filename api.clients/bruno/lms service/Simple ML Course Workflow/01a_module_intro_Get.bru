@@ -1,0 +1,35 @@
+meta {
+  name: Get Module 1 - Introduction to ML
+  type: http
+  seq: 5.1
+}
+
+get {
+  url: {{BASE_URL}}/course-modules/{{MODULE_1_ID}}
+  body: none
+  auth: none
+}
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+tests {
+    test('Request is successfully', function () {
+        expect(res.getStatus()).to.equal(200);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+  
+    test('Module 1 retrieved successfully', function () {
+        var jsonRes = res.getBody();
+        expect(jsonRes.Data).to.have.property('id');
+        expect(jsonRes.Data).to.have.property('Name');
+        expect(jsonRes.Data.Name).equals("Introduction to Machine Learning");
+        expect(jsonRes.Data.Sequence).equals(1);
+    });
+}
+

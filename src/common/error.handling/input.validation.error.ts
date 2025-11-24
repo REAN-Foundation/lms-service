@@ -4,7 +4,6 @@ import { AppError } from './app.error';
 ////////////////////////////////////////////////////////////////////////
 
 export class InputValidationError extends AppError {
-
     _validationErrorMessages: string[] = [];
 
     constructor(errorMessages: string[]) {
@@ -16,5 +15,4 @@ export class InputValidationError extends AppError {
     public get errorMessages() {
         return this._validationErrorMessages;
     }
-
 }

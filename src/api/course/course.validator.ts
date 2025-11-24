@@ -3,34 +3,27 @@ import express from 'express';
 import { ErrorHandler } from '../../common/error.handling/error.handler';
 import BaseValidator from '../base.validator';
 import { TypeUtils } from '../../common/utilities/type.utils';
-import { 
-    CourseCreateModel, 
-    CourseUpdateModel, 
-    CourseSearchFilters 
-} from '../../domain.types/course.types';
-
+import { CourseCreateModel, CourseUpdateModel, CourseSearchFilters } from '../../domain.types/course.types';
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 export class CourseValidator extends BaseValidator {
-
-    public validateCreateRequest = async (request: express.Request)
-        : Promise<CourseCreateModel> => {
+    public validateCreateRequest = async (request: express.Request): Promise<CourseCreateModel> => {
         try {
             const courses = joi.object({
-                                TenantId: joi.string().max(64).min(0).required(),
+                TenantId: joi.string().max(64).min(0).required(),
                 Name: joi.string().max(64).min(0).required(),
-                Description: joi.string().max(64).min(0).required(),
-                ImageUrl: joi.string().max(64).min(0).required(),
-                DurationInDays: joi.number().integer().required()
+                Description: joi.string().max(2000).min(0).required(),
+                ImageUrl: joi.string().max(1000).min(0).required(),
+                DurationInDays: joi.number().integer().required(),
             });
             await courses.validateAsync(request.body);
             const model: CourseCreateModel = {
-                            TenantId: request.body.TenantId ? request.body.TenantId : null,
-            Name: request.body.Name ? request.body.Name : null,
-            Description: request.body.Description ? request.body.Description : null,
-            ImageUrl: request.body.ImageUrl ? request.body.ImageUrl : null,
-            DurationInDays: request.body.DurationInDays ? request.body.DurationInDays : null,
+                TenantId: request.body.TenantId ? request.body.TenantId : null,
+                Name: request.body.Name ? request.body.Name : null,
+                Description: request.body.Description ? request.body.Description : null,
+                ImageUrl: request.body.ImageUrl ? request.body.ImageUrl : null,
+                DurationInDays: request.body.DurationInDays ? request.body.DurationInDays : null,
             };
             return model;
         } catch (error) {
@@ -38,20 +31,18 @@ export class CourseValidator extends BaseValidator {
         }
     };
 
-    public validateUpdateRequest = async (request: express.Request)
-        : Promise<CourseUpdateModel> => {
+    public validateUpdateRequest = async (request: express.Request): Promise<CourseUpdateModel> => {
         try {
             const courses = joi.object({
-                                TenantId: joi.string().max(64).min(0).optional(),
+                TenantId: joi.string().max(64).min(0).optional(),
                 Name: joi.string().max(64).min(0).optional(),
-                Description: joi.string().max(64).min(0).optional(),
-                ImageUrl: joi.string().max(64).min(0).optional(),
-                DurationInDays: joi.number().integer().optional()
+                Description: joi.string().max(2000).min(0).optional(),
+                ImageUrl: joi.string().max(1000).min(0).optional(),
+                DurationInDays: joi.number().integer().optional(),
             });
             await courses.validateAsync(request.body);
-            
-            const model: CourseUpdateModel = {};
 
+            const model: CourseUpdateModel = {};
 
             if (TypeUtils.hasProperty(request.body, 'TenantId')) {
                 model.TenantId = request.body.TenantId;
@@ -75,22 +66,21 @@ export class CourseValidator extends BaseValidator {
         }
     };
 
-    public validateSearchRequest = async (request: express.Request)
-        : Promise<CourseSearchFilters> => {
+    public validateSearchRequest = async (request: express.Request): Promise<CourseSearchFilters> => {
         try {
             const courses = joi.object({
-                                tenantId: joi.string().max(64).min(0).optional(),
+                tenantId: joi.string().max(64).min(0).optional(),
                 name: joi.string().max(64).min(0).optional(),
-                description: joi.string().max(64).min(0).optional(),
-                imageUrl: joi.string().max(64).min(0).optional(),
-                durationInDays: joi.number().integer().optional()
+                description: joi.string().max(2000).min(0).optional(),
+                imageUrl: joi.string().max(1000).min(0).optional(),
+                durationInDays: joi.number().integer().optional(),
             });
             await courses.validateAsync(request.query);
             const filters = this.getSearchFilters(request.query);
             const baseFilters = await this.getBaseSearchFilters(request);
             return {
                 ...baseFilters,
-                ...filters
+                ...filters,
             };
         } catch (error) {
             ErrorHandler.handleValidationError(error);
@@ -98,32 +88,29 @@ export class CourseValidator extends BaseValidator {
     };
 
     private getSearchFilters = (query): CourseSearchFilters => {
-
         var filters = {};
 
-        
         var tenantId = query.tenantId ? query.tenantId : null;
         if (tenantId != null) {
-             filters['TenantId'] = tenantId;
+            filters['TenantId'] = tenantId;
         }
         var name = query.name ? query.name : null;
         if (name != null) {
-             filters['Name'] = name;
+            filters['Name'] = name;
         }
         var description = query.description ? query.description : null;
         if (description != null) {
-             filters['Description'] = description;
+            filters['Description'] = description;
         }
         var imageUrl = query.imageUrl ? query.imageUrl : null;
         if (imageUrl != null) {
-             filters['ImageUrl'] = imageUrl;
+            filters['ImageUrl'] = imageUrl;
         }
         var durationInDays = query.durationInDays ? query.durationInDays : null;
         if (durationInDays != null) {
-             filters['DurationInDays'] = durationInDays;
+            filters['DurationInDays'] = durationInDays;
         }
 
         return filters;
     };
-
 }

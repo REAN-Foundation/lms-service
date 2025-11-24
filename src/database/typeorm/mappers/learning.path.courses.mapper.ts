@@ -4,15 +4,14 @@ import { LearningPathCoursesResponseDto } from '../../../domain.types/learning.p
 ///////////////////////////////////////////////////////////////////////////////////
 
 export class LearningPathCoursesMapper {
-
     static toResponseDto = (learningPathCourses: LearningPathCourses): LearningPathCoursesResponseDto => {
         if (learningPathCourses == null) {
             return null;
         }
         const dto: LearningPathCoursesResponseDto = {
             id: learningPathCourses.id,
-            			CourseId: learningPathCourses.Course?.id,
-			LearningPathId: learningPathCourses.LearningPath?.id,
+            CourseId: learningPathCourses.Course?.id,
+            LearningPathId: learningPathCourses.LearningPath?.id,
             /*
 			Course: learningPathCourses.Course? {
 			TenantId: learningPathCourses.Course.TenantId,
@@ -29,9 +28,7 @@ export class LearningPathCoursesMapper {
 			PreferenceWeight: learningPathCourses.LearningPath.PreferenceWeight,
 			Enabled: learningPathCourses.LearningPath.Enabled,			} : null
 */
-
         };
         return dto;
     };
-
 }

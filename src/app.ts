@@ -47,18 +47,16 @@ export default class Application {
             await DatabaseConnector.setup();
             await CommonMiddlewares.setup(this.expressApp());
             await RouteHandler.setup(this.expressApp());
-            
 
             this._expressApp.use(errorHandlerMiddleware);
 
             //Handle unhandled rejections
             process.on('unhandledRejection', (reason, promise) => {
                 logger.error('Unhandled Rejection!');
-                promise.catch(error => {
+                promise.catch((error) => {
                     logger.error(`Unhandled Rejection at: ${error.message}`);
                 });
             });
-
         } catch (error) {
             logger.error('An error occurred while warming up.' + error.message);
         }

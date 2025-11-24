@@ -3,7 +3,6 @@ import { HttpStatusCodes } from './http.status.codes';
 ////////////////////////////////////////////////////////////////////////
 
 export class AppError extends Error {
-
     Trace: string[] = [];
 
     Code = HttpStatusCodes.INTERNAL_SERVER_ERROR;
@@ -18,5 +17,4 @@ export class AppError extends Error {
         this.Trace = error != null ? error.stack?.split('\n') : [];
         this.Code = errorCode ?? HttpStatusCodes.INTERNAL_SERVER_ERROR;
     }
-
 }

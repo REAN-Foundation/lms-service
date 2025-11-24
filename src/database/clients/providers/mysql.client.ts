@@ -6,7 +6,6 @@ import { IDatabaseClient } from '../database.client.interface';
 //////////////////////////////////////////////////////////////////////////////
 
 export class MysqlClient implements IDatabaseClient {
-
     public createDb = async (schemaType: DatabaseSchema): Promise<boolean> => {
         try {
             const config = getDatabaseConfig(schemaType);
@@ -30,16 +29,15 @@ export class MysqlClient implements IDatabaseClient {
     };
 
     public executeQuery = (schemaType: DatabaseSchema, query: string): Promise<boolean> => {
-
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         return new Promise((resolve, reject) => {
             try {
                 const config = getDatabaseConfig(schemaType);
 
                 const connection = mysql.createConnection({
-                    host     : config?.Host,
-                    user     : config?.Username,
-                    password : config?.Password,
+                    host: config?.Host,
+                    user: config?.Username,
+                    password: config?.Password,
                 });
 
                 connection.connect(function (err) {
@@ -52,24 +50,20 @@ export class MysqlClient implements IDatabaseClient {
                         if (err) {
                             logger.info(err.message);
 
-                            var str = (result !== undefined && result !== null) ? result.toString() : null;
-                            if (str != null){
+                            var str = result !== undefined && result !== null ? result.toString() : null;
+                            if (str != null) {
                                 logger.info(str);
-                            }
-                            else {
+                            } else {
                                 logger.info(`Query: ${query}`);
                             }
                         }
                         resolve(true);
                     });
                 });
-
             } catch (error) {
                 logger.error(error.message);
                 return false;
             }
         });
-
     };
-
 }

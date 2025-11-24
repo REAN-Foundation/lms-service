@@ -1,11 +1,10 @@
-
-import { IncomingHttpHeaders } from "http2";
+import { IncomingHttpHeaders } from 'http2';
 
 export interface RequestDto {
-    Method  : string;
-    Host    : string;
-    Body    : any;
+    Method: string;
+    Host: string;
+    Body: any;
     Headers?: IncomingHttpHeaders;
-    Url     : string;
-    Params  : any;
+    Url: string;
+    Params: any;
 }

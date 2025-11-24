@@ -7,7 +7,6 @@ import { TimeUtils } from './time.utils';
 ////////////////////////////////////////////////////////////////////////
 
 export class FileUtils {
-
     static getStoragePath = (): string => {
         return path.join(process.env.STORAGE, process.env.NODE_ENV);
     };
@@ -18,14 +17,13 @@ export class FileUtils {
     }
 
     static jsonFileToObj = (jsonPath: string) => {
-
         if (!fs.existsSync(jsonPath)) {
             return null;
         }
 
         const rawdata = fs.readFileSync(jsonPath, {
-            encoding : 'utf8',
-            flag     : 'r',
+            encoding: 'utf8',
+            flag: 'r',
         });
 
         const obj = JSON.parse(rawdata);
@@ -34,14 +32,14 @@ export class FileUtils {
 
     public static getFileExtension = (filename: string) => {
         var ext = /^.+\.([^.]+)$/.exec(filename);
-        return ext == null ? "" : ext[1];
+        return ext == null ? '' : ext[1];
     };
 
     public static getFilenameFromFilePath = (filepath: string) => {
         return path.basename(filepath);
     };
 
-    public static generateDownloadFolderPath = async() => {
+    public static generateDownloadFolderPath = async () => {
         var timestamp = TimeUtils.timestamp(new Date());
         var tempDownloadFolder = ConfigurationManager.DownloadTemporaryFolder();
         var downloadFolderPath = path.join(tempDownloadFolder, timestamp);
@@ -49,7 +47,7 @@ export class FileUtils {
         return downloadFolderPath;
     };
 
-    public static createTempDownloadFolder = async() => {
+    public static createTempDownloadFolder = async () => {
         var tempDownloadFolder = ConfigurationManager.DownloadTemporaryFolder();
         if (fs.existsSync(tempDownloadFolder)) {
             return tempDownloadFolder;
@@ -58,7 +56,7 @@ export class FileUtils {
         return tempDownloadFolder;
     };
 
-    public static createTempUploadFolder = async() => {
+    public static createTempUploadFolder = async () => {
         var tempUploadFolder = ConfigurationManager.UploadTemporaryFolder();
         if (fs.existsSync(tempUploadFolder)) {
             return tempUploadFolder;
@@ -81,5 +79,4 @@ export class FileUtils {
         }
         return mimeType;
     };
-
 }

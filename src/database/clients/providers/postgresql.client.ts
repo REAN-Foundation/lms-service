@@ -5,8 +5,7 @@ import { IDatabaseClient } from '../database.client.interface';
 
 ////////////////////////////////////////////////////////////////
 
-export class PostgresqlClient  implements IDatabaseClient {
-
+export class PostgresqlClient implements IDatabaseClient {
     public createDb = async (schemaType: DatabaseSchema): Promise<boolean> => {
         try {
             const config = getDatabaseConfig(schemaType);
@@ -33,10 +32,10 @@ export class PostgresqlClient  implements IDatabaseClient {
         try {
             const config = getDatabaseConfig(schemaType);
             const client = new Client({
-                user     : config?.Username,
-                host     : config?.Host,
-                password : config?.Password,
-                port     : config?.Port,
+                user: config?.Username,
+                host: config?.Host,
+                password: config?.Password,
+                port: config?.Port,
             });
             await client.connect();
             await client.query(query);
@@ -47,5 +46,4 @@ export class PostgresqlClient  implements IDatabaseClient {
             return false;
         }
     };
-
 }

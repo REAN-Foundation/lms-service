@@ -1,17 +1,13 @@
 import express from 'express';
-import {
-    LearningPathController
-} from './learning.path.controller';
+import { LearningPathController } from './learning.path.controller';
 
 import { verifyToken } from '../../auth/jwks/JwtAuthenticationMiddleware';
 
 ///////////////////////////////////////////////////////////////////////////////////
 
 export const register = (app: express.Application): void => {
-
     const router = express.Router();
     const controller = new LearningPathController();
-    
 
     // Use the configured auth middleware
     const authMiddleware = verifyToken;

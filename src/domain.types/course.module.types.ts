@@ -1,25 +1,30 @@
-import { BaseSearchFilters, BaseSearchResults } from "./miscellaneous/base.search.types";
-import { uuid } from "./miscellaneous/system.types";
-
+import { BaseSearchFilters, BaseSearchResults } from './miscellaneous/base.search.types';
+import { uuid } from './miscellaneous/system.types';
 
 export interface CourseModuleCreateModel {
+    /** @minLength 0 @maxLength 64 */
     Name: string;
+    /** @minLength 0 @maxLength 2000 */
     Description: string;
+    /** @minLength 0 @maxLength 1000 */
     ImageUrl: string;
     DurationInMins: number;
     Sequence: number;
-CourseId: uuid;
-LearningPathId: uuid;
+    CourseId: uuid;
+    LearningPathId: uuid;
 }
 
 export interface CourseModuleUpdateModel {
+    /** @minLength 0 @maxLength 64 */
     Name?: string;
+    /** @minLength 0 @maxLength 2000 */
     Description?: string;
+    /** @minLength 0 @maxLength 1000 */
     ImageUrl?: string;
     DurationInMins?: number;
     Sequence?: number;
-CourseId?: uuid;
-LearningPathId?: uuid;
+    CourseId?: uuid;
+    LearningPathId?: uuid;
 }
 
 export interface CourseModuleResponseDto {
@@ -29,21 +34,23 @@ export interface CourseModuleResponseDto {
     ImageUrl: string;
     DurationInMins: number;
     Sequence: number;
-CourseId: uuid;
-LearningPathId: uuid;
+    CourseId: uuid;
+    LearningPathId: uuid;
 }
 
 export interface CourseModuleSearchFilters extends BaseSearchFilters {
+    /** @minLength 0 @maxLength 64 */
     Name?: string;
+    /** @minLength 0 @maxLength 2000 */
     Description?: string;
+    /** @minLength 0 @maxLength 1000 */
     ImageUrl?: string;
     DurationInMins?: number;
     Sequence?: number;
-courseId?: uuid;
-learningPathId?: uuid;
+    courseId?: uuid;
+    learningPathId?: uuid;
 }
 
 export interface CourseModuleSearchResults extends BaseSearchResults {
-        Items: CourseModuleResponseDto[];
-
+    Items: CourseModuleResponseDto[];
 }

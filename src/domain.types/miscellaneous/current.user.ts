@@ -1,13 +1,12 @@
-
 export interface CurrentUser {
-    UserId          : string;
-    DisplayName     : string;
-    Phone           : string;
-    Email           : string;
-    UserName        : string;
-    CurrentRoleId   : number;
+    UserId: string;
+    DisplayName: string;
+    Phone: string;
+    Email: string;
+    UserName: string;
+    CurrentRoleId: number;
     CurrentRoleName?: string;
-    SessionId       : string;
-    TenantId        : string;
-    TenantName      : string;
+    SessionId: string;
+    TenantId: string;
+    TenantName: string;
 }

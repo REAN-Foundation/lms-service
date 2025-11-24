@@ -1,12 +1,10 @@
-
 export enum ProgressStatus {
-        Pending = 'Pending',
+    Pending = 'Pending',
     InProgress = 'InProgress',
     Completed = 'Completed',
     Cancelled = 'Cancelled',
     Delayed = 'Delayed',
     Unknown = 'Unknown',
-
 }
 
 export const ProgressStatusList: ProgressStatus[] = [

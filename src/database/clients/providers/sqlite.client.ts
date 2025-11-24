@@ -6,8 +6,7 @@ import { IDatabaseClient } from '../database.client.interface';
 
 ////////////////////////////////////////////////////////////////
 
-export class SQLiteClient  implements IDatabaseClient {
-
+export class SQLiteClient implements IDatabaseClient {
     public createDb = async (schemaType: DatabaseSchema): Promise<boolean> => {
         try {
             const config = getDatabaseConfig(schemaType);
@@ -47,5 +46,4 @@ export class SQLiteClient  implements IDatabaseClient {
             return false;
         }
     };
-
 }

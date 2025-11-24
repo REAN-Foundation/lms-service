@@ -1,13 +1,11 @@
-
 export class TypeUtils {
-
     static hasProperty = (obj, prop): boolean => {
         return Object.prototype.hasOwnProperty.call(obj, prop);
     };
 
     static isObject = (obj) => {
         var type = typeof obj;
-        return type === 'function' || type === 'object' && !!obj;
+        return type === 'function' || (type === 'object' && !!obj);
     };
 
     static isUrl = (str): boolean => {
@@ -130,5 +128,4 @@ export class TypeUtils {
         }
         return false;
     };
-
 }

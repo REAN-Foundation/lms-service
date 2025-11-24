@@ -7,7 +7,7 @@ import {
     EmailProvider,
     FileStorageProvider,
     MobileNotificationProvider,
-    SmsProvider
+    SmsProvider,
 } from './configuration.types';
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 export class ConfigurationManager {
@@ -18,31 +18,33 @@ export class ConfigurationManager {
             SystemIdentifier: defaultConfiguration.SystemIdentifier as string,
             MaxUploadFileSize: parseInt(defaultConfiguration.MaxUploadFileSize.toString(), 10),
             FileStorage: {
-                Provider: defaultConfiguration.FileStorage.Provider as FileStorageProvider
+                Provider: defaultConfiguration.FileStorage.Provider as FileStorageProvider,
             },
             Email: {
-                Provider: defaultConfiguration.Email.Provider as EmailProvider
+                Provider: defaultConfiguration.Email.Provider as EmailProvider,
             },
             Sms: {
-                Provider: defaultConfiguration.Sms.Provider as SmsProvider
+                Provider: defaultConfiguration.Sms.Provider as SmsProvider,
             },
             MobileNotification: {
-                Provider: defaultConfiguration.MobileNotification.Provider as MobileNotificationProvider
+                Provider: defaultConfiguration.MobileNotification.Provider as MobileNotificationProvider,
             },
             Authentication: {
-                Provider: defaultConfiguration.Authentication.Provider as AuthProvider
+                Provider: defaultConfiguration.Authentication.Provider as AuthProvider,
             },
             Authorization: {
-                Provider: defaultConfiguration.Authorization.Provider as AuthorizationProvider
+                Provider: defaultConfiguration.Authorization.Provider as AuthorizationProvider,
             },
             TemporaryFolders: {
                 UploadFolder: defaultConfiguration.TemporaryFolders.UploadFolder,
                 DownloadFolder: defaultConfiguration.TemporaryFolders.DownloadFolder,
                 LogFolder: defaultConfiguration.TemporaryFolders.LogFolder,
-                CleanupEveryMinutes: parseInt(defaultConfiguration.TemporaryFolders.CleanupEveryMinutes.toString(), 10)
+                CleanupEveryMinutes: parseInt(defaultConfiguration.TemporaryFolders.CleanupEveryMinutes.toString(), 10),
             },
             Telemetry: defaultConfiguration.Telemetry,
-            JwtExpiresIn: defaultConfiguration.JwtExpiresIn ? parseInt(defaultConfiguration.JwtExpiresIn.toString(), 10) : 259200
+            JwtExpiresIn: defaultConfiguration.JwtExpiresIn
+                ? parseInt(defaultConfiguration.JwtExpiresIn.toString(), 10)
+                : 259200,
         };
     };
     public static BaseUrl = (): string => {

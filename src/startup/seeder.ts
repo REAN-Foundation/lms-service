@@ -1,7 +1,7 @@
-import fs from "fs";
-import path from "path";
-import { FileUtils } from "../common/utilities/file.utils";
-import { logger } from "../logger/logger";
+import fs from 'fs';
+import path from 'path';
+import { FileUtils } from '../common/utilities/file.utils';
+import { logger } from '../logger/logger';
 // import { RolePrivilegeService } from '../database/repository.services/role.privilege.service';
 // import { RoleService } from '../database/repository.services/role.service';
 // import { UserRoleService } from '../database/repository.services/user/user.role.service';
@@ -11,7 +11,6 @@ import { logger } from "../logger/logger";
 //////////////////////////////////////////////////////////////////////////////
 
 export class Seeder {
-
     // _apiClientService: ApiClientService = new ApiClientService();
     // _userService: UserService = new UserService();
     // _roleService: RoleService = new RoleService();
@@ -37,7 +36,6 @@ export class Seeder {
     };
 
     private seedDefaultUsers = async () => {
-
         const defaultUsers = this.loadJSONSeedFile('default.users.seed.json');
 
         // TODO: Implement user seeding when UserService is available
@@ -69,6 +67,4 @@ export class Seeder {
     // private seedDefaultRoles = async () => {
     //     // TODO: Implement role seeding when RoleService is available
     // };
-
 }
-

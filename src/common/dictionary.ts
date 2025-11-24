@@ -12,7 +12,6 @@ export interface IKeyCollection<T> {
 }
 
 export default class Dictionary<T> implements IKeyCollection<T> {
-    
     private items: { [index: string]: T } = {};
 
     private count = 0;
@@ -69,5 +68,4 @@ export default class Dictionary<T> implements IKeyCollection<T> {
 
         return values;
     }
-
 }

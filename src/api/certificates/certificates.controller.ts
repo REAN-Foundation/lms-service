@@ -3,17 +3,16 @@ import { ResponseHandler } from '../../common/handlers/response.handler';
 import { ErrorHandler } from '../../common/error.handling/error.handler';
 import { uuid } from '../../domain.types/miscellaneous/system.types';
 import { CertificatesValidator } from './certificates.validator';
-import { CertificatesService } from '../../database/typeorm/services/certificates.service'
-import { 
-    CertificatesCreateModel, 
-    CertificatesSearchFilters, 
-    CertificatesUpdateModel 
+import { CertificatesService } from '../../database/typeorm/services/certificates.service';
+import {
+    CertificatesCreateModel,
+    CertificatesSearchFilters,
+    CertificatesUpdateModel,
 } from '../../domain.types/certificates.types';
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
 export class CertificatesController {
-
     //#region member variables and constructors
 
     _service: CertificatesService = new CertificatesService();
@@ -52,7 +51,7 @@ export class CertificatesController {
             var filters: CertificatesSearchFilters = await this._validator.validateSearchRequest(request);
             const searchResults = await this._service.search(filters);
             const message = 'Certificates records retrieved successfully!';
-            ResponseHandler.success(request, response, message, 200,  { CertificatesRecords: searchResults});
+            ResponseHandler.success(request, response, message, 200, { CertificatesRecords: searchResults });
         } catch (error) {
             ResponseHandler.handleError(request, response, error);
         }
@@ -70,15 +69,14 @@ export class CertificatesController {
         }
     };
 
-    delete = async (request: express.Request, response: express.Response): Promise < void > => {
+    delete = async (request: express.Request, response: express.Response): Promise<void> => {
         try {
             var id: uuid = await this._validator.requestParamAsUUID(request, 'id');
             const result = await this._service.delete(id);
             const message = 'Certificates deleted successfully!';
-            ResponseHandler.success(request, response, message, 200, {deleted: result});
+            ResponseHandler.success(request, response, message, 200, { deleted: result });
         } catch (error) {
             ResponseHandler.handleError(request, response, error);
         }
     };
-
 }

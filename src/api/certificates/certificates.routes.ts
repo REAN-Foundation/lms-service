@@ -1,17 +1,13 @@
 import express from 'express';
-import {
-    CertificatesController
-} from './certificates.controller';
+import { CertificatesController } from './certificates.controller';
 
 import { verifyToken } from '../../auth/jwks/JwtAuthenticationMiddleware';
 
 ///////////////////////////////////////////////////////////////////////////////////
 
 export const register = (app: express.Application): void => {
-
     const router = express.Router();
     const controller = new CertificatesController();
-    
 
     // Use the configured auth middleware
     const authMiddleware = verifyToken;

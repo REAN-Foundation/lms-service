@@ -1,17 +1,16 @@
-import { BaseSearchFilters, BaseSearchResults } from "./miscellaneous/base.search.types";
-import { uuid } from "./miscellaneous/system.types";
+import { BaseSearchFilters, BaseSearchResults } from './miscellaneous/base.search.types';
+import { uuid } from './miscellaneous/system.types';
 import { ProgressStatus } from './enums/progress.status.enum';
-
 
 export interface UserLearningCreateModel {
     UserId: uuid;
     ActionId: uuid;
     ProgressStatus: ProgressStatus;
     PercentageCompletion: number;
-CourseId: uuid;
-LearningPathId: uuid;
-CourseModuleId: uuid;
-CourseContentId: uuid;
+    CourseId: uuid;
+    LearningPathId: uuid;
+    CourseModuleId: uuid;
+    CourseContentId: uuid;
 }
 
 export interface UserLearningUpdateModel {
@@ -19,10 +18,10 @@ export interface UserLearningUpdateModel {
     ActionId?: uuid;
     ProgressStatus?: ProgressStatus;
     PercentageCompletion?: number;
-CourseId?: uuid;
-LearningPathId?: uuid;
-CourseModuleId?: uuid;
-CourseContentId?: uuid;
+    CourseId?: uuid;
+    LearningPathId?: uuid;
+    CourseModuleId?: uuid;
+    CourseContentId?: uuid;
 }
 
 export interface UserLearningResponseDto {
@@ -31,10 +30,10 @@ export interface UserLearningResponseDto {
     ActionId: uuid;
     ProgressStatus: ProgressStatus;
     PercentageCompletion: number;
-CourseId: uuid;
-LearningPathId: uuid;
-CourseModuleId: uuid;
-CourseContentId: uuid;
+    CourseId: uuid;
+    LearningPathId: uuid;
+    CourseModuleId: uuid;
+    CourseContentId: uuid;
 }
 
 export interface UserLearningSearchFilters extends BaseSearchFilters {
@@ -42,13 +41,12 @@ export interface UserLearningSearchFilters extends BaseSearchFilters {
     ActionId?: uuid;
     ProgressStatus?: ProgressStatus;
     PercentageCompletion?: number;
-courseId?: uuid;
-learningPathId?: uuid;
-courseModuleId?: uuid;
-courseContentId?: uuid;
+    CourseId?: uuid;
+    LearningPathId?: uuid;
+    CourseModuleId?: uuid;
+    CourseContentId?: uuid;
 }
 
 export interface UserLearningSearchResults extends BaseSearchResults {
-        Items: UserLearningResponseDto[];
-
+    Items: UserLearningResponseDto[];
 }

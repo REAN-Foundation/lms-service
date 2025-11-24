@@ -3,17 +3,12 @@ import { ResponseHandler } from '../../common/handlers/response.handler';
 import { ErrorHandler } from '../../common/error.handling/error.handler';
 import { uuid } from '../../domain.types/miscellaneous/system.types';
 import { CourseValidator } from './course.validator';
-import { CourseService } from '../../database/typeorm/services/course.service'
-import { 
-    CourseCreateModel, 
-    CourseSearchFilters, 
-    CourseUpdateModel 
-} from '../../domain.types/course.types';
+import { CourseService } from '../../database/typeorm/services/course.service';
+import { CourseCreateModel, CourseSearchFilters, CourseUpdateModel } from '../../domain.types/course.types';
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
 export class CourseController {
-
     //#region member variables and constructors
 
     _service: CourseService = new CourseService();
@@ -52,7 +47,7 @@ export class CourseController {
             var filters: CourseSearchFilters = await this._validator.validateSearchRequest(request);
             const searchResults = await this._service.search(filters);
             const message = 'Course records retrieved successfully!';
-            ResponseHandler.success(request, response, message, 200,  { CourseRecords: searchResults});
+            ResponseHandler.success(request, response, message, 200, { CourseRecords: searchResults });
         } catch (error) {
             ResponseHandler.handleError(request, response, error);
         }
@@ -70,15 +65,14 @@ export class CourseController {
         }
     };
 
-    delete = async (request: express.Request, response: express.Response): Promise < void > => {
+    delete = async (request: express.Request, response: express.Response): Promise<void> => {
         try {
             var id: uuid = await this._validator.requestParamAsUUID(request, 'id');
             const result = await this._service.delete(id);
             const message = 'Course deleted successfully!';
-            ResponseHandler.success(request, response, message, 200, {deleted: result});
+            ResponseHandler.success(request, response, message, 200, { deleted: result });
         } catch (error) {
             ResponseHandler.handleError(request, response, error);
         }
     };
-
 }

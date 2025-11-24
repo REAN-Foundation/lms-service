@@ -5,7 +5,6 @@ import genpass from 'generate-password';
 ////////////////////////////////////////////////////////////////////////
 
 export class StringUtils {
-
     static compareHashedPassword = (password: string, hash: string): boolean => {
         if (!password) {
             return false;
@@ -28,21 +27,21 @@ export class StringUtils {
 
     static generateUserName = (): string => {
         return genpass.generate({
-            length    : 8,
-            numbers   : false,
-            lowercase : true,
-            uppercase : false,
-            symbols   : false
+            length: 8,
+            numbers: false,
+            lowercase: true,
+            uppercase: false,
+            symbols: false,
         });
     };
 
     static generatePassword = (): string => {
         const password = genpass.generate({
-            length    : 8,
-            numbers   : true,
-            lowercase : true,
-            uppercase : true,
-            symbols   : true,
+            length: 8,
+            numbers: true,
+            lowercase: true,
+            uppercase: true,
+            symbols: true,
         });
         return password;
     };
@@ -78,7 +77,7 @@ export class StringUtils {
         var tmp = (Math.floor(Math.random() * 9000000000) + 1000000000).toString();
         var displayId = tmp.slice(0, 4) + '-' + tmp.slice(4, 8);
         var identifier = displayId;
-        if (prefix != null){
+        if (prefix != null) {
             identifier = prefix + '-' + identifier;
         }
         return identifier;
@@ -86,11 +85,11 @@ export class StringUtils {
 
     public static generateDisplayCode_RandomChars = (length = 12, prefix = null) => {
         const code = genpass.generate({
-            length    : length,
-            numbers   : true,
-            lowercase : false,
-            uppercase : true,
-            symbols   : false,
+            length: length,
+            numbers: true,
+            lowercase: false,
+            uppercase: true,
+            symbols: false,
         });
         return prefix ? prefix + '-' + code : code;
     };
@@ -108,13 +107,12 @@ export class StringUtils {
 
     public static convertPascalCaseToCapitalSnakeCase = (str: string): string => {
         if (str.length > 0) {
-            var outstr = "";
+            var outstr = '';
             for (var i = 0; i < str.length; i++) {
                 var c = str.charAt(i);
                 if (this.isUpperCase(c) && i !== 0) {
                     outstr += '_' + c.toUpperCase();
-                }
-                else {
+                } else {
                     outstr += c.toUpperCase();
                 }
             }
@@ -227,5 +225,4 @@ export class StringUtils {
         }
         return true;
     }
-
 }

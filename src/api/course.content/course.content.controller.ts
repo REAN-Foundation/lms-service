@@ -3,17 +3,16 @@ import { ResponseHandler } from '../../common/handlers/response.handler';
 import { ErrorHandler } from '../../common/error.handling/error.handler';
 import { uuid } from '../../domain.types/miscellaneous/system.types';
 import { CourseContentValidator } from './course.content.validator';
-import { CourseContentService } from '../../database/typeorm/services/course.content.service'
-import { 
-    CourseContentCreateModel, 
-    CourseContentSearchFilters, 
-    CourseContentUpdateModel 
+import { CourseContentService } from '../../database/typeorm/services/course.content.service';
+import {
+    CourseContentCreateModel,
+    CourseContentSearchFilters,
+    CourseContentUpdateModel,
 } from '../../domain.types/course.content.types';
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
 export class CourseContentController {
-
     //#region member variables and constructors
 
     _service: CourseContentService = new CourseContentService();
@@ -55,7 +54,7 @@ export class CourseContentController {
             var filters: CourseContentSearchFilters = await this._validator.validateSearchRequest(request);
             const searchResults = await this._service.search(filters);
             const message = 'Course content records retrieved successfully!';
-            ResponseHandler.success(request, response, message, 200,  { CourseContentRecords: searchResults});
+            ResponseHandler.success(request, response, message, 200, { CourseContentRecords: searchResults });
         } catch (error) {
             ResponseHandler.handleError(request, response, error);
         }
@@ -73,12 +72,12 @@ export class CourseContentController {
         }
     };
 
-    delete = async (request: express.Request, response: express.Response): Promise < void > => {
+    delete = async (request: express.Request, response: express.Response): Promise<void> => {
         try {
             var id: uuid = await this._validator.requestParamAsUUID(request, 'id');
             const result = await this._service.delete(id);
             const message = 'Course content deleted successfully!';
-            ResponseHandler.success(request, response, message, 200, {deleted: result});
+            ResponseHandler.success(request, response, message, 200, { deleted: result });
         } catch (error) {
             ResponseHandler.handleError(request, response, error);
         }
@@ -111,5 +110,4 @@ export class CourseContentController {
             ResponseHandler.handleError(request, response, error);
         }
     };
-
 }

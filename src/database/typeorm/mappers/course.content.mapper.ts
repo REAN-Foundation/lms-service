@@ -4,24 +4,23 @@ import { CourseContentResponseDto } from '../../../domain.types/course.content.t
 ///////////////////////////////////////////////////////////////////////////////////
 
 export class CourseContentMapper {
-
     static toResponseDto = (courseContent: CourseContent): CourseContentResponseDto => {
         if (courseContent == null) {
             return null;
         }
         const dto: CourseContentResponseDto = {
             id: courseContent.id,
-            			Title: courseContent.Title,
-			Description: courseContent.Description,
-			ImageUrl: courseContent.ImageUrl,
-			DurationInMins: courseContent.DurationInMins,
-			ContentType: courseContent.ContentType,
-			ResourceLink: courseContent.ResourceLink,
-			ActionTemplateId: courseContent.ActionTemplateId,
-			Sequence: courseContent.Sequence,
-			CourseId: courseContent.Course?.id,
-			LearningPathId: courseContent.LearningPath?.id,
-			CourseModuleId: courseContent.CourseModule?.id,
+            Title: courseContent.Title,
+            Description: courseContent.Description,
+            ImageUrl: courseContent.ImageUrl,
+            DurationInMins: courseContent.DurationInMins,
+            ContentType: courseContent.ContentType,
+            ResourceLink: courseContent.ResourceLink,
+            ActionTemplateId: courseContent.ActionTemplateId,
+            Sequence: courseContent.Sequence,
+            CourseId: courseContent.Course?.id,
+            LearningPathId: courseContent.LearningPath?.id,
+            CourseModuleId: courseContent.CourseModule?.id,
             /*
 			Course: courseContent.Course? {
 			TenantId: courseContent.Course.TenantId,
@@ -46,9 +45,7 @@ export class CourseContentMapper {
 			CourseId: courseContent.CourseModule.Course?.id,
 			LearningPathId: courseContent.CourseModule.LearningPath?.id,			} : null
 */
-
         };
         return dto;
     };
-
 }

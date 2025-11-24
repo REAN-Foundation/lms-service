@@ -3,47 +3,47 @@ import express from 'express';
 import { ErrorHandler } from '../../common/error.handling/error.handler';
 import BaseValidator from '../base.validator';
 import { TypeUtils } from '../../common/utilities/type.utils';
-import { 
-    CourseContentCreateModel, 
-    CourseContentUpdateModel, 
-    CourseContentSearchFilters 
+import {
+    CourseContentCreateModel,
+    CourseContentUpdateModel,
+    CourseContentSearchFilters,
 } from '../../domain.types/course.content.types';
 import { CourseContentType } from '../../domain.types/enums/course.content.type.enum';
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 export class CourseContentValidator extends BaseValidator {
-
-    public validateCreateRequest = async (request: express.Request)
-        : Promise<CourseContentCreateModel> => {
+    public validateCreateRequest = async (request: express.Request): Promise<CourseContentCreateModel> => {
         try {
             const course_contents = joi.object({
-                                Title: joi.string().max(64).min(0).required(),
-                Description: joi.string().max(64).min(0).required(),
-                ImageUrl: joi.string().max(64).min(0).required(),
+                Title: joi.string().max(64).min(0).required(),
+                Description: joi.string().max(2000).min(0).required(),
+                ImageUrl: joi.string().max(1000).min(0).required(),
                 DurationInMins: joi.number().integer().required(),
-                ContentType: joi.string().valid(...Object.values(CourseContentType)).required(),
-                ResourceLink: joi.string().max(64).min(0).required(),
+                ContentType: joi
+                    .string()
+                    .valid(...Object.values(CourseContentType))
+                    .required(),
+                ResourceLink: joi.string().max(1000).min(0).required(),
                 ActionTemplateId: joi.string().uuid().required(),
                 Sequence: joi.number().integer().required(),
                 CourseId: joi.string().uuid().required(),
                 LearningPathId: joi.string().uuid().required(),
-                CourseModuleId: joi.string().uuid().required()
+                CourseModuleId: joi.string().uuid().required(),
             });
             await course_contents.validateAsync(request.body);
             const model: CourseContentCreateModel = {
-                            Title: request.body.Title ? request.body.Title : null,
-            Description: request.body.Description ? request.body.Description : null,
-            ImageUrl: request.body.ImageUrl ? request.body.ImageUrl : null,
-            DurationInMins: request.body.DurationInMins ? request.body.DurationInMins : null,
-            ContentType: request.body.ContentType ? request.body.ContentType : null,
-            ResourceLink: request.body.ResourceLink ? request.body.ResourceLink : null,
-            ActionTemplateId: request.body.ActionTemplateId ? request.body.ActionTemplateId : null,
-            Sequence: request.body.Sequence ? request.body.Sequence : null,
-            CourseId: request.body.CourseId,
-            LearningPathId: request.body.LearningPathId,
-            CourseModuleId: request.body.CourseModuleId,
+                Title: request.body.Title ? request.body.Title : null,
+                Description: request.body.Description ? request.body.Description : null,
+                ImageUrl: request.body.ImageUrl ? request.body.ImageUrl : null,
+                DurationInMins: request.body.DurationInMins ? request.body.DurationInMins : null,
+                ContentType: request.body.ContentType ? request.body.ContentType : null,
+                ResourceLink: request.body.ResourceLink ? request.body.ResourceLink : null,
+                ActionTemplateId: request.body.ActionTemplateId ? request.body.ActionTemplateId : null,
+                Sequence: request.body.Sequence ? request.body.Sequence : null,
+                CourseId: request.body.CourseId,
+                LearningPathId: request.body.LearningPathId,
+                CourseModuleId: request.body.CourseModuleId,
             };
             return model;
         } catch (error) {
@@ -51,26 +51,27 @@ export class CourseContentValidator extends BaseValidator {
         }
     };
 
-    public validateUpdateRequest = async (request: express.Request)
-        : Promise<CourseContentUpdateModel> => {
+    public validateUpdateRequest = async (request: express.Request): Promise<CourseContentUpdateModel> => {
         try {
             const course_contents = joi.object({
-                                Title: joi.string().max(64).min(0).optional(),
-                Description: joi.string().max(64).min(0).optional(),
-                ImageUrl: joi.string().max(64).min(0).optional(),
+                Title: joi.string().max(64).min(0).optional(),
+                Description: joi.string().max(2000).min(0).optional(),
+                ImageUrl: joi.string().max(1000).min(0).optional(),
                 DurationInMins: joi.number().integer().optional(),
-                ContentType: joi.string().valid(...Object.values(CourseContentType)).optional(),
-                ResourceLink: joi.string().max(64).min(0).optional(),
+                ContentType: joi
+                    .string()
+                    .valid(...Object.values(CourseContentType))
+                    .optional(),
+                ResourceLink: joi.string().max(1000).min(0).optional(),
                 ActionTemplateId: joi.string().uuid().optional(),
                 Sequence: joi.number().integer().optional(),
                 CourseId: joi.string().uuid().optional(),
                 LearningPathId: joi.string().uuid().optional(),
-                CourseModuleId: joi.string().uuid().optional()
+                CourseModuleId: joi.string().uuid().optional(),
             });
             await course_contents.validateAsync(request.body);
-            
-            const model: CourseContentUpdateModel = {};
 
+            const model: CourseContentUpdateModel = {};
 
             if (TypeUtils.hasProperty(request.body, 'Title')) {
                 model.Title = request.body.Title;
@@ -112,28 +113,30 @@ export class CourseContentValidator extends BaseValidator {
         }
     };
 
-    public validateSearchRequest = async (request: express.Request)
-        : Promise<CourseContentSearchFilters> => {
+    public validateSearchRequest = async (request: express.Request): Promise<CourseContentSearchFilters> => {
         try {
             const course_contents = joi.object({
-                                title: joi.string().max(64).min(0).optional(),
-                description: joi.string().max(64).min(0).optional(),
-                imageUrl: joi.string().max(64).min(0).optional(),
+                title: joi.string().max(64).min(0).optional(),
+                description: joi.string().max(2000).min(0).optional(),
+                imageUrl: joi.string().max(1000).min(0).optional(),
                 durationInMins: joi.number().integer().optional(),
-                contentType: joi.string().valid(...Object.values(CourseContentType)).optional(),
-                resourceLink: joi.string().max(64).min(0).optional(),
+                contentType: joi
+                    .string()
+                    .valid(...Object.values(CourseContentType))
+                    .optional(),
+                resourceLink: joi.string().max(1000).min(0).optional(),
                 actionTemplateId: joi.string().uuid().optional(),
                 sequence: joi.number().integer().optional(),
                 courseId: joi.string().uuid().optional(),
                 learningPathId: joi.string().uuid().optional(),
-                courseModuleId: joi.string().uuid().optional()
+                courseModuleId: joi.string().uuid().optional(),
             });
             await course_contents.validateAsync(request.query);
             const filters = this.getSearchFilters(request.query);
             const baseFilters = await this.getBaseSearchFilters(request);
             return {
                 ...baseFilters,
-                ...filters
+                ...filters,
             };
         } catch (error) {
             ErrorHandler.handleValidationError(error);
@@ -141,56 +144,53 @@ export class CourseContentValidator extends BaseValidator {
     };
 
     private getSearchFilters = (query): CourseContentSearchFilters => {
-
         var filters = {};
 
-        
         var title = query.title ? query.title : null;
         if (title != null) {
-             filters['Title'] = title;
+            filters['Title'] = title;
         }
         var description = query.description ? query.description : null;
         if (description != null) {
-             filters['Description'] = description;
+            filters['Description'] = description;
         }
         var imageUrl = query.imageUrl ? query.imageUrl : null;
         if (imageUrl != null) {
-             filters['ImageUrl'] = imageUrl;
+            filters['ImageUrl'] = imageUrl;
         }
         var durationInMins = query.durationInMins ? query.durationInMins : null;
         if (durationInMins != null) {
-             filters['DurationInMins'] = durationInMins;
+            filters['DurationInMins'] = durationInMins;
         }
         var contentType = query.contentType ? query.contentType : null;
         if (contentType != null) {
-             filters['ContentType'] = contentType;
+            filters['ContentType'] = contentType;
         }
         var resourceLink = query.resourceLink ? query.resourceLink : null;
         if (resourceLink != null) {
-             filters['ResourceLink'] = resourceLink;
+            filters['ResourceLink'] = resourceLink;
         }
         var actionTemplateId = query.actionTemplateId ? query.actionTemplateId : null;
         if (actionTemplateId != null) {
-             filters['ActionTemplateId'] = actionTemplateId;
+            filters['ActionTemplateId'] = actionTemplateId;
         }
         var sequence = query.sequence ? query.sequence : null;
         if (sequence != null) {
-             filters['Sequence'] = sequence;
+            filters['Sequence'] = sequence;
         }
         var courseId = query.courseId ? query.courseId : null;
         if (courseId != null) {
-             filters['CourseId'] = courseId;
+            filters['CourseId'] = courseId;
         }
         var learningPathId = query.learningPathId ? query.learningPathId : null;
         if (learningPathId != null) {
-             filters['LearningPathId'] = learningPathId;
+            filters['LearningPathId'] = learningPathId;
         }
         var courseModuleId = query.courseModuleId ? query.courseModuleId : null;
         if (courseModuleId != null) {
-             filters['CourseModuleId'] = courseModuleId;
+            filters['CourseModuleId'] = courseModuleId;
         }
 
         return filters;
     };
-
 }

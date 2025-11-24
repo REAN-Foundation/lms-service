@@ -3,17 +3,16 @@ import { ResponseHandler } from '../../common/handlers/response.handler';
 import { ErrorHandler } from '../../common/error.handling/error.handler';
 import { uuid } from '../../domain.types/miscellaneous/system.types';
 import { CourseModuleValidator } from './course.module.validator';
-import { CourseModuleService } from '../../database/typeorm/services/course.module.service'
-import { 
-    CourseModuleCreateModel, 
-    CourseModuleSearchFilters, 
-    CourseModuleUpdateModel 
+import { CourseModuleService } from '../../database/typeorm/services/course.module.service';
+import {
+    CourseModuleCreateModel,
+    CourseModuleSearchFilters,
+    CourseModuleUpdateModel,
 } from '../../domain.types/course.module.types';
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
 export class CourseModuleController {
-
     //#region member variables and constructors
 
     _service: CourseModuleService = new CourseModuleService();
@@ -52,7 +51,7 @@ export class CourseModuleController {
             var filters: CourseModuleSearchFilters = await this._validator.validateSearchRequest(request);
             const searchResults = await this._service.search(filters);
             const message = 'Course module records retrieved successfully!';
-            ResponseHandler.success(request, response, message, 200,  { CourseModuleRecords: searchResults});
+            ResponseHandler.success(request, response, message, 200, { CourseModuleRecords: searchResults });
         } catch (error) {
             ResponseHandler.handleError(request, response, error);
         }
@@ -70,15 +69,14 @@ export class CourseModuleController {
         }
     };
 
-    delete = async (request: express.Request, response: express.Response): Promise < void > => {
+    delete = async (request: express.Request, response: express.Response): Promise<void> => {
         try {
             var id: uuid = await this._validator.requestParamAsUUID(request, 'id');
             const result = await this._service.delete(id);
             const message = 'Course module deleted successfully!';
-            ResponseHandler.success(request, response, message, 200, {deleted: result});
+            ResponseHandler.success(request, response, message, 200, { deleted: result });
         } catch (error) {
             ResponseHandler.handleError(request, response, error);
         }
     };
-
 }

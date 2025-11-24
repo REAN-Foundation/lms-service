@@ -4,21 +4,20 @@ import { UserLearningResponseDto } from '../../../domain.types/user.learning.typ
 ///////////////////////////////////////////////////////////////////////////////////
 
 export class UserLearningMapper {
-
     static toResponseDto = (userLearning: UserLearning): UserLearningResponseDto => {
         if (userLearning == null) {
             return null;
         }
         const dto: UserLearningResponseDto = {
             id: userLearning.id,
-            			UserId: userLearning.UserId,
-			ActionId: userLearning.ActionId,
-			ProgressStatus: userLearning.ProgressStatus,
-			PercentageCompletion: userLearning.PercentageCompletion,
-			CourseId: userLearning.Course?.id,
-			LearningPathId: userLearning.LearningPath?.id,
-			CourseModuleId: userLearning.CourseModule?.id,
-			CourseContentId: userLearning.CourseContent?.id,
+            UserId: userLearning.UserId,
+            ActionId: userLearning.ActionId,
+            ProgressStatus: userLearning.ProgressStatus,
+            PercentageCompletion: userLearning.PercentageCompletion,
+            CourseId: userLearning.Course?.id,
+            LearningPathId: userLearning.LearningPath?.id,
+            CourseModuleId: userLearning.CourseModule?.id,
+            CourseContentId: userLearning.CourseContent?.id,
             /*
 			Course: userLearning.Course? {
 			TenantId: userLearning.Course.TenantId,
@@ -55,9 +54,7 @@ export class UserLearningMapper {
 			LearningPathId: userLearning.CourseContent.LearningPath?.id,
 			CourseModuleId: userLearning.CourseContent.CourseModule?.id,			} : null
 */
-
         };
         return dto;
     };
-
 }

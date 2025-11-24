@@ -3,17 +3,16 @@ import { ResponseHandler } from '../../common/handlers/response.handler';
 import { ErrorHandler } from '../../common/error.handling/error.handler';
 import { uuid } from '../../domain.types/miscellaneous/system.types';
 import { UserLearningValidator } from './user.learning.validator';
-import { UserLearningService } from '../../database/typeorm/services/user.learning.service'
-import { 
-    UserLearningCreateModel, 
-    UserLearningSearchFilters, 
-    UserLearningUpdateModel 
+import { UserLearningService } from '../../database/typeorm/services/user.learning.service';
+import {
+    UserLearningCreateModel,
+    UserLearningSearchFilters,
+    UserLearningUpdateModel,
 } from '../../domain.types/user.learning.types';
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
 export class UserLearningController {
-
     //#region member variables and constructors
 
     _service: UserLearningService = new UserLearningService();
@@ -55,7 +54,7 @@ export class UserLearningController {
             var filters: UserLearningSearchFilters = await this._validator.validateSearchRequest(request);
             const searchResults = await this._service.search(filters);
             const message = 'User learning records retrieved successfully!';
-            ResponseHandler.success(request, response, message, 200,  { UserLearningRecords: searchResults});
+            ResponseHandler.success(request, response, message, 200, { UserLearningRecords: searchResults });
         } catch (error) {
             ResponseHandler.handleError(request, response, error);
         }
@@ -73,12 +72,12 @@ export class UserLearningController {
         }
     };
 
-    delete = async (request: express.Request, response: express.Response): Promise < void > => {
+    delete = async (request: express.Request, response: express.Response): Promise<void> => {
         try {
             var id: uuid = await this._validator.requestParamAsUUID(request, 'id');
             const result = await this._service.delete(id);
             const message = 'User learning deleted successfully!';
-            ResponseHandler.success(request, response, message, 200, {deleted: result});
+            ResponseHandler.success(request, response, message, 200, { deleted: result });
         } catch (error) {
             ResponseHandler.handleError(request, response, error);
         }
@@ -95,7 +94,8 @@ export class UserLearningController {
                 model.CourseId ?? null,
                 model.ModuleId ?? null,
                 model.ProgressStatus ?? null,
-                model.PercentageCompletion ?? 100);
+                model.PercentageCompletion ?? 100
+            );
             if (userLearning == null) {
                 ErrorHandler.throwInternalServerError('Can not update user learning!');
             }
@@ -127,7 +127,7 @@ export class UserLearningController {
     getUserCourseContents = async (request: express.Request, response: express.Response): Promise<void> => {
         try {
             const userId: uuid = await this._validator.requestParamAsUUID(request, 'userId');
-            const learningPathId: uuid = request.query['learningPathId'] as string ?? null;
+            const learningPathId: uuid = (request.query['learningPathId'] as string) ?? null;
             const contents = await this._service.getUserCourseContents(userId, learningPathId);
             if (contents == null) {
                 ErrorHandler.throwNotFoundError('User course contents cannot be retrieved.');
@@ -202,5 +202,4 @@ export class UserLearningController {
             ResponseHandler.handleError(request, response, error);
         }
     };
-
 }

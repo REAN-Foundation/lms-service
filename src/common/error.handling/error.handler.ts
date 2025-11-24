@@ -6,7 +6,6 @@ import { InputValidationError } from './input.validation.error';
 ////////////////////////////////////////////////////////////////////////
 
 export class ErrorHandler {
-
     static throwInputValidationError = (errorMessages: string[]) => {
         throw new InputValidationError(errorMessages);
     };
@@ -46,12 +45,10 @@ export class ErrorHandler {
     static handleValidationError = (error: any) => {
         if (error.isJoi === true) {
             logger.error(error.message);
-            const errorMessages = error.details.map(x => x.message);
+            const errorMessages = error.details.map((x) => x.message);
             ErrorHandler.throwInputValidationError(errorMessages);
-        }
-        else {
+        } else {
             ErrorHandler.throwInputValidationError(error.message);
         }
     };
-
 }

@@ -3,38 +3,35 @@ import express from 'express';
 import { ErrorHandler } from '../../common/error.handling/error.handler';
 import BaseValidator from '../base.validator';
 import { TypeUtils } from '../../common/utilities/type.utils';
-import { 
-    CourseModuleCreateModel, 
-    CourseModuleUpdateModel, 
-    CourseModuleSearchFilters 
+import {
+    CourseModuleCreateModel,
+    CourseModuleUpdateModel,
+    CourseModuleSearchFilters,
 } from '../../domain.types/course.module.types';
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 export class CourseModuleValidator extends BaseValidator {
-
-    public validateCreateRequest = async (request: express.Request)
-        : Promise<CourseModuleCreateModel> => {
+    public validateCreateRequest = async (request: express.Request): Promise<CourseModuleCreateModel> => {
         try {
             const course_modules = joi.object({
-                                Name: joi.string().max(64).min(0).required(),
-                Description: joi.string().max(64).min(0).required(),
-                ImageUrl: joi.string().max(64).min(0).required(),
+                Name: joi.string().max(64).min(0).required(),
+                Description: joi.string().max(2000).min(0).required(),
+                ImageUrl: joi.string().max(1000).min(0).required(),
                 DurationInMins: joi.number().integer().required(),
                 Sequence: joi.number().integer().required(),
                 CourseId: joi.string().uuid().required(),
-                LearningPathId: joi.string().uuid().required()
+                LearningPathId: joi.string().uuid().required(),
             });
             await course_modules.validateAsync(request.body);
             const model: CourseModuleCreateModel = {
-                            Name: request.body.Name ? request.body.Name : null,
-            Description: request.body.Description ? request.body.Description : null,
-            ImageUrl: request.body.ImageUrl ? request.body.ImageUrl : null,
-            DurationInMins: request.body.DurationInMins ? request.body.DurationInMins : null,
-            Sequence: request.body.Sequence ? request.body.Sequence : null,
-            CourseId: request.body.CourseId,
-            LearningPathId: request.body.LearningPathId,
+                Name: request.body.Name ? request.body.Name : null,
+                Description: request.body.Description ? request.body.Description : null,
+                ImageUrl: request.body.ImageUrl ? request.body.ImageUrl : null,
+                DurationInMins: request.body.DurationInMins ? request.body.DurationInMins : null,
+                Sequence: request.body.Sequence ? request.body.Sequence : null,
+                CourseId: request.body.CourseId,
+                LearningPathId: request.body.LearningPathId,
             };
             return model;
         } catch (error) {
@@ -42,22 +39,20 @@ export class CourseModuleValidator extends BaseValidator {
         }
     };
 
-    public validateUpdateRequest = async (request: express.Request)
-        : Promise<CourseModuleUpdateModel> => {
+    public validateUpdateRequest = async (request: express.Request): Promise<CourseModuleUpdateModel> => {
         try {
             const course_modules = joi.object({
-                                Name: joi.string().max(64).min(0).optional(),
-                Description: joi.string().max(64).min(0).optional(),
-                ImageUrl: joi.string().max(64).min(0).optional(),
+                Name: joi.string().max(64).min(0).optional(),
+                Description: joi.string().max(2000).min(0).optional(),
+                ImageUrl: joi.string().max(1000).min(0).optional(),
                 DurationInMins: joi.number().integer().optional(),
                 Sequence: joi.number().integer().optional(),
                 CourseId: joi.string().uuid().optional(),
-                LearningPathId: joi.string().uuid().optional()
+                LearningPathId: joi.string().uuid().optional(),
             });
             await course_modules.validateAsync(request.body);
-            
-            const model: CourseModuleUpdateModel = {};
 
+            const model: CourseModuleUpdateModel = {};
 
             if (TypeUtils.hasProperty(request.body, 'Name')) {
                 model.Name = request.body.Name;
@@ -87,24 +82,23 @@ export class CourseModuleValidator extends BaseValidator {
         }
     };
 
-    public validateSearchRequest = async (request: express.Request)
-        : Promise<CourseModuleSearchFilters> => {
+    public validateSearchRequest = async (request: express.Request): Promise<CourseModuleSearchFilters> => {
         try {
             const course_modules = joi.object({
-                                name: joi.string().max(64).min(0).optional(),
-                description: joi.string().max(64).min(0).optional(),
-                imageUrl: joi.string().max(64).min(0).optional(),
+                name: joi.string().max(64).min(0).optional(),
+                description: joi.string().max(2000).min(0).optional(),
+                imageUrl: joi.string().max(1000).min(0).optional(),
                 durationInMins: joi.number().integer().optional(),
                 sequence: joi.number().integer().optional(),
                 courseId: joi.string().uuid().optional(),
-                learningPathId: joi.string().uuid().optional()
+                learningPathId: joi.string().uuid().optional(),
             });
             await course_modules.validateAsync(request.query);
             const filters = this.getSearchFilters(request.query);
             const baseFilters = await this.getBaseSearchFilters(request);
             return {
                 ...baseFilters,
-                ...filters
+                ...filters,
             };
         } catch (error) {
             ErrorHandler.handleValidationError(error);
@@ -112,40 +106,37 @@ export class CourseModuleValidator extends BaseValidator {
     };
 
     private getSearchFilters = (query): CourseModuleSearchFilters => {
-
         var filters = {};
 
-        
         var name = query.name ? query.name : null;
         if (name != null) {
-             filters['Name'] = name;
+            filters['Name'] = name;
         }
         var description = query.description ? query.description : null;
         if (description != null) {
-             filters['Description'] = description;
+            filters['Description'] = description;
         }
         var imageUrl = query.imageUrl ? query.imageUrl : null;
         if (imageUrl != null) {
-             filters['ImageUrl'] = imageUrl;
+            filters['ImageUrl'] = imageUrl;
         }
         var durationInMins = query.durationInMins ? query.durationInMins : null;
         if (durationInMins != null) {
-             filters['DurationInMins'] = durationInMins;
+            filters['DurationInMins'] = durationInMins;
         }
         var sequence = query.sequence ? query.sequence : null;
         if (sequence != null) {
-             filters['Sequence'] = sequence;
+            filters['Sequence'] = sequence;
         }
         var courseId = query.courseId ? query.courseId : null;
         if (courseId != null) {
-             filters['CourseId'] = courseId;
+            filters['CourseId'] = courseId;
         }
         var learningPathId = query.learningPathId ? query.learningPathId : null;
         if (learningPathId != null) {
-             filters['LearningPathId'] = learningPathId;
+            filters['LearningPathId'] = learningPathId;
         }
 
         return filters;
     };
-
 }

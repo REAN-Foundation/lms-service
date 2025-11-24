@@ -7,42 +7,38 @@ import mime = require('mime-types');
 ////////////////////////////////////////////////////////////////////////
 
 export class Helper {
-
     static executeCommand = (command: string): Promise<string> => {
         return new Promise(function (resolve, reject) {
-            child_process.exec(
-                command,
-                function (error: Error, standardOutput: string, standardError: string) {
-                    if (error) {
-                        reject();
-                        return;
-                    }
-                    if (standardError) {
-                        reject(standardError);
-                        return;
-                    }
-                    resolve(standardOutput);
+            child_process.exec(command, function (error: Error, standardOutput: string, standardError: string) {
+                if (error) {
+                    reject();
+                    return;
                 }
-            );
+                if (standardError) {
+                    reject(standardError);
+                    return;
+                }
+                resolve(standardOutput);
+            });
         });
     };
 
     static getSessionHeaders = (token: string) => {
         return {
-            'Content-Type'    : 'application/json; charset=utf-8',
-            Accept            : '*/*',
-            'Cache-Control'   : 'no-cache',
-            'Accept-Encoding' : 'gzip, deflate, br',
-            Connection        : 'keep-alive',
-            Authorization     : 'Bearer ' + token,
+            'Content-Type': 'application/json; charset=utf-8',
+            Accept: '*/*',
+            'Cache-Control': 'no-cache',
+            'Accept-Encoding': 'gzip, deflate, br',
+            Connection: 'keep-alive',
+            Authorization: 'Bearer ' + token,
         };
     };
 
     static getNeedleOptions = (headers: any) => {
         return {
-            headers    : headers,
-            compressed : true,
-            json       : true,
+            headers: headers,
+            compressed: true,
+            json: true,
         };
     };
 
@@ -56,11 +52,7 @@ export class Helper {
         return ''; //Return empty prefix
     };
 
-    static getFullName = (
-        prefix: string | null,
-        firstName: string | null,
-        lastName: string | null
-    ): string => {
+    static getFullName = (prefix: string | null, firstName: string | null, lastName: string | null): string => {
         var prefix = TypeUtils.checkAndGetString(prefix) ? prefix + ' ' : '';
         var firstName = TypeUtils.checkAndGetString(firstName) ? firstName + ' ' : '';
         var lastName = TypeUtils.isString(lastName) ? lastName : '';
@@ -79,14 +71,13 @@ export class Helper {
         if (phone.includes('-')) {
             const tokens = phone.split('-');
             let countryCode = tokens[0];
-            let phoneNumber = tokens.length > 2 ? tokens.slice(1, ).join() : tokens[1];
+            let phoneNumber = tokens.length > 2 ? tokens.slice(1).join() : tokens[1];
             countryCode = '+' + TypeUtils.getDigitsOnly(countryCode);
             phoneNumber = TypeUtils.getDigitsOnly(phoneNumber);
             return countryCode + '-' + phoneNumber;
-        }
-        else if (phone.startsWith('+')) {
-            var countryCodes = Countries.map(x => x.PhoneCode);
-            var countryCodesSorted = countryCodes.sort((a,b) => b.length - a.length);
+        } else if (phone.startsWith('+')) {
+            var countryCodes = Countries.map((x) => x.PhoneCode);
+            var countryCodesSorted = countryCodes.sort((a, b) => b.length - a.length);
             for (var cc of countryCodesSorted) {
                 if (phone.startsWith(cc)) {
                     var phoneNumber = phone.substring(cc.length);
@@ -108,7 +99,6 @@ export class Helper {
         }
         const validPhoneNumber = TypeUtils.isString(phoneNumber) && phoneNumber.length >= 9;
         if (!validPhoneNumber) {
-
             //throw new InputValidationError(['Invalid phone number']);
             return Promise.reject('Invalid phone number');
         }
@@ -122,18 +112,17 @@ export class Helper {
     // };
 
     public static getPossiblePhoneNumbers = (phone) => {
-
         if (phone == null) {
             return [];
         }
 
         let phoneTemp = phone;
         phoneTemp = phoneTemp.trim();
-        const countryCodes = Countries.map(x => x.PhoneCode);
+        const countryCodes = Countries.map((x) => x.PhoneCode);
         const searchFors = countryCodes;
         const possiblePhoneNumbers = [phone];
 
-        let phonePrefix = "";
+        let phonePrefix = '';
 
         for (var s of searchFors) {
             if (phoneTemp.startsWith(s)) {
@@ -145,17 +134,15 @@ export class Helper {
 
         if (phonePrefix) {
             possiblePhoneNumbers.push(phonePrefix + phoneTemp);
-            possiblePhoneNumbers.push(phonePrefix + "-" + phoneTemp);
+            possiblePhoneNumbers.push(phonePrefix + '-' + phoneTemp);
             possiblePhoneNumbers.push(phoneTemp);
-
         } else {
-
-            var possibles = Countries.map(x => {
+            var possibles = Countries.map((x) => {
                 return x.PhoneCode + phoneTemp;
             });
             possiblePhoneNumbers.push(...possibles);
-            possibles = Countries.map(x => {
-                return x.PhoneCode + "-" + phoneTemp;
+            possibles = Countries.map((x) => {
+                return x.PhoneCode + '-' + phoneTemp;
             });
             possiblePhoneNumbers.push(...possibles);
             possiblePhoneNumbers.push(phoneTemp);
@@ -170,5 +157,4 @@ export class Helper {
         }
         return mimeType;
     };
-
 }

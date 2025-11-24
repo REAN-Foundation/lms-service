@@ -10,7 +10,7 @@ import {
     UserLearningResponseDto,
     UserLearningSearchFilters,
     UserLearningSearchResults,
-    UserLearningUpdateModel
+    UserLearningUpdateModel,
 } from '../../../domain.types/user.learning.types';
 import { UserLearningMapper } from '../mappers/user.learning.mapper';
 import { LearningPathMapper } from '../mappers/learning.path.mapper';
@@ -26,7 +26,6 @@ import { UserLearning } from '../models/user.learning.entity';
 ///////////////////////////////////////////////////////////////////////
 
 export class UserLearningService extends BaseService {
-
     //#region Repositories
 
     _courseRepository: Repository<Course> = Source.getRepository(Course);
@@ -43,14 +42,11 @@ export class UserLearningService extends BaseService {
 
     //#endregion
 
-    public create = async (createModel: UserLearningCreateModel)
-        : Promise<UserLearningResponseDto> => {
-
+    public create = async (createModel: UserLearningCreateModel): Promise<UserLearningResponseDto> => {
         const course = await this.getCourse(createModel.CourseId);
         const learningPath = await this.getLearningPath(createModel.LearningPathId);
         const courseModule = await this.getCourseModule(createModel.CourseModuleId);
         const courseContent = await this.getCourseContent(createModel.CourseContentId);
-
 
         const userLearning = this._userLearningRepository.create({
             Course: course,
@@ -62,7 +58,6 @@ export class UserLearningService extends BaseService {
             ActionId: createModel.ActionId,
             ProgressStatus: createModel.ProgressStatus,
             PercentageCompletion: createModel.PercentageCompletion,
-
         });
         var record = await this._userLearningRepository.save(userLearning);
         return UserLearningMapper.toResponseDto(record);
@@ -72,7 +67,7 @@ export class UserLearningService extends BaseService {
         try {
             var userLearning = await this._userLearningRepository.findOne({
                 where: {
-                    id: id
+                    id: id,
                 },
                 relations: {
                     // Client: true
@@ -80,8 +75,7 @@ export class UserLearningService extends BaseService {
                     LearningPath: true,
                     CourseModule: true,
                     CourseContent: true,
-
-                }
+                },
             });
             if (!userLearning) {
                 ErrorHandler.throwNotFoundError('User learning not found!');
@@ -93,8 +87,7 @@ export class UserLearningService extends BaseService {
         }
     };
 
-    public search = async (filters: UserLearningSearchFilters)
-        : Promise<UserLearningSearchResults> => {
+    public search = async (filters: UserLearningSearchFilters): Promise<UserLearningSearchResults> => {
         try {
             var search = this.getSearchObject(filters);
             var { search, pageIndex, limit, order, orderByColumn } = this.addSortingAndPagination(search, filters);
@@ -106,7 +99,7 @@ export class UserLearningService extends BaseService {
                 ItemsPerPage: limit,
                 Order: order === 'DESC' ? 'descending' : 'ascending',
                 OrderedBy: orderByColumn,
-                Items: list.map(x => UserLearningMapper.toResponseDto(x)),
+                Items: list.map((x) => UserLearningMapper.toResponseDto(x)),
             };
             return searchResults;
         } catch (error) {
@@ -115,13 +108,12 @@ export class UserLearningService extends BaseService {
         }
     };
 
-    public update = async (id: uuid, model: UserLearningUpdateModel)
-        : Promise<UserLearningResponseDto> => {
+    public update = async (id: uuid, model: UserLearningUpdateModel): Promise<UserLearningResponseDto> => {
         try {
             const userLearning = await this._userLearningRepository.findOne({
                 where: {
-                    id: id
-                }
+                    id: id,
+                },
             });
             if (!userLearning) {
                 ErrorHandler.throwNotFoundError('User learning not found!');
@@ -142,7 +134,6 @@ export class UserLearningService extends BaseService {
             if (model.PercentageCompletion !== undefined && model.PercentageCompletion != null) {
                 userLearning.PercentageCompletion = model.PercentageCompletion;
             }
-
 
             if (model.CourseId != null) {
                 const course = await this.getCourse(model.CourseId);
@@ -180,8 +171,8 @@ export class UserLearningService extends BaseService {
         try {
             var record = await this._userLearningRepository.findOne({
                 where: {
-                    id: id
-                }
+                    id: id,
+                },
             });
             var result = await this._userLearningRepository.remove(record);
             return result != null;
@@ -194,7 +185,6 @@ export class UserLearningService extends BaseService {
     //#region Privates
 
     private getSearchObject = (filters: UserLearningSearchFilters) => {
-
         var search: FindManyOptions<UserLearning> = {
             relations: {
                 // Client: true
@@ -202,10 +192,8 @@ export class UserLearningService extends BaseService {
                 LearningPath: true,
                 CourseModule: true,
                 CourseContent: true,
-
             },
-            where: {
-            },
+            where: {},
             select: {
                 id: true,
                 UserId: true,
@@ -258,7 +246,7 @@ export class UserLearningService extends BaseService {
                 // },
                 CreatedAt: true,
                 UpdatedAt: true,
-            }
+            },
         };
 
         if (filters.UserId) {
@@ -277,7 +265,6 @@ export class UserLearningService extends BaseService {
             search.where['PercentageCompletion'] = Like(`%${filters.PercentageCompletion}%`);
         }
 
-
         return search;
     };
 
@@ -286,8 +273,8 @@ export class UserLearningService extends BaseService {
     private async getCourse(courseId: uuid) {
         const course = await this._courseRepository.findOne({
             where: {
-                id: courseId
-            }
+                id: courseId,
+            },
         });
         if (!course) {
             ErrorHandler.throwNotFoundError('Course cannot be found');
@@ -298,8 +285,8 @@ export class UserLearningService extends BaseService {
     private async getLearningPath(learningPathId: uuid) {
         const learningPath = await this._learningPathRepository.findOne({
             where: {
-                id: learningPathId
-            }
+                id: learningPathId,
+            },
         });
         if (!learningPath) {
             ErrorHandler.throwNotFoundError('LearningPath cannot be found');
@@ -310,8 +297,8 @@ export class UserLearningService extends BaseService {
     private async getCourseModule(courseModuleId: uuid) {
         const courseModule = await this._courseModuleRepository.findOne({
             where: {
-                id: courseModuleId
-            }
+                id: courseModuleId,
+            },
         });
         if (!courseModule) {
             ErrorHandler.throwNotFoundError('CourseModule cannot be found');
@@ -322,8 +309,8 @@ export class UserLearningService extends BaseService {
     private async getCourseContent(courseContentId: uuid) {
         const courseContent = await this._courseContentRepository.findOne({
             where: {
-                id: courseContentId
-            }
+                id: courseContentId,
+            },
         });
         if (!courseContent) {
             ErrorHandler.throwNotFoundError('CourseContent cannot be found');
@@ -341,11 +328,12 @@ export class UserLearningService extends BaseService {
         courseId?: uuid,
         moduleId?: uuid,
         progressStatus?: ProgressStatus,
-        progressPercentage?: number): Promise<UserLearningResponseDto> => {
+        progressPercentage?: number
+    ): Promise<UserLearningResponseDto> => {
         try {
             const content = await this._courseContentRepository.findOne({
                 where: { id: contentId },
-                relations: { Course: true, LearningPath: true, CourseModule: true }
+                relations: { Course: true, LearningPath: true, CourseModule: true },
             });
             if (!content) {
                 ErrorHandler.throwNotFoundError('Course content cannot be retrieved.');
@@ -370,9 +358,9 @@ export class UserLearningService extends BaseService {
             let userLearning = await this._userLearningRepository.findOne({
                 where: {
                     UserId: userId,
-                    CourseContent: { id: contentId }
+                    CourseContent: { id: contentId },
                 },
-                relations: { CourseContent: true }
+                relations: { CourseContent: true },
             });
 
             if (userLearning) {
@@ -405,7 +393,7 @@ export class UserLearningService extends BaseService {
                     Course: course,
                     LearningPath: learningPath,
                     CourseModule: courseModule,
-                    CourseContent: content
+                    CourseContent: content,
                 });
                 userLearning = await this._userLearningRepository.save(userLearning);
             }
@@ -421,16 +409,16 @@ export class UserLearningService extends BaseService {
         try {
             const userLearnings = await this._userLearningRepository.find({
                 where: { UserId: userId },
-                relations: { LearningPath: true }
+                relations: { LearningPath: true },
             });
             if (userLearnings.length === 0) {
                 return [];
             }
-            const uniqueLearningPathIds = [...new Set(userLearnings.map(x => x.LearningPath?.id).filter(Boolean))];
+            const uniqueLearningPathIds = [...new Set(userLearnings.map((x) => x.LearningPath?.id).filter(Boolean))];
             const userLearningPaths = [];
             for (const lpId of uniqueLearningPathIds) {
                 const learningPath = await this._learningPathRepository.findOne({
-                    where: { id: lpId }
+                    where: { id: lpId },
                 });
                 if (learningPath) {
                     userLearningPaths.push(LearningPathMapper.toResponseDto(learningPath));
@@ -451,12 +439,12 @@ export class UserLearningService extends BaseService {
             }
             const userLearnings = await this._userLearningRepository.find({
                 where: where,
-                relations: { CourseContent: true, Course: true, LearningPath: true, CourseModule: true }
+                relations: { CourseContent: true, Course: true, LearningPath: true, CourseModule: true },
             });
             if (userLearnings.length === 0) {
                 return [];
             }
-            const userCourseContents = userLearnings.map(x => {
+            const userCourseContents = userLearnings.map((x) => {
                 return {
                     UserId: x.UserId,
                     ContentId: x.CourseContent?.id,
@@ -483,9 +471,9 @@ export class UserLearningService extends BaseService {
             const userLearnings = await this._userLearningRepository.find({
                 where: {
                     UserId: userId,
-                    LearningPath: { id: learningPathId }
+                    LearningPath: { id: learningPathId },
                 },
-                relations: { CourseContent: true }
+                relations: { CourseContent: true },
             });
             if (userLearnings.length === 0) {
                 return 0;
@@ -494,19 +482,19 @@ export class UserLearningService extends BaseService {
             // Get all courses for this learning path
             const learningPathCourses = await this._learningPathCoursesRepository.find({
                 where: { LearningPath: { id: learningPathId } },
-                relations: { Course: true }
+                relations: { Course: true },
             });
-            const courses = learningPathCourses.map(lpc => lpc.Course);
+            const courses = learningPathCourses.map((lpc) => lpc.Course);
 
             // Get all contents for all courses in this learning path
             const contents = [];
             for (const course of courses) {
                 const modules = await this._courseModuleRepository.find({
-                    where: { Course: { id: course.id } }
+                    where: { Course: { id: course.id } },
                 });
                 for (const module of modules) {
                     const moduleContents = await this._courseContentRepository.find({
-                        where: { CourseModule: { id: module.id } }
+                        where: { CourseModule: { id: module.id } },
                     });
                     contents.push(...moduleContents);
                 }
@@ -519,9 +507,9 @@ export class UserLearningService extends BaseService {
             let numerator = 0;
             const denominator = contents.length;
             for (const content of contents) {
-                const foundUserLearning = userLearnings.find(x => x.CourseContent?.id === content.id);
+                const foundUserLearning = userLearnings.find((x) => x.CourseContent?.id === content.id);
                 if (foundUserLearning) {
-                    numerator += (foundUserLearning.PercentageCompletion / 100);
+                    numerator += foundUserLearning.PercentageCompletion / 100;
                 }
             }
             return numerator / denominator;
@@ -534,7 +522,7 @@ export class UserLearningService extends BaseService {
     public getCourseProgress = async (userId: uuid, courseId: uuid): Promise<number> => {
         try {
             const modules = await this._courseModuleRepository.find({
-                where: { Course: { id: courseId } }
+                where: { Course: { id: courseId } },
             });
             if (modules.length === 0) {
                 return 0;
@@ -556,15 +544,15 @@ export class UserLearningService extends BaseService {
             const userLearnings = await this._userLearningRepository.find({
                 where: {
                     UserId: userId,
-                    CourseModule: { id: moduleId }
+                    CourseModule: { id: moduleId },
                 },
-                relations: { CourseContent: true }
+                relations: { CourseContent: true },
             });
             if (userLearnings.length === 0) {
                 return 0;
             }
             const contents = await this._courseContentRepository.find({
-                where: { CourseModule: { id: moduleId } }
+                where: { CourseModule: { id: moduleId } },
             });
             if (contents.length === 0) {
                 return 0;
@@ -572,9 +560,9 @@ export class UserLearningService extends BaseService {
             let numerator = 0;
             const denominator = contents.length;
             for (const content of contents) {
-                const foundUserLearning = userLearnings.find(x => x.CourseContent?.id === content.id);
+                const foundUserLearning = userLearnings.find((x) => x.CourseContent?.id === content.id);
                 if (foundUserLearning) {
-                    numerator += (foundUserLearning.PercentageCompletion / 100);
+                    numerator += foundUserLearning.PercentageCompletion / 100;
                 }
             }
             return numerator / denominator;
@@ -589,8 +577,8 @@ export class UserLearningService extends BaseService {
             const userLearning = await this._userLearningRepository.findOne({
                 where: {
                     UserId: userId,
-                    CourseContent: { id: contentId }
-                }
+                    CourseContent: { id: contentId },
+                },
             });
             if (userLearning) {
                 return userLearning.PercentageCompletion;
@@ -601,5 +589,4 @@ export class UserLearningService extends BaseService {
             ErrorHandler.throwInternalServerError(error.message, error);
         }
     };
-
 }

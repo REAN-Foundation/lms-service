@@ -1,11 +1,8 @@
-import { BaseSearchFilters } from "../../../domain.types/miscellaneous/base.search.types";
-import { FindManyOptions } from "typeorm";
+import { BaseSearchFilters } from '../../../domain.types/miscellaneous/base.search.types';
+import { FindManyOptions } from 'typeorm';
 
 export class BaseService {
-
-    protected addSortingAndPagination = <T>(
-        search: FindManyOptions<T>, filters: BaseSearchFilters) => {
-
+    protected addSortingAndPagination = <T>(search: FindManyOptions<T>, filters: BaseSearchFilters) => {
         //Sorting
         let orderByColumn = 'CreatedAt';
         if (filters.OrderBy) {
@@ -34,5 +31,4 @@ export class BaseService {
 
         return { search, pageIndex, limit, order, orderByColumn };
     };
-
 }

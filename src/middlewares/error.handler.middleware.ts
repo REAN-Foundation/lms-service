@@ -5,16 +5,17 @@ import { logger } from '../logger/logger';
 ///////////////////////////////////////////////////////////////////////////////////////
 
 export const errorHandlerMiddleware = (
-    error, request: express.Request,
+    error,
+    request: express.Request,
     response: express.Response,
-    next: express.NextFunction) => {
-
+    next: express.NextFunction
+) => {
     const stack = JSON.stringify(error.stack);
     logger.error(stack);
     const errMessage = error.message;
     const responseObject = {
-        Status  : 'failure',
-        Message : errMessage
+        Status: 'failure',
+        Message: errMessage,
     };
     response.status(error).send(responseObject);
 };

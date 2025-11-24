@@ -1,17 +1,13 @@
 import express from 'express';
-import {
-    CourseContentController
-} from './course.content.controller';
+import { CourseContentController } from './course.content.controller';
 
 import { verifyToken } from '../../auth/jwks/JwtAuthenticationMiddleware';
 
 ///////////////////////////////////////////////////////////////////////////////////
 
 export const register = (app: express.Application): void => {
-
     const router = express.Router();
     const controller = new CourseContentController();
-    
 
     // Use the configured auth middleware
     const authMiddleware = verifyToken;

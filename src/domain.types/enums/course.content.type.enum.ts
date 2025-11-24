@@ -1,12 +1,10 @@
-
 export enum CourseContentType {
-        Video = 'Video',
+    Video = 'Video',
     Document = 'Document',
     Url = 'Url',
     Audio = 'Audio',
     Text = 'Text',
     Assessment = 'Assessment',
-
 }
 
 export const CourseContentTypeList: CourseContentType[] = [

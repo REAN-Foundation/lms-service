@@ -4,20 +4,19 @@ import { CourseModuleResponseDto } from '../../../domain.types/course.module.typ
 ///////////////////////////////////////////////////////////////////////////////////
 
 export class CourseModuleMapper {
-
     static toResponseDto = (courseModule: CourseModule): CourseModuleResponseDto => {
         if (courseModule == null) {
             return null;
         }
         const dto: CourseModuleResponseDto = {
             id: courseModule.id,
-            			Name: courseModule.Name,
-			Description: courseModule.Description,
-			ImageUrl: courseModule.ImageUrl,
-			DurationInMins: courseModule.DurationInMins,
-			Sequence: courseModule.Sequence,
-			CourseId: courseModule.Course?.id,
-			LearningPathId: courseModule.LearningPath?.id,
+            Name: courseModule.Name,
+            Description: courseModule.Description,
+            ImageUrl: courseModule.ImageUrl,
+            DurationInMins: courseModule.DurationInMins,
+            Sequence: courseModule.Sequence,
+            CourseId: courseModule.Course?.id,
+            LearningPathId: courseModule.LearningPath?.id,
             /*
 			Course: courseModule.Course? {
 			TenantId: courseModule.Course.TenantId,
@@ -34,9 +33,7 @@ export class CourseModuleMapper {
 			PreferenceWeight: courseModule.LearningPath.PreferenceWeight,
 			Enabled: courseModule.LearningPath.Enabled,			} : null
 */
-
         };
         return dto;
     };
-
 }

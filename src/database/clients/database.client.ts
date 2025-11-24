@@ -1,15 +1,12 @@
-import { inject, injectable } from "tsyringe";
-import { IDatabaseClient } from "./database.client.interface";
-import { DatabaseSchema } from "../database.configs";
+import { inject, injectable } from 'tsyringe';
+import { IDatabaseClient } from './database.client.interface';
+import { DatabaseSchema } from '../database.configs';
 
 //////////////////////////////////////////////////////////////////////////////
 
 @injectable()
 export class DatabaseClient {
-
-    constructor(
-        @inject('IDatabaseClient') private _client: IDatabaseClient,
-    ) {}
+    constructor(@inject('IDatabaseClient') private _client: IDatabaseClient) {}
 
     public createDb = async (schemaType: DatabaseSchema): Promise<boolean> => {
         return await this._client.createDb(schemaType);
@@ -22,5 +19,4 @@ export class DatabaseClient {
     public executeQuery = async (schemaType: DatabaseSchema, query: string): Promise<boolean> => {
         return await this._client.executeQuery(schemaType, query);
     };
-
 }

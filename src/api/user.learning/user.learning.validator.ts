@@ -98,17 +98,17 @@ export class UserLearningValidator extends BaseValidator {
     public validateSearchRequest = async (request: express.Request): Promise<UserLearningSearchFilters> => {
         try {
             const user_learnings = joi.object({
-                UserId: joi.string().uuid().optional(),
-                ActionId: joi.string().uuid().optional(),
-                ProgressStatus: joi
+                userId: joi.string().uuid().optional(),
+                actionId: joi.string().uuid().optional(),
+                progressStatus: joi
                     .string()
                     .valid(...Object.values(ProgressStatus))
                     .optional(),
-                PercentageCompletion: joi.number().integer().optional(),
-                CourseId: joi.string().uuid().optional(),
-                LearningPathId: joi.string().uuid().optional(),
-                CourseModuleId: joi.string().uuid().optional(),
-                CourseContentId: joi.string().uuid().optional(),
+                percentageCompletion: joi.number().integer().optional(),
+                courseId: joi.string().uuid().optional(),
+                learningPathId: joi.string().uuid().optional(),
+                courseModuleId: joi.string().uuid().optional(),
+                courseContentId: joi.string().uuid().optional(),
             });
             await user_learnings.validateAsync(request.query);
             const filters = this.getSearchFilters(request.query);
@@ -125,37 +125,37 @@ export class UserLearningValidator extends BaseValidator {
     private getSearchFilters = (query): UserLearningSearchFilters => {
         var filters = {};
 
-        var UserId = query.UserId ? query.UserId : null;
-        if (UserId != null) {
-            filters['UserId'] = UserId;
+        var userId = query.userId ? query.userId : null;
+        if (userId != null) {
+            filters['UserId'] = userId;
         }
-        var ActionId = query.ActionId ? query.ActionId : null;
-        if (ActionId != null) {
-            filters['ActionId'] = ActionId;
+        var actionId = query.actionId ? query.actionId : null;
+        if (actionId != null) {
+            filters['ActionId'] = actionId;
         }
-        var ProgressStatus = query.ProgressStatus ? query.ProgressStatus : null;
-        if (ProgressStatus != null) {
-            filters['ProgressStatus'] = ProgressStatus;
+        var progressStatus = query.progressStatus ? query.progressStatus : null;
+        if (progressStatus != null) {
+            filters['ProgressStatus'] = progressStatus;
         }
-        var PercentageCompletion = query.PercentageCompletion ? query.PercentageCompletion : null;
-        if (PercentageCompletion != null) {
-            filters['PercentageCompletion'] = PercentageCompletion;
+        var percentageCompletion = query.percentageCompletion ? query.percentageCompletion : null;
+        if (percentageCompletion != null) {
+            filters['PercentageCompletion'] = percentageCompletion;
         }
-        var CourseId = query.CourseId ? query.CourseId : null;
-        if (CourseId != null) {
-            filters['CourseId'] = CourseId;
+        var courseId = query.courseId ? query.courseId : null;
+        if (courseId != null) {
+            filters['CourseId'] = courseId;
         }
-        var LearningPathId = query.LearningPathId ? query.LearningPathId : null;
-        if (LearningPathId != null) {
-            filters['LearningPathId'] = LearningPathId;
+        var learningPathId = query.learningPathId ? query.learningPathId : null;
+        if (learningPathId != null) {
+            filters['LearningPathId'] = learningPathId;
         }
-        var CourseModuleId = query.CourseModuleId ? query.CourseModuleId : null;
-        if (CourseModuleId != null) {
-            filters['CourseModuleId'] = CourseModuleId;
+        var courseModuleId = query.courseModuleId ? query.courseModuleId : null;
+        if (courseModuleId != null) {
+            filters['CourseModuleId'] = courseModuleId;
         }
-        var CourseContentId = query.CourseContentId ? query.CourseContentId : null;
-        if (CourseContentId != null) {
-            filters['CourseContentId'] = CourseContentId;
+        var courseContentId = query.courseContentId ? query.courseContentId : null;
+        if (courseContentId != null) {
+            filters['CourseContentId'] = courseContentId;
         }
 
         return filters;

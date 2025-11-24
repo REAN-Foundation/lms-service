@@ -58,8 +58,7 @@ export class CustomAuthorizer implements IUserAuthorizer {
         return new Promise((resolve, reject) => {
             try {
                 const expiresIn: number = ConfigurationManager.JwtExpiresIn();
-                var seconds = expiresIn.toString() + 's';
-                const token = jwt.sign(user, process.env.USER_ACCESS_TOKEN_SECRET, { expiresIn: seconds });
+                const token = jwt.sign(user, process.env.USER_ACCESS_TOKEN_SECRET, { expiresIn: expiresIn });
                 resolve(token);
             } catch (error) {
                 reject(error);

@@ -1,7 +1,11 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import { logger } from '../../logger/logger';
+// import { IAuthorizer } from '../authorizer.interface';
+// import { Injector } from '../../startup/injector';
 import { PermissionHandler } from './permission.handler';
+import { Injector } from '../../startup/injector';
+// import { RolePrivilegeService } from '../../database/repository.services/role.privilege.service';
 import { ActionScope } from '../auth.types';
 import { ConfigurationManager } from '../../config/configuration.manager';
 import { CurrentUser } from '../../domain.types/miscellaneous/current.user';
@@ -11,10 +15,13 @@ import { IUserAuthorizer } from '../interfaces/user.authorizer.interface';
 
 export class CustomAuthorizer implements IUserAuthorizer {
 
+    // _userService: UserService = null;
+
     _rolePrivilegeService: any = null;
 
     constructor() {
-        // RolePrivilegeService will be injected when needed
+        // this._userService = Injector.Container.resolve(UserService);
+        // this._rolePrivilegeService = Injector.Container.resolve(RolePrivilegeService);
     }
 
     public authorize = async (request: express.Request, response: express.Response | null): Promise<boolean> => {
@@ -58,7 +65,8 @@ export class CustomAuthorizer implements IUserAuthorizer {
         return new Promise((resolve, reject) => {
             try {
                 const expiresIn: number = ConfigurationManager.JwtExpiresIn();
-                const token = jwt.sign(user, process.env.USER_ACCESS_TOKEN_SECRET, { expiresIn: expiresIn });
+                var seconds = expiresIn.toString() + 's';
+                const token = jwt.sign(user, process.env.USER_ACCESS_TOKEN_SECRET, { expiresIn: seconds });
                 resolve(token);
             } catch (error) {
                 reject(error);

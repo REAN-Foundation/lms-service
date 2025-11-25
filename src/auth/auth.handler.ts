@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { Injector } from '../startup/injector';
+// import { uuid } from '../domain.types/miscellaneous/system.types';
 import { AuthOptions, RequestType, ResourceOwnership, ActionScope } from './auth.types';
 import { ResponseHandler } from '../common/handlers/response.handler';
 import { ErrorHandler } from '../common/error.handling/error.handler';
@@ -41,14 +42,21 @@ export class AuthHandler {
         middlewares.push(contextSetter);
 
         //Line-up the auth middleware chain
+        // const clientAppAuth = options.ClientAppAuth ?? false;
         const systemOwnedResource = options.Ownership === ResourceOwnership.System;
         const publicAccess = options.ActionScope === ActionScope.Public;
 
-        // If the request is about the alternate authentication
+        // Client app authentication could be turned off for certain endpoints. e.g. public file downloads, etc.
+        // if (clientAppAuth === true) {
+        //     middlewares.push(ClientAppAuthMiddleware.authenticateClient);
+        // }
+        // else {
+        // If client app authentication is turned off and the alternate authentication is in place.
         // For example, get or renew API key, etc.
         const alternateAuth = options.AlternateAuth ?? false;
         if (alternateAuth) {
             return middlewares;
+    
         }
 
         // If the request is about the user registration. For example, Sign-up, Sign-in, OTP, ... etc.

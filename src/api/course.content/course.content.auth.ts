@@ -44,4 +44,20 @@ export class CourseContentAuth {
         ActionScope: ActionScope.Tenant,
         RequestType: RequestType.GetOne,
     };
+
+    static readonly getContentsForCourse: AuthOptions = {
+        ...DefaultAuthOptions,
+        Context: `${this._baseContext}.GetContentsForCourse`,
+        Ownership: ResourceOwnership.System,
+        ActionScope: ActionScope.Tenant,
+        RequestType: RequestType.GetMany,
+    };
+
+    static readonly getContentsForLearningPath: AuthOptions = {
+        ...DefaultAuthOptions,
+        Context: `${this._baseContext}.GetContentsForLearningPath`,
+        Ownership: ResourceOwnership.System,
+        ActionScope: ActionScope.Tenant,
+        RequestType: RequestType.GetMany,
+    };
 }

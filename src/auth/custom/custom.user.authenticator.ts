@@ -4,6 +4,10 @@ import { logger } from '../../logger/logger';
 import { IUserAuthenticator } from '../interfaces/user.authenticator.interface';
 import { ActionScope, AuthResult } from '../auth.types';
 import { CurrentUser } from '../../domain.types/miscellaneous/current.user';
+// import { ConfigurationManager } from '../../config/configuration.manager';
+
+// import { Injector } from '../../startup/injector';
+// import { NeedleService } from '.././../common/needle.service';
 
 /////////////////////////////////////////////////////////////////////////////////
 
@@ -20,6 +24,18 @@ export class CustomUserAuthenticator implements IUserAuthenticator {
         };
 
         try {
+
+            //////////////////////////////////////////////////////////////////////////////////////////
+            // Already taken care of in the auth.handler
+            // if (!request.clientAppAuth && request.alternateAuth) {
+            //     // Cuurently, this check is applicable only for the specific endpoints, where
+            //     // there is a need to allow alternate authentication mechanism.
+            //     // For example, client-app specific endpoints like renew and get API keys.
+            //     // Here we are using basic authentication (username and password) instead of JWT token.
+            //     // For all other endpoints, this check is not applicable.
+            //     return res;
+            // }
+            //////////////////////////////////////////////////////////////////////////////////////////
 
             const publicAccess = request.actionScope === ActionScope.Public;
             const optionalUserAuth = request.optionalUserAuth;
@@ -46,6 +62,19 @@ export class CustomUserAuthenticator implements IUserAuthenticator {
 
             // synchronous verification
             var user = jwt.verify(token, process.env.USER_ACCESS_TOKEN_SECRET) as JwtPayload;
+
+            // For checking the user exist or not
+            // const apiURL = `/users/validate/${user.UserId}`;
+            // const result = await NeedleService.needleRequestForREAN("get", apiURL);
+
+            // if (result.HTTPCode !== 200 && result.Status !== 'success') {
+            //     res = {
+            //         Result        : false,
+            //         Message       : 'Unauthorized user access',
+            //         HttpErrorCode : 401,
+            //     };
+            //     return res;
+            // }
 
             var sessionId = user.SessionId ?? null;
             if (!sessionId) {
@@ -83,6 +112,71 @@ export class CustomUserAuthenticator implements IUserAuthenticator {
             return res;
         }
     };
+
+    // public rotateUserSessionToken = async (refreshToken: string): Promise<string> => {
+    //     if (!refreshToken) {
+    //         throw ('Invalid refresh token');
+    //     }
+    //     const payload = jwt.verify(refreshToken, process.env.USER_REFRESH_TOKEN_SECRET) as JwtPayload;
+    //     const userId = payload.userId;
+    //     const sessionId = payload.sessionId;
+    //     const tenantId = payload.tenantId;
+    //     var isValidUserLoginSession = await this._userService.isValidUserLoginSession(sessionId);
+    //     if (!isValidUserLoginSession) {
+    //         throw ('Invalid or expired user login session.');
+    //     }
+    //     const user = await this._userService.getById(userId);
+    //     if (!user) {
+    //         throw ('Invalid user');
+    //     }
+    //     const tenant = await this._tenantService.getById(tenantId);
+    //     var currentUser: CurrentUser = {
+    //         UserId        : user.id,
+    //         TenantId      : tenant.id,
+    //         TenantCode    : tenant.Code,
+    //         TenantName    : tenant.Name,
+    //         DisplayName   : user.Person.DisplayName,
+    //         Phone         : user.Person.Phone,
+    //         Email         : user.Person.Email,
+    //         UserName      : user.UserName,
+    //         CurrentRoleId : user.RoleId,
+    //         CurrentRole   : user.Role.RoleName,
+    //         SessionId     : sessionId
+    //     };
+    //     const accessToken = await this.generateUserSessionToken(currentUser);
+    //     return accessToken;
+    // };
+
+    // public generateRefreshToken = async (userId: string, sessionId: string, tenantId: string): Promise<string> => {
+    //     return new Promise((resolve, reject) => {
+    //         try {
+    //             const expiresIn: number = ConfigurationManager.RefreshTokenExpiresInSeconds();
+    //             var seconds = expiresIn.toString() + 's';
+    //             const payload = {
+    //                 userId,
+    //                 sessionId,
+    //                 tenantId
+    //             };
+    //             const token = jwt.sign(payload, process.env.USER_REFRESH_TOKEN_SECRET, { expiresIn: seconds });
+    //             resolve(token);
+    //         } catch (error) {
+    //             reject(error);
+    //         }
+    //     });
+    // };
+
+    // public generateUserSessionToken = async (user: CurrentUser): Promise<string> => {
+    //     return new Promise((resolve, reject) => {
+    //         try {
+    //             const expiresIn: number = ConfigurationManager.AccessTokenExpiresInSeconds();
+    //             var seconds = expiresIn.toString() + 's';
+    //             const token = jwt.sign(user, process.env.USER_ACCESS_TOKEN_SECRET, { expiresIn: seconds });
+    //             resolve(token);
+    //         } catch (error) {
+    //             reject(error);
+    //         }
+    //     });
+    // };
 
 }
 

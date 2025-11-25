@@ -1,4 +1,3 @@
-
 meta {
   name: Post course_modules
   type: http
@@ -11,7 +10,6 @@ post {
   auth: none
 }
 
-
 headers {
   x-api-key: {{API_KEY}}
   x-api-secret: {{API_SECRET}}
@@ -20,9 +18,9 @@ headers {
 }
 
 body:json {
-{
+  {
     "CourseId": "{{COURSE_ID}}",
-    "LearningPathId": "{{LEARNING_PATH_ID}}",
+    "LearningPathId": "5f8b1aa0-6cbf-4734-8b7a-6e718578be43",
     "Name": "Jeanne Kunde",
     "Description": "quia iste",
     "ImageUrl": "https://gertrude.info",
@@ -32,7 +30,6 @@ body:json {
 }
 
 tests {
-
     try {
         var respData = res.getBody();
         bru.setEnvVar('COURSE_MODULE_ID', respData.Data.id);
@@ -45,10 +42,10 @@ tests {
         var jsonRes = res.getBody();
         expect(jsonRes.Status).to.eql('success');
     });
-
+  
     test('Course modules created successfully', function () {
         var jsonRes = res.getBody();
-
+  
         expect(jsonRes.Data).to.have.property('id');
         
         expect(jsonRes.Data).to.have.property('CourseId');
@@ -58,7 +55,7 @@ tests {
         expect(jsonRes.Data).to.have.property('ImageUrl');
         expect(jsonRes.Data).to.have.property('DurationInMins');
         expect(jsonRes.Data).to.have.property('Sequence');
-
+  
         expect(jsonRes.Data.CourseId).equals('{{COURSE_ID}}');
         expect(jsonRes.Data.LearningPathId).equals('{{LEARNING_PATH_ID}}');
         expect(jsonRes.Data.Name).equals("Jeanne Kunde");
@@ -66,7 +63,7 @@ tests {
         expect(jsonRes.Data.ImageUrl).equals("https://gertrude.info");
         expect(jsonRes.Data.DurationInMins).equals(937);
         expect(jsonRes.Data.Sequence).equals(846);
-
+  
     });
     
 }

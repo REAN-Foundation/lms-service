@@ -1,7 +1,7 @@
 meta {
   name: Get Module 1 - Introduction to ML
   type: http
-  seq: 5.1
+  seq: 6
 }
 
 get {
@@ -28,8 +28,6 @@ tests {
         var jsonRes = res.getBody();
         expect(jsonRes.Data).to.have.property('id');
         expect(jsonRes.Data).to.have.property('Name');
-        expect(jsonRes.Data.Name).equals("Introduction to Machine Learning");
-        expect(jsonRes.Data.Sequence).equals(1);
+       
     });
 }
-

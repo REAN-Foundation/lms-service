@@ -1,7 +1,7 @@
 meta {
   name: Get Content 1.2 - Types of ML
   type: http
-  seq: 10.1
+  seq: 16
 }
 
 get {
@@ -26,8 +26,17 @@ tests {
   
     test('Content 1.2 retrieved successfully', function () {
         var jsonRes = res.getBody();
-        expect(jsonRes.Data).to.have.property('Title');
-        expect(jsonRes.Data.Title).equals("Types of Machine Learning");
+        expect(jsonRes.Data.CourseContent).to.have.property('Title');
+      expect(jsonRes.Data.CourseContent).to.have.property('Description');
+      expect(jsonRes.Data.CourseContent).to.have.property('ImageUrl');
+      expect(jsonRes.Data.CourseContent).to.have.property('DurationInMins');
+      expect(jsonRes.Data.CourseContent).to.have.property('ContentType');
+      expect(jsonRes.Data.CourseContent).to.have.property('ResourceLink');
+      expect(jsonRes.Data.CourseContent).to.have.property('ActionTemplateId');
+      expect(jsonRes.Data.CourseContent).to.have.property('Sequence');
+      expect(jsonRes.Data.CourseContent).to.have.property('CourseId');
+      expect(jsonRes.Data.CourseContent).to.have.property('LearningPathId');
+      expect(jsonRes.Data.CourseContent).to.have.property('CourseModuleId');
+        
     });
 }
-

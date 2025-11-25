@@ -1,7 +1,7 @@
 meta {
   name: Get User Learning Progress
   type: http
-  seq: 21.1
+  seq: 33
 }
 
 get {
@@ -26,9 +26,9 @@ tests {
   
     test('User learning retrieved successfully', function () {
         var jsonRes = res.getBody();
-        expect(jsonRes.Data).to.have.property('ProgressStatus');
-        expect(jsonRes.Data.ProgressStatus).equals("InProgress");
-        expect(jsonRes.Data.PercentageCompletion).equals(45);
+        expect(jsonRes.Data.UserLearning).to.have.property('id');
+      
+        expect(jsonRes.Data.UserLearning.ProgressStatus).equals("InProgress");
+        expect(jsonRes.Data.UserLearning.PercentageCompletion).equals(45);
     });
 }
-

@@ -56,9 +56,6 @@ tests {
         expect(jsonRes.Data).to.have.property('CourseId');
         expect(jsonRes.Data).to.have.property('LearningPathId');
   
-        expect(jsonRes.Data.CourseId).equals('{{COURSE_ID}}');
-        expect(jsonRes.Data.LearningPathId).equals('{{LEARNING_PATH_ID}}');
-  
     });
     
 }

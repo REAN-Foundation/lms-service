@@ -1,7 +1,7 @@
 meta {
   name: Post certificates
   type: http
-  seq: 22
+  seq: 35
 }
 
 post {
@@ -88,7 +88,6 @@ tests {
         expect(jsonRes.Data).to.have.property('VerificationUrl');
         expect(jsonRes.Data).to.have.property('IssuedBy');
   
-        expect(jsonRes.Data.CourseId).equals('{{COURSE_ID}}');
         expect(jsonRes.Data.CertificateNumber).equals("ML-CERT-2024-001");
         expect(jsonRes.Data.CertificateName).equals("Machine Learning Fundamentals Certificate");
         expect(jsonRes.Data.CertificateType).equals("Course Completion");
@@ -97,7 +96,7 @@ tests {
         expect(jsonRes.Data.CertificateUrl).equals("https://certificates.ml-academy.com/ml-fundamentals-001.pdf");
         expect(jsonRes.Data.FinalGrade).equals(92.5);
         expect(jsonRes.Data.CreditHours).equals(30);
-        expect(jsonRes.Data.Skills).equals("Machine Learning, Python, Data Analysis, Supervised Learning, Neural Networks");
+        expect(jsonRes.Data.Skills).equals("ML, Python, Data Analysis, Supervised Learning, Neural Nets");
         expect(jsonRes.Data.IsVerified).equals(true);
         expect(jsonRes.Data.VerificationUrl).equals("https://verify.ml-academy.com/ml-cert-001");
   

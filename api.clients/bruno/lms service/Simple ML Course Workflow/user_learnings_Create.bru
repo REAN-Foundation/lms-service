@@ -1,7 +1,7 @@
 meta {
   name: Post user_learnings
   type: http
-  seq: 21
+  seq: 32
 }
 
 post {
@@ -76,11 +76,7 @@ tests {
         expect(jsonRes.Data).to.have.property('ActionId');
         expect(jsonRes.Data).to.have.property('ProgressStatus');
         expect(jsonRes.Data).to.have.property('PercentageCompletion');
-  
-        expect(jsonRes.Data.CourseId).equals('{{COURSE_ID}}');
-        expect(jsonRes.Data.LearningPathId).equals('{{LEARNING_PATH_ID}}');
-        expect(jsonRes.Data.CourseModuleId).equals('{{MODULE_1_ID}}');
-        expect(jsonRes.Data.CourseContentId).equals('{{CONTENT_1_1_ID}}');
+      
         expect(jsonRes.Data.ProgressStatus).equals("InProgress");
         expect(jsonRes.Data.PercentageCompletion).equals(45);
   

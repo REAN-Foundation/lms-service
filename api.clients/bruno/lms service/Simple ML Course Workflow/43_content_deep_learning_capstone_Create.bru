@@ -1,7 +1,7 @@
 meta {
   name: Content 4.3 - Deep Learning Capstone Project
   type: http
-  seq: 20
+  seq: 31
 }
 
 post {
@@ -26,7 +26,7 @@ body:json {
     "Description": "Build end-to-end deep learning app with TensorFlow/PyTorch",
     "ImageUrl": "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb",
     "DurationInMins": 90,
-    "ContentType": "Project",
+    "ContentType": "Audio",
     "ResourceLink": "https://lab.ml-fundamentals.com/capstone-project",
     "ActionTemplateId": "00000000-0000-0000-0000-000000000000",
     "Sequence": 3
@@ -54,8 +54,7 @@ tests {
         var jsonRes = res.getBody();
         expect(jsonRes.Data).to.have.property('id');
         expect(jsonRes.Data.Title).equals("Deep Learning Capstone Project");
-        expect(jsonRes.Data.ContentType).equals("Project");
+        expect(jsonRes.Data.ContentType).equals("Audio");
         expect(jsonRes.Data.Sequence).equals(3);
     });
 }
-

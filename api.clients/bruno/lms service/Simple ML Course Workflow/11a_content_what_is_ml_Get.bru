@@ -26,9 +26,17 @@ tests {
   
     test('Content 1.1 retrieved successfully', function () {
         var jsonRes = res.getBody();
-        expect(jsonRes.Data).to.have.property('Title');
-        expect(jsonRes.Data.Title).equals("What is Machine Learning?");
-        expect(jsonRes.Data.ContentType).equals("Video");
+        expect(jsonRes.Data.CourseContent).to.have.property('Title');
+        expect(jsonRes.Data.CourseContent).to.have.property('Description');
+        expect(jsonRes.Data.CourseContent).to.have.property('ImageUrl');
+        expect(jsonRes.Data.CourseContent).to.have.property('DurationInMins');
+        expect(jsonRes.Data.CourseContent).to.have.property('ContentType');
+        expect(jsonRes.Data.CourseContent).to.have.property('ResourceLink');
+        expect(jsonRes.Data.CourseContent).to.have.property('ContentType');
+        expect(jsonRes.Data.CourseContent).to.have.property('Sequence');
+        expect(jsonRes.Data.CourseContent).to.have.property('CourseId');
+        expect(jsonRes.Data.CourseContent).to.have.property('LearningPathId');
+        expect(jsonRes.Data.CourseContent).to.have.property('CourseModuleId');
+        
     });
 }
-

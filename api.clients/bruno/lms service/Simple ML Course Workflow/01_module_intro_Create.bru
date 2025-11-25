@@ -58,10 +58,10 @@ tests {
   
         expect(jsonRes.Data).to.have.property('id');
         expect(jsonRes.Data).to.have.property('Name');
+      
         expect(jsonRes.Data.Name).equals("Introduction to Machine Learning");
         expect(jsonRes.Data.Sequence).equals(1);
   
     });
     
 }
-

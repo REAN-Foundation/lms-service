@@ -1,4 +1,3 @@
-
 meta {
   name: Search courses
   type: http
@@ -6,11 +5,17 @@ meta {
 }
 
 get {
-  url: {{BASE_URL}}/courses/search?tenantId=Ut qui quaerat.&name=Est et enim.&description=Et veniam velit.&imageUrl=Consequuntur assumenda et.&durationInDays=6069
+  url: {{BASE_URL}}/courses/search?durationInDays=30
   body: json
   auth: none
 }
 
+params:query {
+  durationInDays: 30
+  ~name: Tricia Donnelly
+  ~description: et quos
+  ~imageUrl: http://zack.org
+}
 
 headers {
   x-api-key: {{API_KEY}}
@@ -20,13 +25,12 @@ headers {
 }
 
 tests {
-
     test('Request is successfully', function () {
         expect(res.getStatus()).to.equal(200);
         var jsonRes = res.getBody();
         expect(jsonRes.Status).to.eql('success');
     });
-
+  
     test('Courses records retrieved successfully', function () {
          var jsonRes = res.getBody();
           expect(jsonRes.Data).to.have.property('Items');

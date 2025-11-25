@@ -1,4 +1,3 @@
-
 meta {
   name: Search course_modules
   type: http
@@ -6,11 +5,18 @@ meta {
 }
 
 get {
-  url: {{BASE_URL}}/course-modules/search?name=Quia ut voluptates.&description=Exercitationem laborum autem.&imageUrl=Et facilis sed.&durationInMins=2542&sequence=3074
+  url: {{BASE_URL}}/course-modules/search?name=Jeanne Kunde
   body: json
   auth: none
 }
 
+params:query {
+  name: Jeanne Kunde
+  ~description: 
+  ~durationInMins: 
+  ~courseId: 597e9acd-85f6-4e2f-a48b-52bb386669fe
+  ~learningPathId: 5f8b1aa0-6cbf-4734-8b7a-6e718578be43
+}
 
 headers {
   x-api-key: {{API_KEY}}
@@ -20,13 +26,12 @@ headers {
 }
 
 tests {
-
     test('Request is successfully', function () {
         expect(res.getStatus()).to.equal(200);
         var jsonRes = res.getBody();
         expect(jsonRes.Status).to.eql('success');
     });
-
+  
     test('Course modules records retrieved successfully', function () {
          var jsonRes = res.getBody();
           expect(jsonRes.Data).to.have.property('Items');

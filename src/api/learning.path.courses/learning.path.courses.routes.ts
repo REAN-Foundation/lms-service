@@ -9,7 +9,7 @@ export const register = (app: express.Application): void => {
     const router = express.Router();
     const controller = new LearningPathCoursesController();
 
-    router.post('/', auth(LearningPathCoursesAuth.create), controller.create);
+    router.post('/', controller.create);
     router.get('/search', auth(LearningPathCoursesAuth.search), controller.search);
     router.get('/:id', auth(LearningPathCoursesAuth.getById), controller.getById);
     router.put('/:id', auth(LearningPathCoursesAuth.update), controller.update);

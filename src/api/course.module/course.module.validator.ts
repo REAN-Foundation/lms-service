@@ -16,10 +16,10 @@ export class CourseModuleValidator extends BaseValidator {
         try {
             const course_modules = joi.object({
                 Name: joi.string().max(64).min(0).required(),
-                Description: joi.string().max(2000).min(0).required(),
-                ImageUrl: joi.string().max(1000).min(0).required(),
-                DurationInMins: joi.number().integer().required(),
-                Sequence: joi.number().integer().required(),
+                Description: joi.string().max(2000).min(0),
+                ImageUrl: joi.string().max(1000).min(0),
+                DurationInMins: joi.number().integer(),
+                Sequence: joi.number().integer(),
                 CourseId: joi.string().uuid().required(),
                 LearningPathId: joi.string().uuid().required(),
             });
@@ -92,6 +92,16 @@ export class CourseModuleValidator extends BaseValidator {
                 sequence: joi.number().integer().optional(),
                 courseId: joi.string().uuid().optional(),
                 learningPathId: joi.string().uuid().optional(),
+                pageIndex    : joi.number().min(0).optional(),
+                itemsPerPage : joi.number().min(1).optional(),
+                orderBy      : joi.string().max(256).optional(),
+                order        : joi
+                                    .string()
+                                    .valid('ascending', 'descending')
+                                    .optional()
+                                    .error(() => new Error("order param: 'ascending' and 'descending' are the only valid values.")),
+                        
+                            
             });
             await course_modules.validateAsync(request.query);
             const filters = this.getSearchFilters(request.query);

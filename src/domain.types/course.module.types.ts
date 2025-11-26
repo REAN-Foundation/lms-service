@@ -5,13 +5,13 @@ export interface CourseModuleCreateModel {
     /** @minLength 0 @maxLength 64 */
     Name: string;
     /** @minLength 0 @maxLength 2000 */
-    Description: string;
+    Description?: string;
     /** @minLength 0 @maxLength 1000 */
-    ImageUrl: string;
-    DurationInMins: number;
-    Sequence: number;
-    CourseId: uuid;
-    LearningPathId: uuid;
+    ImageUrl?: string;
+    DurationInMins?: number;
+    Sequence?: number;
+    CourseId?: uuid;
+    LearningPathId?: uuid;
 }
 
 export interface CourseModuleUpdateModel {

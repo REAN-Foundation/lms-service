@@ -9,11 +9,11 @@ export const register = (app: express.Application): void => {
     const router = express.Router();
     const controller = new CourseModuleController();
 
-    router.post('/', auth(CourseModuleAuth.create), controller.create);
-    router.get('/search', auth(CourseModuleAuth.search), controller.search);
-    router.get('/:id', auth(CourseModuleAuth.getById), controller.getById);
-    router.put('/:id', auth(CourseModuleAuth.update), controller.update);
-    router.delete('/:id', auth(CourseModuleAuth.delete), controller.delete);
+    router.post('/', controller.create);
+    router.get('/search', controller.search);
+    router.get('/:id', controller.getById);
+    router.put('/:id', controller.update);
+    router.delete('/:id', controller.delete);
 
     app.use('/api/v1/course-modules', router);
 };

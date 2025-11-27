@@ -4,9 +4,7 @@ import { ProgressStatus } from './enums/progress.status.enum';
 
 export interface UserLearningCreateModel {
     UserId: uuid;
-    ActionId: uuid;
     ProgressStatus: ProgressStatus;
-    PercentageCompletion: number;
     CourseId: uuid;
     LearningPathId: uuid;
     CourseModuleId: uuid;
@@ -15,9 +13,7 @@ export interface UserLearningCreateModel {
 
 export interface UserLearningUpdateModel {
     UserId?: uuid;
-    ActionId?: uuid;
     ProgressStatus?: ProgressStatus;
-    PercentageCompletion?: number;
     CourseId?: uuid;
     LearningPathId?: uuid;
     CourseModuleId?: uuid;
@@ -27,9 +23,7 @@ export interface UserLearningUpdateModel {
 export interface UserLearningResponseDto {
     id: uuid;
     UserId: uuid;
-    ActionId: uuid;
     ProgressStatus: ProgressStatus;
-    PercentageCompletion: number;
     CourseId: uuid;
     LearningPathId: uuid;
     CourseModuleId: uuid;
@@ -38,9 +32,7 @@ export interface UserLearningResponseDto {
 
 export interface UserLearningSearchFilters extends BaseSearchFilters {
     UserId?: uuid;
-    ActionId?: uuid;
     ProgressStatus?: ProgressStatus;
-    PercentageCompletion?: number;
     CourseId?: uuid;
     LearningPathId?: uuid;
     CourseModuleId?: uuid;

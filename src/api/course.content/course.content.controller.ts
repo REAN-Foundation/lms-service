@@ -97,17 +97,4 @@ export class CourseContentController {
         }
     };
 
-    getContentsForLearningPath = async (request: express.Request, response: express.Response): Promise<void> => {
-        try {
-            const learningPathId: uuid = await this._validator.requestParamAsUUID(request, 'learningPathId');
-            const courseContents = await this._service.getContentsForLearningPath(learningPathId);
-            if (courseContents == null) {
-                ErrorHandler.throwNotFoundError('Course contents not found.');
-            }
-            const message = 'Course contents for learning path retrieved successfully!';
-            ResponseHandler.success(request, response, message, 200, { CourseContents: courseContents });
-        } catch (error) {
-            ResponseHandler.handleError(request, response, error);
-        }
-    };
 }

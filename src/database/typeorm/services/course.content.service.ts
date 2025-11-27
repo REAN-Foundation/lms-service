@@ -13,7 +13,6 @@ import {
 } from '../../../domain.types/course.content.types';
 import { CourseContentMapper } from '../mappers/course.content.mapper';
 import { Course } from '../models/course.entity';
-import { LearningPath } from '../models/learning.path.entity';
 import { CourseModule } from '../models/course.module.entity';
 import { UserLearning } from '../models/user.learning.entity';
 
@@ -26,8 +25,6 @@ export class CourseContentService extends BaseService {
 
     _courseRepository: Repository<Course> = Source.getRepository(Course);
 
-    _learningPathRepository: Repository<LearningPath> = Source.getRepository(LearningPath);
-
     _courseModuleRepository: Repository<CourseModule> = Source.getRepository(CourseModule);
 
     _userLearningRepository: Repository<UserLearning> = Source.getRepository(UserLearning);
@@ -38,12 +35,10 @@ export class CourseContentService extends BaseService {
 
     public create = async (createModel: CourseContentCreateModel): Promise<CourseContentResponseDto> => {
         const course = await this.getCourse(createModel.CourseId);
-        const learningPath = await this.getLearningPath(createModel.LearningPathId);
         const courseModule = await this.getCourseModule(createModel.CourseModuleId);
 
         const courseContent = this._courseContentRepository.create({
             Course: course,
-            LearningPath: learningPath,
             CourseModule: courseModule,
 
             Title: createModel.Title,
@@ -68,7 +63,6 @@ export class CourseContentService extends BaseService {
                 relations: {
                     // Client: true
                     Course: true,
-                    LearningPath: true,
                     CourseModule: true,
                 },
             });
@@ -151,11 +145,6 @@ export class CourseContentService extends BaseService {
                 courseContent.Course = course;
             }
 
-            if (model.LearningPathId != null) {
-                const learningPath = await this.getLearningPath(model.LearningPathId);
-                courseContent.LearningPath = learningPath;
-            }
-
             if (model.CourseModuleId != null) {
                 const courseModule = await this.getCourseModule(model.CourseModuleId);
                 courseContent.CourseModule = courseModule;
@@ -192,20 +181,7 @@ export class CourseContentService extends BaseService {
         try {
             const contents = await this._courseContentRepository.find({
                 where: { Course: { id: courseId } },
-                relations: { Course: true, LearningPath: true, CourseModule: true },
-            });
-            return contents.map((x) => CourseContentMapper.toResponseDto(x));
-        } catch (error) {
-            logger.error(error.message);
-            ErrorHandler.throwInternalServerError(error.message, error);
-        }
-    };
-
-    public getContentsForLearningPath = async (learningPathId: uuid): Promise<CourseContentResponseDto[]> => {
-        try {
-            const contents = await this._courseContentRepository.find({
-                where: { LearningPath: { id: learningPathId } },
-                relations: { Course: true, LearningPath: true, CourseModule: true },
+                relations: { Course: true, CourseModule: true },
             });
             return contents.map((x) => CourseContentMapper.toResponseDto(x));
         } catch (error) {
@@ -221,7 +197,6 @@ export class CourseContentService extends BaseService {
             relations: {
                 // Client: true
                 Course: true,
-                LearningPath: true,
                 CourseModule: true,
             },
             where: {},
@@ -243,16 +218,6 @@ export class CourseContentService extends BaseService {
                     Description: true,
                     ImageUrl: true,
                     DurationInDays: true,
-                },
-                LearningPath: {
-                    id: true,
-                    TenantId: true,
-                    Name: true,
-                    Description: true,
-                    ImageUrl: true,
-                    DurationInDays: true,
-                    PreferenceWeight: true,
-                    Enabled: true,
                 },
                 CourseModule: {
                     id: true,
@@ -320,18 +285,6 @@ export class CourseContentService extends BaseService {
             ErrorHandler.throwNotFoundError('Course cannot be found');
         }
         return course;
-    }
-
-    private async getLearningPath(learningPathId: uuid) {
-        const learningPath = await this._learningPathRepository.findOne({
-            where: {
-                id: learningPathId,
-            },
-        });
-        if (!learningPath) {
-            ErrorHandler.throwNotFoundError('LearningPath cannot be found');
-        }
-        return learningPath;
     }
 
     private async getCourseModule(courseModuleId: uuid) {

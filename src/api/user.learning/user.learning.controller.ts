@@ -89,12 +89,10 @@ export class UserLearningController {
             const userLearning = await this._service.updateUserLearning(
                 model.UserId,
                 model.ContentId,
-                model.ActionId ?? null,
                 model.LearningPathId ?? null,
                 model.CourseId ?? null,
                 model.ModuleId ?? null,
                 model.ProgressStatus ?? null,
-                model.PercentageCompletion ?? 100
             );
             if (userLearning == null) {
                 ErrorHandler.throwInternalServerError('Can not update user learning!');

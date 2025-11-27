@@ -55,9 +55,7 @@ export class UserLearningService extends BaseService {
             CourseContent: courseContent,
 
             UserId: createModel.UserId,
-            ActionId: createModel.ActionId,
             ProgressStatus: createModel.ProgressStatus,
-            PercentageCompletion: createModel.PercentageCompletion,
         });
         var record = await this._userLearningRepository.save(userLearning);
         return UserLearningMapper.toResponseDto(record);
@@ -123,17 +121,11 @@ export class UserLearningService extends BaseService {
                 userLearning.UserId = model.UserId;
             }
 
-            if (model.ActionId !== undefined && model.ActionId != null) {
-                userLearning.ActionId = model.ActionId;
-            }
-
             if (model.ProgressStatus !== undefined && model.ProgressStatus != null) {
                 userLearning.ProgressStatus = model.ProgressStatus;
             }
 
-            if (model.PercentageCompletion !== undefined && model.PercentageCompletion != null) {
-                userLearning.PercentageCompletion = model.PercentageCompletion;
-            }
+      
 
             if (model.CourseId != null) {
                 const course = await this.getCourse(model.CourseId);
@@ -197,9 +189,7 @@ export class UserLearningService extends BaseService {
             select: {
                 id: true,
                 UserId: true,
-                ActionId: true,
                 ProgressStatus: true,
-                PercentageCompletion: true,
 
                 Course: {
                     id: true,
@@ -253,17 +243,11 @@ export class UserLearningService extends BaseService {
             search.where['UserId'] = Like(`%${filters.UserId}%`);
         }
 
-        if (filters.ActionId) {
-            search.where['ActionId'] = Like(`%${filters.ActionId}%`);
-        }
-
         if (filters.ProgressStatus) {
             search.where['ProgressStatus'] = Like(`%${filters.ProgressStatus}%`);
         }
 
-        if (filters.PercentageCompletion) {
-            search.where['PercentageCompletion'] = Like(`%${filters.PercentageCompletion}%`);
-        }
+  
 
         return search;
     };
@@ -323,7 +307,6 @@ export class UserLearningService extends BaseService {
     public updateUserLearning = async (
         userId: uuid,
         contentId: uuid,
-        actionId?: uuid,
         learningPathId?: uuid,
         courseId?: uuid,
         moduleId?: uuid,
@@ -333,7 +316,7 @@ export class UserLearningService extends BaseService {
         try {
             const content = await this._courseContentRepository.findOne({
                 where: { id: contentId },
-                relations: { Course: true, LearningPath: true, CourseModule: true },
+                relations: { Course: true, CourseModule: true },
             });
             if (!content) {
                 ErrorHandler.throwNotFoundError('Course content cannot be retrieved.');
@@ -343,9 +326,6 @@ export class UserLearningService extends BaseService {
             }
             if (!courseId) {
                 courseId = content.Course?.id;
-            }
-            if (!learningPathId) {
-                learningPathId = content.LearningPath?.id;
             }
             if (!progressStatus) {
                 progressStatus = ProgressStatus.InProgress;
@@ -364,9 +344,8 @@ export class UserLearningService extends BaseService {
             });
 
             if (userLearning) {
-                userLearning.ActionId = actionId ?? userLearning.ActionId;
                 userLearning.ProgressStatus = progressStatus;
-                userLearning.PercentageCompletion = progressPercentage;
+                userLearning.PercentageCompletion = progressPercentage
                 if (moduleId) {
                     const module = await this.getCourseModule(moduleId);
                     userLearning.CourseModule = module;
@@ -382,16 +361,15 @@ export class UserLearningService extends BaseService {
                 userLearning = await this._userLearningRepository.save(userLearning);
             } else {
                 const course = courseId ? await this.getCourse(courseId) : content.Course;
-                const learningPath = learningPathId ? await this.getLearningPath(learningPathId) : content.LearningPath;
+                // const learningPath = learningPathId ? await this.getLearningPath(learningPathId) : content.LearningPath;
                 const courseModule = moduleId ? await this.getCourseModule(moduleId) : content.CourseModule;
 
                 userLearning = this._userLearningRepository.create({
                     UserId: userId,
-                    ActionId: actionId,
                     ProgressStatus: progressStatus,
                     PercentageCompletion: progressPercentage,
                     Course: course,
-                    LearningPath: learningPath,
+                    // LearningPath: learningPath,
                     CourseModule: courseModule,
                     CourseContent: content,
                 });

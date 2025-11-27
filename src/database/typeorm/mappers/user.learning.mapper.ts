@@ -11,9 +11,7 @@ export class UserLearningMapper {
         const dto: UserLearningResponseDto = {
             id: userLearning.id,
             UserId: userLearning.UserId,
-            ActionId: userLearning.ActionId,
             ProgressStatus: userLearning.ProgressStatus,
-            PercentageCompletion: userLearning.PercentageCompletion,
             CourseId: userLearning.Course?.id,
             LearningPathId: userLearning.LearningPath?.id,
             CourseModuleId: userLearning.CourseModule?.id,

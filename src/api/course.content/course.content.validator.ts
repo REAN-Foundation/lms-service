@@ -28,7 +28,6 @@ export class CourseContentValidator extends BaseValidator {
                 ActionTemplateId: joi.string().uuid().required(),
                 Sequence: joi.number().integer().required(),
                 CourseId: joi.string().uuid().required(),
-                LearningPathId: joi.string().uuid().required(),
                 CourseModuleId: joi.string().uuid().required(),
             });
             await course_contents.validateAsync(request.body);
@@ -42,7 +41,6 @@ export class CourseContentValidator extends BaseValidator {
                 ActionTemplateId: request.body.ActionTemplateId ? request.body.ActionTemplateId : null,
                 Sequence: request.body.Sequence ? request.body.Sequence : null,
                 CourseId: request.body.CourseId,
-                LearningPathId: request.body.LearningPathId,
                 CourseModuleId: request.body.CourseModuleId,
             };
             return model;
@@ -66,7 +64,6 @@ export class CourseContentValidator extends BaseValidator {
                 ActionTemplateId: joi.string().uuid().optional(),
                 Sequence: joi.number().integer().optional(),
                 CourseId: joi.string().uuid().optional(),
-                LearningPathId: joi.string().uuid().optional(),
                 CourseModuleId: joi.string().uuid().optional(),
             });
             await course_contents.validateAsync(request.body);
@@ -100,9 +97,6 @@ export class CourseContentValidator extends BaseValidator {
             if (TypeUtils.hasProperty(request.body, 'CourseId')) {
                 model.CourseId = request.body.CourseId;
             }
-            if (TypeUtils.hasProperty(request.body, 'LearningPathId')) {
-                model.LearningPathId = request.body.LearningPathId;
-            }
             if (TypeUtils.hasProperty(request.body, 'CourseModuleId')) {
                 model.CourseModuleId = request.body.CourseModuleId;
             }
@@ -128,7 +122,6 @@ export class CourseContentValidator extends BaseValidator {
                 actionTemplateId: joi.string().uuid().optional(),
                 sequence: joi.number().integer().optional(),
                 courseId: joi.string().uuid().optional(),
-                learningPathId: joi.string().uuid().optional(),
                 courseModuleId: joi.string().uuid().optional(),
             });
             await course_contents.validateAsync(request.query);
@@ -181,10 +174,6 @@ export class CourseContentValidator extends BaseValidator {
         var courseId = query.courseId ? query.courseId : null;
         if (courseId != null) {
             filters['CourseId'] = courseId;
-        }
-        var learningPathId = query.learningPathId ? query.learningPathId : null;
-        if (learningPathId != null) {
-            filters['LearningPathId'] = learningPathId;
         }
         var courseModuleId = query.courseModuleId ? query.courseModuleId : null;
         if (courseModuleId != null) {

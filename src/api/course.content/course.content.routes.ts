@@ -10,8 +10,6 @@ export const register = (app: express.Application): void => {
     const controller = new CourseContentController();
 
     router.post('/', controller.create);
-    router.get('/by-course/:courseId', controller.getContentsForCourse);
-    router.get('/by-learning-path/:learningPathId', controller.getContentsForLearningPath);
     router.get('/search', controller.search);
     router.get('/:id', controller.getById);
     router.put('/:id', controller.update);

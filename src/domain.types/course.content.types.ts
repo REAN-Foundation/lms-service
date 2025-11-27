@@ -16,7 +16,6 @@ export interface CourseContentCreateModel {
     ActionTemplateId: uuid;
     Sequence: number;
     CourseId: uuid;
-    LearningPathId: uuid;
     CourseModuleId: uuid;
 }
 
@@ -34,7 +33,6 @@ export interface CourseContentUpdateModel {
     ActionTemplateId?: uuid;
     Sequence?: number;
     CourseId?: uuid;
-    LearningPathId?: uuid;
     CourseModuleId?: uuid;
 }
 
@@ -49,7 +47,6 @@ export interface CourseContentResponseDto {
     ActionTemplateId: uuid;
     Sequence: number;
     CourseId: uuid;
-    LearningPathId: uuid;
     CourseModuleId: uuid;
 }
 
@@ -67,7 +64,6 @@ export interface CourseContentSearchFilters extends BaseSearchFilters {
     ActionTemplateId?: uuid;
     Sequence?: number;
     courseId?: uuid;
-    learningPathId?: uuid;
     courseModuleId?: uuid;
 }
 

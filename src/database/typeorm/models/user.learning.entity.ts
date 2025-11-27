@@ -32,9 +32,6 @@ export class UserLearning {
     @Column({ type: 'uuid', nullable: true })
     UserId: string;
 
-    @Column({ type: 'uuid', nullable: true })
-    ActionId: string;
-
     @Column({ type: 'enum', enum: ProgressStatus, nullable: true })
     ProgressStatus: ProgressStatus;
 

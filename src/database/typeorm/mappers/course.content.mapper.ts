@@ -19,7 +19,6 @@ export class CourseContentMapper {
             ActionTemplateId: courseContent.ActionTemplateId,
             Sequence: courseContent.Sequence,
             CourseId: courseContent.Course?.id,
-            LearningPathId: courseContent.LearningPath?.id,
             CourseModuleId: courseContent.CourseModule?.id,
             /*
 			Course: courseContent.Course? {
@@ -42,8 +41,7 @@ export class CourseContentMapper {
 			ImageUrl: courseContent.CourseModule.ImageUrl,
 			DurationInMins: courseContent.CourseModule.DurationInMins,
 			Sequence: courseContent.CourseModule.Sequence,
-			CourseId: courseContent.CourseModule.Course?.id,
-			LearningPathId: courseContent.CourseModule.LearningPath?.id,			} : null
+			CourseId: courseContent.CourseModule.Course?.id,			} : null
 */
         };
         return dto;

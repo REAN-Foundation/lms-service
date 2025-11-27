@@ -22,9 +22,11 @@ export class CourseModuleUpdateModel {
     @IsOptional()
     @IsString()
     Name?: string;
+
     @IsOptional()
     @IsString()
     Description?: string;
+    
     @IsOptional()
     @IsString()
     ImageUrl?: string;

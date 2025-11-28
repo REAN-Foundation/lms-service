@@ -17,17 +17,18 @@ export class CourseContentValidator extends BaseValidator {
         try {
             const course_contents = joi.object({
                 Title: joi.string().max(64).min(0).required(),
-                Description: joi.string().max(2000).min(0).required(),
-                ImageUrl: joi.string().max(1000).min(0).required(),
-                DurationInMins: joi.number().integer().required(),
+                Description: joi.string().max(2000).min(0).optional(),
+                ImageUrl: joi.string().max(1000).min(0).optional(),
+                DurationInMins: joi.number().integer().optional(),
                 ContentType: joi
                     .string()
                     .valid(...Object.values(CourseContentType))
                     .required(),
-                ResourceLink: joi.string().max(1000).min(0).required(),
-                ActionTemplateId: joi.string().uuid().required(),
-                Sequence: joi.number().integer().required(),
-                CourseId: joi.string().uuid().required(),
+                ResourceLink: joi.string().max(1000).min(0).optional(),
+                ActionTemplateId: joi.string().uuid().optional(),
+                Sequence: joi.number().integer().optional(),
+                CourseId: joi.string().uuid().optional(),
+                LearningPathId: joi.string().uuid().required(),
                 CourseModuleId: joi.string().uuid().required(),
             });
             await course_contents.validateAsync(request.body);
@@ -123,6 +124,15 @@ export class CourseContentValidator extends BaseValidator {
                 sequence: joi.number().integer().optional(),
                 courseId: joi.string().uuid().optional(),
                 courseModuleId: joi.string().uuid().optional(),
+                pageIndex: joi.number().min(0).optional(),
+                itemsPerPage: joi.number().min(1).optional(),
+                orderBy: joi.string().max(256).optional(),
+                order: joi
+                    .string()
+                    .valid('ascending', 'descending')
+                    .optional()
+                    .error(() => new Error("order param: 'ascending' and 'descending' are the only valid values.")),
+
             });
             await course_contents.validateAsync(request.query);
             const filters = this.getSearchFilters(request.query);

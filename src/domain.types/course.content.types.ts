@@ -6,15 +6,15 @@ export interface CourseContentCreateModel {
     /** @minLength 0 @maxLength 64 */
     Title: string;
     /** @minLength 0 @maxLength 2000 */
-    Description: string;
+    Description?: string;
     /** @minLength 0 @maxLength 1000 */
-    ImageUrl: string;
-    DurationInMins: number;
+    ImageUrl?: string;
+    DurationInMins?: number;
     ContentType: CourseContentType;
     /** @minLength 0 @maxLength 1000 */
-    ResourceLink: string;
-    ActionTemplateId: uuid;
-    Sequence: number;
+    ResourceLink?: string;
+    ActionTemplateId?: uuid;
+    Sequence?: number;
     CourseId: uuid;
     CourseModuleId: uuid;
 }

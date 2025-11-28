@@ -74,7 +74,7 @@ export class CourseModuleService extends BaseService {
             // Pipeline: Get contents for module
             const contents = await this._courseContentRepository.find({
                 where: { CourseModule: { id: courseModule.id } },
-                relations: { Course: true, LearningPath: true, CourseModule: true },
+                relations: { Course: true, CourseModule: true },
             });
 
             // Enrich module object with contents

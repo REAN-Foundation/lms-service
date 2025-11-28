@@ -1,6 +1,6 @@
 
 meta {
-  name: Put certificates
+  name: Update Certificates
   type: http
   seq: 4
 }
@@ -23,18 +23,18 @@ body:json {
 {
     "CourseId": "{{COURSE_ID}}",
     "UserId": "{{USER_ID}}",
-    "CertificateNumber": "Molestiae aut est.",
-    "CertificateName": "Lester Rowe",
-    "CertificateType": "Laboriosam dolore expedita.",
-    "IssuedDate": "Porro blanditiis quos.",
-    "ExpiryDate": "2025-02-12T00:35:41",
-    "CertificateUrl": "http://marcel.org",
-    "FinalGrade": 848.7727,
-    "CreditHours": 9028,
-    "Skills": "Amet eligendi neque.",
-    "IsVerified": true,
-    "VerificationUrl": "https://walter.name",
-    "IssuedBy": "8871d0af-e2c2-6aad-3906-16eb6ddc707e"
+    "CertificateNumber": "Ad qui quibusdam.",
+    "CertificateName": "Hannah Volkman",
+    "CertificateType": "Facilis cumque earum.",
+    "IssuedDate": "Rem voluptas et.",
+    "ExpiryDate": "2025-04-01T03:18:37",
+    "CertificateUrl": "https://rahsaan.com",
+    "FinalGrade": 9122.092,
+    "CreditHours": 1710,
+    "Skills": "Totam hic cumque.",
+    "IsVerified": false,
+    "VerificationUrl": "http://joy.com",
+    "IssuedBy": "e3bcbb45-b1e8-bf85-65f2-f2ba7d6015ca"
   }
 }
 
@@ -67,18 +67,18 @@ tests {
         expect(jsonRes.Data).to.have.property('IssuedBy');
 
         expect(jsonRes.Data.CourseId).equals('{{COURSE_ID}}');
-        expect(jsonRes.Data.CertificateNumber).equals("Molestiae aut est.");
-        expect(jsonRes.Data.CertificateName).equals("Lester Rowe");
-        expect(jsonRes.Data.CertificateType).equals("Laboriosam dolore expedita.");
-        expect(jsonRes.Data.IssuedDate).equals("Porro blanditiis quos.");
-        expect(jsonRes.Data.ExpiryDate).equals("2025-02-12T00:35:41");
-        expect(jsonRes.Data.CertificateUrl).equals("http://marcel.org");
-        expect(jsonRes.Data.FinalGrade).equals(848.7727);
-        expect(jsonRes.Data.CreditHours).equals(9028);
-        expect(jsonRes.Data.Skills).equals("Amet eligendi neque.");
-        expect(jsonRes.Data.IsVerified).equals(true);
-        expect(jsonRes.Data.VerificationUrl).equals("https://walter.name");
-        expect(jsonRes.Data.IssuedBy).equals("8871d0af-e2c2-6aad-3906-16eb6ddc707e");
+        expect(jsonRes.Data.CertificateNumber).equals("Ad qui quibusdam.");
+        expect(jsonRes.Data.CertificateName).equals("Hannah Volkman");
+        expect(jsonRes.Data.CertificateType).equals("Facilis cumque earum.");
+        expect(jsonRes.Data.IssuedDate).equals("Rem voluptas et.");
+        expect(jsonRes.Data.ExpiryDate).equals("2025-04-01T03:18:37");
+        expect(jsonRes.Data.CertificateUrl).equals("https://rahsaan.com");
+        expect(jsonRes.Data.FinalGrade).equals(9122.092);
+        expect(jsonRes.Data.CreditHours).equals(1710);
+        expect(jsonRes.Data.Skills).equals("Totam hic cumque.");
+        expect(jsonRes.Data.IsVerified).equals(false);
+        expect(jsonRes.Data.VerificationUrl).equals("http://joy.com");
+        expect(jsonRes.Data.IssuedBy).equals("e3bcbb45-b1e8-bf85-65f2-f2ba7d6015ca");
 
     });
     

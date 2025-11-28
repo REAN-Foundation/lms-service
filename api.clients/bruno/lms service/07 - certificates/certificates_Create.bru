@@ -1,6 +1,6 @@
 
 meta {
-  name: Post certificates
+  name: Create Certificates
   type: http
   seq: 1
 }
@@ -23,18 +23,18 @@ body:json {
 {
     "CourseId": "{{COURSE_ID}}",
     "UserId": "{{USER_ID}}",
-    "CertificateNumber": "Sunt veritatis atque.",
-    "CertificateName": "Jana Stoltenberg",
-    "CertificateType": "Ea perspiciatis expedita.",
-    "IssuedDate": "Ullam delectus enim.",
-    "ExpiryDate": "2025-01-28T21:10:55",
-    "CertificateUrl": "https://elroy.net",
-    "FinalGrade": 9569.969,
-    "CreditHours": 988,
-    "Skills": "Corrupti rerum facilis.",
+    "CertificateNumber": "Explicabo et maxime.",
+    "CertificateName": "Malcolm Padberg",
+    "CertificateType": "Dolor dolores fugiat.",
+    "IssuedDate": "Esse excepturi sequi.",
+    "ExpiryDate": "2025-07-01T19:02:05",
+    "CertificateUrl": "https://layla.name",
+    "FinalGrade": 8504.074,
+    "CreditHours": 2137,
+    "Skills": "Est quidem cum.",
     "IsVerified": true,
-    "VerificationUrl": "http://makayla.name",
-    "IssuedBy": "15149e6e-d112-297a-2a63-dcbd19390dfe"
+    "VerificationUrl": "https://gerson.net",
+    "IssuedBy": "945b0e7c-7c31-5e6f-120d-b11824c1b8aa"
   }
 }
 
@@ -74,18 +74,18 @@ tests {
         expect(jsonRes.Data).to.have.property('IssuedBy');
 
         expect(jsonRes.Data.CourseId).equals('{{COURSE_ID}}');
-        expect(jsonRes.Data.CertificateNumber).equals("Sunt veritatis atque.");
-        expect(jsonRes.Data.CertificateName).equals("Jana Stoltenberg");
-        expect(jsonRes.Data.CertificateType).equals("Ea perspiciatis expedita.");
-        expect(jsonRes.Data.IssuedDate).equals("Ullam delectus enim.");
-        expect(jsonRes.Data.ExpiryDate).equals("2025-01-28T21:10:55");
-        expect(jsonRes.Data.CertificateUrl).equals("https://elroy.net");
-        expect(jsonRes.Data.FinalGrade).equals(9569.969);
-        expect(jsonRes.Data.CreditHours).equals(988);
-        expect(jsonRes.Data.Skills).equals("Corrupti rerum facilis.");
+        expect(jsonRes.Data.CertificateNumber).equals("Explicabo et maxime.");
+        expect(jsonRes.Data.CertificateName).equals("Malcolm Padberg");
+        expect(jsonRes.Data.CertificateType).equals("Dolor dolores fugiat.");
+        expect(jsonRes.Data.IssuedDate).equals("Esse excepturi sequi.");
+        expect(jsonRes.Data.ExpiryDate).equals("2025-07-01T19:02:05");
+        expect(jsonRes.Data.CertificateUrl).equals("https://layla.name");
+        expect(jsonRes.Data.FinalGrade).equals(8504.074);
+        expect(jsonRes.Data.CreditHours).equals(2137);
+        expect(jsonRes.Data.Skills).equals("Est quidem cum.");
         expect(jsonRes.Data.IsVerified).equals(true);
-        expect(jsonRes.Data.VerificationUrl).equals("http://makayla.name");
-        expect(jsonRes.Data.IssuedBy).equals("15149e6e-d112-297a-2a63-dcbd19390dfe");
+        expect(jsonRes.Data.VerificationUrl).equals("https://gerson.net");
+        expect(jsonRes.Data.IssuedBy).equals("945b0e7c-7c31-5e6f-120d-b11824c1b8aa");
 
     });
     

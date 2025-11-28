@@ -1,12 +1,12 @@
 
 meta {
-  name: Search Certificates
+  name: Search User learning
   type: http
   seq: 3
 }
 
 get {
-  url: {{BASE_URL}}/certificates/search?userId=46a252ee-81ef-89c2-b49f-ff4c1fd9f5ce&certificateNumber=Molestiae ex eos.&certificateName=Nihil eos consequatur.&certificateType=Atque exercitationem dolor.&issuedDate=Necessitatibus error ut.&expiryDate=2025-01-27T05:32:11&certificateUrl=Illo itaque consectetur.&finalGrade=8561.635&creditHours=7688&skills=Vero aut dolores.&isVerified=true&verificationUrl=Atque amet ratione.&issuedBy=f14e8480-70c9-3937-275c-d914532791ef
+  url: {{BASE_URL}}/user-learnings/search?userId=5186723d-9d18-4455-6883-f5de1892d49c&actionId=03bed9c9-f976-58fd-cfe5-8c2a6a144f9b&progressStatus=nostrum&percentageCompletion=5992
   body: json
   auth: none
 }
@@ -27,7 +27,7 @@ tests {
         expect(jsonRes.Status).to.eql('success');
     });
 
-    test('Certificates records retrieved successfully', function () {
+    test('User learnings records retrieved successfully', function () {
          var jsonRes = res.getBody();
           expect(jsonRes.Data).to.have.property('Items');
           expect(jsonRes.Data.Items.length).to.be.at.least(0);

@@ -1,12 +1,12 @@
 
 meta {
-  name: Delete Certificates
+  name: Delete User learning
   type: http
   seq: 5
 }
 
 delete {
-  url: {{BASE_URL}}/certificates/{{CERTIFICATES_ID}}
+  url: {{BASE_URL}}/user-learnings/{{USER_LEARNING_ID}}
   body: json
   auth: none
 }
@@ -27,7 +27,7 @@ tests {
         expect(jsonRes.Status).to.eql('success');
     });
 
-    test('Certificates deleted successfully', function () {
+    test('User learnings deleted successfully', function () {
         let expectedValue = true;
         var jsonRes = res.getBody();
         expect(jsonRes.Data).to.have.property('deleted');

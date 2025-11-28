@@ -1,26 +1,7 @@
 // import { IsUrl } from "class-validator";
 import 'reflect-metadata';
-import {
-    Column,
-    CreateDateColumn,
-    DeleteDateColumn,
-    Entity,
-    JoinColumn,
-    OneToOne,
-    ManyToOne,
-    OneToMany,
-    ManyToMany,
-    PrimaryGeneratedColumn,
-    UpdateDateColumn,
-    JoinTable,
-} from 'typeorm';
-import { uuid } from '../../../domain.types/miscellaneous/system.types';
-import { IsEmail, Max, Min, IsUrl } from 'class-validator';
-import { CourseModule } from './course.module.entity';
-import { LearningPathCourses } from './learning.path.courses.entity';
-import { CourseContent } from './course.content.entity';
-import { UserLearning } from './user.learning.entity';
-import { Certificates } from './certificates.entity';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Max, Min } from 'class-validator';
 
 ////////////////////////////////////////////////////////////////////////
 

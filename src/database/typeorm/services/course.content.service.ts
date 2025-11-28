@@ -190,6 +190,19 @@ export class CourseContentService extends BaseService {
         }
     };
 
+    // getContentsForLearningPath = async (learningPathId: string): Promise<CourseContentResponseDto[]> => {
+    //     try {
+    //         const contents = await this._courseContentRepository.find({
+    //             where: { Course: { LearningPathId: learningPathId } },
+    //             relationns: { Course: true, CourseModule: true },
+    //         });
+    //         return contents.map((x) => CourseContentMapper.toResponseDto(x));
+    //     } catch (error) {
+    //         logger.error(error.message);
+    //         ErrorHandler.throwInternalServerError(error.message, error);
+    //     }
+    // };
+
     //#region Privates
 
     private getSearchObject = (filters: CourseContentSearchFilters) => {

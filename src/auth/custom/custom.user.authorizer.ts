@@ -5,11 +5,12 @@ import { logger } from '../../logger/logger';
 // import { Injector } from '../../startup/injector';
 import { PermissionHandler } from './permission.handler';
 import { Injector } from '../../startup/injector';
-// import { RolePrivilegeService } from '../../database/repository.services/role.privilege.service';
+// import { RolePrivilegeService } from '../../database/services/role.privilege.service';
 import { ActionScope } from '../auth.types';
 import { ConfigurationManager } from '../../config/configuration.manager';
 import { CurrentUser } from '../../domain.types/miscellaneous/current.user';
 import { IUserAuthorizer } from '../interfaces/user.authorizer.interface';
+import { RolePrivilegeService } from '../../database/typeorm/services/role.privilege.service';
 
 //////////////////////////////////////////////////////////////
 
@@ -21,7 +22,7 @@ export class CustomAuthorizer implements IUserAuthorizer {
 
     constructor() {
         // this._userService = Injector.Container.resolve(UserService);
-        // this._rolePrivilegeService = Injector.Container.resolve(RolePrivilegeService);
+        this._rolePrivilegeService = Injector.Container.resolve(RolePrivilegeService);
     }
 
     public authorize = async (request: express.Request, response: express.Response | null): Promise<boolean> => {

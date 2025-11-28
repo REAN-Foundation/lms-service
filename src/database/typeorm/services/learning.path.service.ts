@@ -88,7 +88,7 @@ export class LearningPathService extends BaseService {
                 for (const module of modules) {
                     const contents = await this._courseContentRepository.find({
                         where: { CourseModule: { id: module.id } },
-                        relations: { Course: true, LearningPath: true, CourseModule: true },
+                        relations: { Course: true, CourseModule: true },
                     });
                     module['Contents'] = contents.map((x) => CourseContentMapper.toResponseDto(x));
                 }

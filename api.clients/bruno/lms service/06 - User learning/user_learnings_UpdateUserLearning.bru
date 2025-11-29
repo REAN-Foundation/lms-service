@@ -1,12 +1,12 @@
 
 meta {
-  name: Get user_learnings
+  name: Update User learning for content
   type: http
-  seq: 2
+  seq: 6
 }
 
-get {
-  url: {{BASE_URL}}/user-learnings/{{USER_LEARNING_ID}}
+put {
+  url: {{BASE_URL}}/user-learnings/{{USER_ID}}/contents/{{COURSE_CONTENT_ID}}
   body: json
   auth: none
 }
@@ -19,6 +19,13 @@ headers {
   Authorization: Bearer {{USER_ACCESS_TOKEN}}
 }
 
+body:json {
+  {
+    "ProgressStatus": "Completed",
+    "PercentageCompletion": 100
+  }
+}
+
 tests {
 
     test('Request is successfully', function () {
@@ -27,19 +34,12 @@ tests {
         expect(jsonRes.Status).to.eql('success');
     });
 
-    test('User learnings retrieved successfully', function () {
+    test('User learning updated successfully', function () {
         var jsonRes = res.getBody();
-        
-        expect(jsonRes.Data).to.have.property('CourseId');
-        expect(jsonRes.Data).to.have.property('LearningPathId');
-        expect(jsonRes.Data).to.have.property('CourseModuleId');
-        expect(jsonRes.Data).to.have.property('CourseContentId');
-        expect(jsonRes.Data).to.have.property('UserId');
-        expect(jsonRes.Data).to.have.property('ActionId');
+        expect(jsonRes.Data).to.have.property('id');
         expect(jsonRes.Data).to.have.property('ProgressStatus');
         expect(jsonRes.Data).to.have.property('PercentageCompletion');
-
-
     });
     
 }
+

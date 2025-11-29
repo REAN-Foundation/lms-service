@@ -1,13 +1,13 @@
 
 meta {
-  name: Get learning_path_courses
+  name: Get Content progress
   type: http
-  seq: 2
+  seq: 12
 }
 
 get {
-  url: {{BASE_URL}}/learning-path-courses/{{LEARNING_PATH_COURSES_ID}}
-  body: json
+  url: {{BASE_URL}}/user-learnings/{{USER_ID}}/contents/{{COURSE_CONTENT_ID}}/progress
+  body: none
   auth: none
 }
 
@@ -27,13 +27,10 @@ tests {
         expect(jsonRes.Status).to.eql('success');
     });
 
-    test('Learning path courses retrieved successfully', function () {
+    test('Content progress retrieved successfully', function () {
         var jsonRes = res.getBody();
-        
-        expect(jsonRes.Data).to.have.property('CourseId');
-        expect(jsonRes.Data).to.have.property('LearningPathId');
-
-
+        expect(jsonRes.Data).to.have.property('PercentageCompletion');
     });
     
 }
+

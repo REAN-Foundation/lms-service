@@ -1,13 +1,13 @@
 
 meta {
-  name: Search learning_path_courses
+  name: Get Learning path progress
   type: http
-  seq: 3
+  seq: 9
 }
 
 get {
-  url: {{BASE_URL}}/learning-path-courses/search?
-  body: json
+  url: {{BASE_URL}}/user-learnings/{{USER_ID}}/learning-paths/{{LEARNING_PATH_ID}}/progress
+  body: none
   auth: none
 }
 
@@ -27,10 +27,10 @@ tests {
         expect(jsonRes.Status).to.eql('success');
     });
 
-    test('Learning path courses records retrieved successfully', function () {
-         var jsonRes = res.getBody();
-          expect(jsonRes.Data).to.have.property('Items');
-          expect(jsonRes.Data.Items.length).to.be.at.least(0);
+    test('Learning path progress retrieved successfully', function () {
+        var jsonRes = res.getBody();
+        expect(jsonRes.Data).to.have.property('PercentageCompletion');
     });
     
 }
+

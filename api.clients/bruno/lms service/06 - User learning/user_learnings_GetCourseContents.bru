@@ -1,13 +1,13 @@
 
 meta {
-  name: Delete certificates
+  name: Get User course contents
   type: http
-  seq: 5
+  seq: 8
 }
 
-delete {
-  url: {{BASE_URL}}/certificates/{{CERTIFICATES_ID}}
-  body: json
+get {
+  url: {{BASE_URL}}/user-learnings/{{USER_ID}}/course-contents
+  body: none
   auth: none
 }
 
@@ -21,17 +21,16 @@ headers {
 
 tests {
 
-     test('Request is successfully', function () {
+    test('Request is successfully', function () {
         expect(res.getStatus()).to.equal(200);
         var jsonRes = res.getBody();
         expect(jsonRes.Status).to.eql('success');
     });
 
-    test('Certificates deleted successfully', function () {
-        let expectedValue = true;
+    test('User course contents retrieved successfully', function () {
         var jsonRes = res.getBody();
-        expect(jsonRes.Data).to.have.property('deleted');
-        expect(jsonRes.Data.deleted).to.equal(true);
+        expect(jsonRes.Data).to.be.an('array');
     });
     
 }
+

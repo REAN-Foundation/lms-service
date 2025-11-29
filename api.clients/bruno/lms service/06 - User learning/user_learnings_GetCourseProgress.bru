@@ -1,12 +1,12 @@
 
 meta {
-  name: Get user course contents
+  name: Get Course progress
   type: http
-  seq: 8
+  seq: 10
 }
 
 get {
-  url: {{BASE_URL}}/user-learnings/{{USER_ID}}/course-contents
+  url: {{BASE_URL}}/user-learnings/{{USER_ID}}/courses/{{COURSE_ID}}/progress
   body: none
   auth: none
 }
@@ -27,9 +27,9 @@ tests {
         expect(jsonRes.Status).to.eql('success');
     });
 
-    test('User course contents retrieved successfully', function () {
+    test('Course progress retrieved successfully', function () {
         var jsonRes = res.getBody();
-        expect(jsonRes.Data).to.be.an('array');
+        expect(jsonRes.Data).to.have.property('PercentageCompletion');
     });
     
 }

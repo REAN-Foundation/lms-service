@@ -1,29 +1,22 @@
 import express from 'express';
+import { RolePrivilegeService } from '../../database/typeorm/services/role.privilege.service';
 import { ActionScope, RequestType, ResourceOwnership } from "../auth.types";
 import { CurrentUser } from "../../domain.types/miscellaneous/current.user";
 import { logger } from '../../logger/logger';
+import { Injector } from '../../startup/injector';
+import { Roles } from '../../domain.types/miscellaneous/role.types';
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
 export class PermissionHandler {
 
     public static checkRoleBasedPermissions = async (request: express.Request): Promise<boolean> => {
-        // TODO: Implement role-based permission checking
-        // For now, return true if user is authenticated
-        // This should be replaced with actual RolePrivilegeService implementation
         const currentUser = request.currentUser;
-        if (!currentUser) {
-            return false;
-        }
-        
-        // Placeholder: In a real implementation, this would check against RolePrivilegeService
-        // const roleId = currentUser.CurrentRoleId;
-        // const context = request.context;
-        // const rolePrivilegeService = Injector.Container.resolve(RolePrivilegeService);
-        // const hasPrivilege = await rolePrivilegeService.hasPrivilegeForRole(roleId, context);
-        // return hasPrivilege;
-        
-        return true;
+        const roleId = currentUser.CurrentRoleId;
+        const context = request.context;
+        const rolePrivilegeService = Injector.Container.resolve(RolePrivilegeService);
+        const hasPrivilege = await rolePrivilegeService.hasPrivilegeForRole(roleId, context);
+        return hasPrivilege;
     };
     
     // Check permissions by ownership, action scope and consent
@@ -36,19 +29,20 @@ export class PermissionHandler {
 
         const currentUserRole = currentUser.CurrentRoleName;
 
-        // System Admin has access to all resources
-        if (currentUserRole === 'System admin') {
+        // 2. SuperAdmin (System Admin) has access to all resources
+        if (currentUserRole === Roles.SystemAdmin) {
             return true;
         }
 
-        // System User access has already been checked for role based permissions
-        if (currentUserRole === 'System user') {
+        // 3. SystemUser
+        // System user access has already been checked for role based permissions
+        if (currentUserRole === Roles.SystemUser) {
             const msg = `System User access has already been checked for role based permissions`;
             logger.info(msg);
             return true;
         }
 
-        if (currentUserRole === 'Tenant admin') {
+        if (currentUserRole === Roles.TenantAdmin) {
             // Tenant Admin has access to all resources in the tenant scope
             if (request.resourceTenantId === currentUser.TenantId
               && request.actionScope === ActionScope.Tenant) {

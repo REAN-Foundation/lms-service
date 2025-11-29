@@ -16,7 +16,7 @@ export class UserAuthorizer {
         response: express.Response,
         next: express.NextFunction
     ): Promise<void> => {
-        const authorized = await this._authorizer.authorize(request, response);
+        const authorized = await this._authorizer.authorize(request);
         if (!authorized) {
             ResponseHandler.failure(request, response, 'Unauthorized access', 403);
             return;
@@ -25,7 +25,7 @@ export class UserAuthorizer {
     };
 
     public verify = async (request: express.Request): Promise<boolean> => {
-        const authorized = await this._authorizer.authorize(request, null);
+        const authorized = await this._authorizer.authorize(request);
         return authorized;
     };
 

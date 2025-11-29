@@ -1,32 +1,19 @@
 import * as fs from 'fs';
-import { RolePrivilegeModel } from '../models/role.privilege.model';
-import { ErrorHandler } from '../../common/error.handler';
-import { Op } from 'sequelize';
 import path from 'path';
-import { RolePermissionModel } from '../models/role.permission.model';
-import { ApiError } from '../../common/api.error';
-import { Logger } from '../../common/logger';
-import { RolePrivilegeDto } from '../../domain.types/role.privilege/role.privilege.dto';
-// import { Helper } from '../../common/helper';
-// import { NeedleService } from '../../common/needle.service';
-import { DefaultRoles } from '../../domain.types/miscellaneous/role.types';
+import { Like, Repository } from 'typeorm';
+import { logger } from '../../../logger/logger';
+import { RolePrivilegeDto } from '../../../domain.types/role.privilege/role.privilege.dto';
 import { Helper } from '../../../common/helper';
+import { NeedleService } from '../../../common/needle.service';
+import { DefaultRoles } from '../../../domain.types/miscellaneous/role.types';
+import { RolePermission } from '../models/role.permission.entity';
+import { Source } from '../typeorm.database.connector';
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 export class RolePrivilegeService {
-
-    RolePrivilege = RolePrivilegeModel.Model;
-
-    RolePermission = RolePermissionModel.Model;
-
-    // create = async (createModel) => {
-    //     try {
-    //         return await this.RolePrivilege.create(createModel);
-    //     } catch (error) {
-    //         ErrorHandler.throwDbAccessError('Unable to create role privilege!', error);
-    //     }
-    // };
+    
+    _rolePermissionRepository: Repository<RolePermission> = Source.getRepository(RolePermission);
 
     create = async (object: any): Promise<RolePrivilegeDto> => {
         try {
@@ -37,7 +24,7 @@ export class RolePrivilegeService {
                 Scope     : object.Scope,
                 Enabled   : object.Enabled,
             };
-            const rp = await this.RolePermission.create(entity);
+            const rp = await this._rolePermissionRepository.save(entity);
             const dto: RolePrivilegeDto = {
                 id        : rp.id,
                 RoleId    : rp.RoleId,
@@ -48,52 +35,32 @@ export class RolePrivilegeService {
             };
             return dto;
         } catch (error) {
-            Logger.instance().log(error.message);
-            throw new ApiError(500, error.message);
+            logger.error(error.message);
+            throw new Error('Unable to create role privilege: ' + error.message);
         }
     };
 
-    getById = async (id) => {
+    hasPrivilegeForRole = async (roleId: number, privilege: string): Promise<boolean> => {
         try {
-            return await this.RolePrivilege.findByPk(id);
-        } catch (error) {
-            ErrorHandler.throwDbAccessError('Unable to retrieve role privilege!', error);
-        }
-    };
-
-    getPrivilegesForRole = async (roleId) => {
-        try {
-            const rolePrivileges = await this.RolePrivilege.findAll({
-                where : {
-                    RoleId : roleId,
-                },
-            });
-            return rolePrivileges.map((x) => x.Privilege);
-        } catch (error) {
-            ErrorHandler.throwDbAccessError('Unable to retrieve role privileges!', error);
-        }
-    };
-
-    hasPrivilegeForRole = async (roleId: number, privilege: string) => {
-        try {
-            const rolePrivileges = await this.RolePermission.findAll({
-                where : {
+            const rolePrivileges = await this._rolePermissionRepository.find({
+                where: {
                     RoleId    : roleId,
-                    Privilege : { [Op.like]: '%' + privilege + '%' },
+                    Privilege : Like(`%${privilege}%`),
                 },
             });
             return rolePrivileges.length > 0;
         } catch (error) {
-            ErrorHandler.throwDbAccessError('Unable to validate role and privilege!', error);
+            logger.error('Unable to validate role and privilege: ' + error.message);
+            throw new Error('Unable to validate role and privilege: ' + error.message);
         }
     };
 
-    getRolePrivilege = async (roleId: number, privilege: string): Promise<RolePrivilegeDto> => {
+    getRolePrivilege = async (roleId: number, privilege: string): Promise<RolePrivilegeDto | null> => {
         try {
-            const rp = await this.RolePermission.findOne({
-                where : {
+            const rp = await this._rolePermissionRepository.findOne({
+                where: {
                     RoleId    : roleId,
-                    Privilege : { [Op.like]: '%' + privilege + '%' },
+                    Privilege : Like(`%${privilege}%`),
                 },
             });
             if (rp == null) {
@@ -109,16 +76,19 @@ export class RolePrivilegeService {
             };
             return dto;
         } catch (error) {
-            Logger.instance().log(error.message);
-            throw new ApiError(500, error.message);
+            logger.error(error.message);
+            throw new Error('Unable to get role privilege: ' + error.message);
         }
     };
 
     enable = async (id: string, enable: boolean): Promise<RolePrivilegeDto> => {
         try {
-            const rp = await this.RolePermission.findByPk(id);
+            const rp = await this._rolePermissionRepository.findOne({ where: { id } });
+            if (!rp) {
+                throw new Error('Role permission not found');
+            }
             rp.Enabled = enable;
-            await rp.save();
+            await this._rolePermissionRepository.save(rp);
             const dto: RolePrivilegeDto = {
                 id        : rp.id,
                 RoleId    : rp.RoleId,
@@ -129,8 +99,8 @@ export class RolePrivilegeService {
             };
             return dto;
         } catch (error) {
-            Logger.instance().log(error.message);
-            throw new ApiError(500, error.message);
+            logger.error(error.message);
+            throw new Error('Unable to enable/disable role privilege: ' + error.message);
         }
     };
 
@@ -143,6 +113,12 @@ export class RolePrivilegeService {
                     continue;
                 }
                 var filepath = path.join(process.cwd(), 'seed.data', 'role.privileges', seederFile);
+                
+                if (!fs.existsSync(filepath)) {
+                    logger.info(`Seeder file not found: ${filepath}`);
+                    continue;
+                }
+                
                 var fileBuffer = fs.readFileSync(filepath, 'utf8');
                 const privilegeMap = JSON.parse(fileBuffer);
                 const privileges = Helper.convertPrivilegeMapToPrivilegeList(privilegeMap);
@@ -169,7 +145,8 @@ export class RolePrivilegeService {
                 }
             }
         } catch (error) {
-            ErrorHandler.throwDbAccessError('Error occurred while seeding role-privileges!', error);
+            logger.error(error.message);
+            throw new Error('Error occurred while seeding role-privileges: ' + error.message);
         }
           
     };
@@ -197,7 +174,7 @@ export class RolePrivilegeService {
 
               return Array.from(roleMap.values());
           } catch (error) {
-              ErrorHandler.throwDbAccessError('Failed to fetch person roles!', error);
+              logger.error('Failed to fetch person roles: ' + error.message);
               return DefaultRoles;
           }
       };

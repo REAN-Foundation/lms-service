@@ -8,6 +8,7 @@ import { LearningPathCourses } from './learning.path.courses.entity';
 import { LearningPath } from './learning.path.entity';
 import { UserLearning } from './user.learning.entity';
 import { Certificates } from './certificates.entity';
+import { RolePermission } from './role.permission.entity';
 
 export const Entities = [
     CourseModule,
@@ -17,4 +18,5 @@ export const Entities = [
     LearningPath,
     UserLearning,
     Certificates,
+    RolePermission,
 ];

@@ -4,7 +4,7 @@ import { Helper } from "./helper";
 
 export class NeedleService {
 
-    public static async needleRequestForREAN (method: string, url:string, accessToken?, obj?) {
+    public static async needleRequestForREAN (method: any, url:string, accessToken?, obj?) {
         const ReanBackendBaseUrl = process.env.REANCARE_BACKEND_BASE_URL;
         if (!accessToken) {
             accessToken = null;
@@ -42,5 +42,7 @@ export class NeedleService {
     };
 
 }
+
+
 
 

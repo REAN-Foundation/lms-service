@@ -25,7 +25,7 @@ export class CustomAuthorizer implements IUserAuthorizer {
         this._rolePrivilegeService = Injector.Container.resolve(RolePrivilegeService);
     }
 
-    public authorize = async (request: express.Request, response: express.Response | null): Promise<boolean> => {
+    public authorize = async (request: express.Request): Promise<boolean> => {
         try {
 
             const context = request.context;
@@ -66,8 +66,7 @@ export class CustomAuthorizer implements IUserAuthorizer {
         return new Promise((resolve, reject) => {
             try {
                 const expiresIn: number = ConfigurationManager.JwtExpiresIn();
-                var seconds = expiresIn.toString() + 's';
-                const token = jwt.sign(user, process.env.USER_ACCESS_TOKEN_SECRET, { expiresIn: seconds });
+                const token = jwt.sign(user, process.env.USER_ACCESS_TOKEN_SECRET, { expiresIn });
                 resolve(token);
             } catch (error) {
                 reject(error);

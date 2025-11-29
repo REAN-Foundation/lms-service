@@ -7,7 +7,8 @@ import { Injector } from './startup/injector';
 import DatabaseConnector from './database/database.connector';
 import { CommonMiddlewares } from './middlewares/common.middlewares';
 import { errorHandlerMiddleware } from './middlewares/error.handler.middleware';
-import { initializeJwtAuthentication, stopJwtAuthentication } from './auth/jwks/JwtAuthenticationConfiguration';
+// import { initializeJwtAuthentication, stopJwtAuthentication } from './auth/jwks/JwtAuthenticationConfiguration';
+import { Seeder } from './startup/seeder';
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
@@ -49,6 +50,10 @@ export default class Application {
             await RouteHandler.setup(this.expressApp());
 
             this._expressApp.use(errorHandlerMiddleware);
+
+            // Seed role privileges and other data (after routes are setup, like careplan-service)
+            const seeder = new Seeder();
+            await seeder.seed();
 
             //Handle unhandled rejections
             process.on('unhandledRejection', (reason, promise) => {

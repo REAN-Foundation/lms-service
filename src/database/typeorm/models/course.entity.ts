@@ -36,6 +36,11 @@ export class Course {
     @Min(0)
     DurationInDays: number;
 
+    @Column({ type: 'int', nullable: true })
+    @Max(64)
+    @Min(0)
+    Sequence: number;
+
     @ManyToOne(() => LearningPath)
     @JoinColumn({ name: 'LearningPathId', referencedColumnName: 'id' })
     LearningPath: LearningPath;

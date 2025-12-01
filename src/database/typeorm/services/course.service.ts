@@ -56,6 +56,7 @@ export class CourseService extends BaseService {
             Description: createModel.Description,
             ImageUrl: createModel.ImageUrl,
             DurationInDays: createModel.DurationInDays,
+            Sequence: createModel.Sequence,
             LearningPath: learningPath,
         });
         var record = await this._courseRepository.save(course);
@@ -163,6 +164,10 @@ export class CourseService extends BaseService {
                 course.DurationInDays = model.DurationInDays;
             }
 
+            if (model.Sequence !== undefined && model.Sequence != null) {
+                course.Sequence = model.Sequence;
+            }
+
             if (model.LearningPathId !== undefined && model.LearningPathId != null) {
                 const learningPath = await this.getLearningPath(model.LearningPathId);
                 course.LearningPath = learningPath;
@@ -210,6 +215,7 @@ export class CourseService extends BaseService {
                 Description: true,
                 ImageUrl: true,
                 DurationInDays: true,
+                Sequence: true,
 
                 // Client       : {
                 //     id  : true,
@@ -239,6 +245,10 @@ export class CourseService extends BaseService {
 
         if (filters.DurationInDays) {
             search.where['DurationInDays'] = Like(`%${filters.DurationInDays}%`);
+        }
+
+        if (filters.sequence) {
+            search.where['Sequence'] = Like(`%${filters.sequence}%`);
         }
 
         if (filters.learningPathId) {

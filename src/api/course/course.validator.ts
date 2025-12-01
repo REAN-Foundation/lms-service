@@ -16,6 +16,7 @@ export class CourseValidator extends BaseValidator {
                 Description: joi.string().max(2000).min(0).required(),
                 ImageUrl: joi.string().max(1000).min(0).required(),
                 DurationInDays: joi.number().integer().required(),
+                Sequence: joi.number().integer().optional(),
                 LearningPathId: joi.string().uuid().optional(),
             });
             await courses.validateAsync(request.body);
@@ -25,6 +26,7 @@ export class CourseValidator extends BaseValidator {
                 Description: request.body.Description ? request.body.Description : null,
                 ImageUrl: request.body.ImageUrl ? request.body.ImageUrl : null,
                 DurationInDays: request.body.DurationInDays ? request.body.DurationInDays : null,
+                Sequence: request.body.Sequence ? request.body.Sequence : null,
                 LearningPathId: request.body.LearningPathId,
             };
             return model;
@@ -41,6 +43,7 @@ export class CourseValidator extends BaseValidator {
                 Description: joi.string().max(2000).min(0).optional(),
                 ImageUrl: joi.string().max(1000).min(0).optional(),
                 DurationInDays: joi.number().integer().optional(),
+                Sequence: joi.number().integer().optional(),
                 LearningPathId: joi.string().uuid().optional(),
             });
             await courses.validateAsync(request.body);
@@ -62,6 +65,9 @@ export class CourseValidator extends BaseValidator {
             if (TypeUtils.hasProperty(request.body, 'DurationInDays')) {
                 model.DurationInDays = request.body.DurationInDays;
             }
+            if (TypeUtils.hasProperty(request.body, 'Sequence')) {
+                model.Sequence = request.body.Sequence;
+            }
             if (TypeUtils.hasProperty(request.body, 'LearningPathId')) {
                 model.LearningPathId = request.body.LearningPathId;
             }
@@ -80,6 +86,7 @@ export class CourseValidator extends BaseValidator {
                 description: joi.string().max(2000).min(0).optional(),
                 imageUrl: joi.string().max(1000).min(0).optional(),
                 durationInDays: joi.number().integer().optional(),
+                sequence: joi.number().integer().optional(),
                 learningPathId: joi.string().uuid().optional(),
                 pageIndex    : joi.number().min(0).optional(),
                 itemsPerPage : joi.number().min(1).optional(),
@@ -125,6 +132,10 @@ export class CourseValidator extends BaseValidator {
         var durationInDays = query.durationInDays ? query.durationInDays : null;
         if (durationInDays != null) {
             filters['DurationInDays'] = durationInDays;
+        }
+        var sequence = query.sequence ? query.sequence : null;
+        if (sequence != null) {
+            filters['Sequence'] = sequence;
         }
         var learningPathId = query.learningPathId ? query.learningPathId : null;
         if (learningPathId != null) {

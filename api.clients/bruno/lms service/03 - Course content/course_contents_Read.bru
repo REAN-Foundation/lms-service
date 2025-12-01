@@ -31,7 +31,6 @@ tests {
         var jsonRes = res.getBody();
         
         expect(jsonRes.Data).to.have.property('CourseId');
-        expect(jsonRes.Data).to.have.property('LearningPathId');
         expect(jsonRes.Data).to.have.property('CourseModuleId');
         expect(jsonRes.Data).to.have.property('Title');
         expect(jsonRes.Data).to.have.property('Description');

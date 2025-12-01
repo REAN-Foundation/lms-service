@@ -1,16 +1,21 @@
-
 meta {
-  name: Search Course module
+  name: Search Course
   type: http
   seq: 3
 }
 
 get {
-  url: {{BASE_URL}}/course-modules/search?name=Rerum aliquam nemo.&description=Veniam incidunt sint.&imageUrl=Dolor aspernatur saepe.&durationInMins=4100&sequence=67
+  url: {{BASE_URL}}/courses/search
   body: json
   auth: none
 }
 
+params:query {
+  ~name: Hic laborum iste.
+  ~description: Voluptate qui ex.
+  ~imageUrl: Laudantium architecto in.
+  ~durationInDays: 1759
+}
 
 headers {
   x-api-key: {{API_KEY}}
@@ -20,14 +25,13 @@ headers {
 }
 
 tests {
-
     test('Request is successfully', function () {
         expect(res.getStatus()).to.equal(200);
         var jsonRes = res.getBody();
         expect(jsonRes.Status).to.eql('success');
     });
-
-    test('Course modules records retrieved successfully', function () {
+  
+    test('Courses records retrieved successfully', function () {
          var jsonRes = res.getBody();
           expect(jsonRes.Data).to.have.property('Items');
           expect(jsonRes.Data.Items.length).to.be.at.least(0);

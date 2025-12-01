@@ -1,4 +1,3 @@
-
 meta {
   name: Update Course
   type: http
@@ -11,7 +10,6 @@ put {
   auth: none
 }
 
-
 headers {
   x-api-key: {{API_KEY}}
   x-api-secret: {{API_SECRET}}
@@ -20,7 +18,7 @@ headers {
 }
 
 body:json {
-{
+  {
     "TenantId": "{{TENANT_ID}}",
     "Name": "Isabel Smith",
     "Description": "reprehenderit quis",
@@ -30,16 +28,15 @@ body:json {
 }
 
 tests {
-
     test('Request is successfully', function () {
         expect(res.getStatus()).to.equal(200);
         var jsonRes = res.getBody();
         expect(jsonRes.Status).to.eql('success');
     });
-
+  
     test('Courses updated successfully', function () {
         var jsonRes = res.getBody();
-
+  
         expect(jsonRes.Data).to.have.property('id');
         
         expect(jsonRes.Data).to.have.property('TenantId');
@@ -47,12 +44,12 @@ tests {
         expect(jsonRes.Data).to.have.property('Description');
         expect(jsonRes.Data).to.have.property('ImageUrl');
         expect(jsonRes.Data).to.have.property('DurationInDays');
-
+  
         expect(jsonRes.Data.Name).equals("Isabel Smith");
         expect(jsonRes.Data.Description).equals("reprehenderit quis");
         expect(jsonRes.Data.ImageUrl).equals("http://maxine.name");
         expect(jsonRes.Data.DurationInDays).equals(9657);
-
+  
     });
     
 }

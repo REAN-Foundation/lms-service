@@ -1,4 +1,3 @@
-
 meta {
   name: Create Course
   type: http
@@ -11,7 +10,6 @@ post {
   auth: none
 }
 
-
 headers {
   x-api-key: {{API_KEY}}
   x-api-secret: {{API_SECRET}}
@@ -20,7 +18,7 @@ headers {
 }
 
 body:json {
-{
+  {
     "TenantId": "{{TENANT_ID}}",
     "Name": "Dewey Leannon",
     "Description": "minus ea",
@@ -30,7 +28,6 @@ body:json {
 }
 
 tests {
-
     try {
         var respData = res.getBody();
         bru.setEnvVar('COURSE_ID', respData.Data.id);
@@ -43,10 +40,10 @@ tests {
         var jsonRes = res.getBody();
         expect(jsonRes.Status).to.eql('success');
     });
-
+  
     test('Courses created successfully', function () {
         var jsonRes = res.getBody();
-
+  
         expect(jsonRes.Data).to.have.property('id');
         
         expect(jsonRes.Data).to.have.property('TenantId');
@@ -54,12 +51,12 @@ tests {
         expect(jsonRes.Data).to.have.property('Description');
         expect(jsonRes.Data).to.have.property('ImageUrl');
         expect(jsonRes.Data).to.have.property('DurationInDays');
-
+  
         expect(jsonRes.Data.Name).equals("Dewey Leannon");
         expect(jsonRes.Data.Description).equals("minus ea");
         expect(jsonRes.Data.ImageUrl).equals("https://pink.org");
         expect(jsonRes.Data.DurationInDays).equals(100);
-
+  
     });
     
 }

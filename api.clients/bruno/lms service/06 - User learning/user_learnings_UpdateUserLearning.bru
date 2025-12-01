@@ -1,4 +1,3 @@
-
 meta {
   name: Update User learning for content
   type: http
@@ -11,7 +10,6 @@ put {
   auth: none
 }
 
-
 headers {
   x-api-key: {{API_KEY}}
   x-api-secret: {{API_SECRET}}
@@ -21,19 +19,17 @@ headers {
 
 body:json {
   {
-    "ProgressStatus": "Completed",
-    "PercentageCompletion": 100
+    "ProgressStatus": "Completed"
   }
 }
 
 tests {
-
     test('Request is successfully', function () {
         expect(res.getStatus()).to.equal(200);
         var jsonRes = res.getBody();
         expect(jsonRes.Status).to.eql('success');
     });
-
+  
     test('User learning updated successfully', function () {
         var jsonRes = res.getBody();
         expect(jsonRes.Data).to.have.property('id');
@@ -42,4 +38,3 @@ tests {
     });
     
 }
-

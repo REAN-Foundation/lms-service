@@ -1,16 +1,25 @@
-
 meta {
-  name: Search Course
+  name: Search Course content
   type: http
   seq: 3
 }
 
 get {
-  url: {{BASE_URL}}/courses/search?tenantId=Beatae in magni.&name=Hic laborum iste.&description=Voluptate qui ex.&imageUrl=Laudantium architecto in.&durationInDays=1759
+  url: {{BASE_URL}}/course-contents/search?contentType=Video
   body: json
   auth: none
 }
 
+params:query {
+  contentType: Video
+  ~title: Sit repellat laborum
+  ~description: Dolorem voluptates incidunt.
+  ~imageUrl: Pariatur odio distinctio.
+  ~durationInMins: 8720
+  ~resourceLink: Quia doloribus quaerat.
+  ~actionTemplateId: f63887b4-b75c-59cc-fd0a-d88bf5d5a703
+  ~sequence: 9579
+}
 
 headers {
   x-api-key: {{API_KEY}}
@@ -20,14 +29,13 @@ headers {
 }
 
 tests {
-
     test('Request is successfully', function () {
         expect(res.getStatus()).to.equal(200);
         var jsonRes = res.getBody();
         expect(jsonRes.Status).to.eql('success');
     });
-
-    test('Courses records retrieved successfully', function () {
+  
+    test('Course contents records retrieved successfully', function () {
          var jsonRes = res.getBody();
           expect(jsonRes.Data).to.have.property('Items');
           expect(jsonRes.Data.Items.length).to.be.at.least(0);

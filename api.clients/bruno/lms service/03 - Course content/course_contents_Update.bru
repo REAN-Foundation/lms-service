@@ -1,4 +1,3 @@
-
 meta {
   name: Update Course content
   type: http
@@ -11,7 +10,6 @@ put {
   auth: none
 }
 
-
 headers {
   x-api-key: {{API_KEY}}
   x-api-secret: {{API_SECRET}}
@@ -20,9 +18,8 @@ headers {
 }
 
 body:json {
-{
+  {
     "CourseId": "{{COURSE_ID}}",
-    "LearningPathId": "{{LEARNING_PATH_ID}}",
     "CourseModuleId": "{{COURSE_MODULE_ID}}",
     "Title": "Voluptatibus officia ipsam.",
     "Description": "officiis consequatur",
@@ -36,20 +33,18 @@ body:json {
 }
 
 tests {
-
     test('Request is successfully', function () {
         expect(res.getStatus()).to.equal(200);
         var jsonRes = res.getBody();
         expect(jsonRes.Status).to.eql('success');
     });
-
+  
     test('Course contents updated successfully', function () {
         var jsonRes = res.getBody();
-
+  
         expect(jsonRes.Data).to.have.property('id');
         
         expect(jsonRes.Data).to.have.property('CourseId');
-        expect(jsonRes.Data).to.have.property('LearningPathId');
         expect(jsonRes.Data).to.have.property('CourseModuleId');
         expect(jsonRes.Data).to.have.property('Title');
         expect(jsonRes.Data).to.have.property('Description');
@@ -59,9 +54,8 @@ tests {
         expect(jsonRes.Data).to.have.property('ResourceLink');
         expect(jsonRes.Data).to.have.property('ActionTemplateId');
         expect(jsonRes.Data).to.have.property('Sequence');
-
+  
         expect(jsonRes.Data.CourseId).equals('{{COURSE_ID}}');
-        expect(jsonRes.Data.LearningPathId).equals('{{LEARNING_PATH_ID}}');
         expect(jsonRes.Data.CourseModuleId).equals('{{COURSE_MODULE_ID}}');
         expect(jsonRes.Data.Title).equals("Voluptatibus officia ipsam.");
         expect(jsonRes.Data.Description).equals("officiis consequatur");
@@ -70,7 +64,7 @@ tests {
         expect(jsonRes.Data.ContentType).equals("Url");
         expect(jsonRes.Data.ResourceLink).equals("Maiores voluptatibus reprehenderit.");
         expect(jsonRes.Data.Sequence).equals(7757);
-
+  
     });
     
 }

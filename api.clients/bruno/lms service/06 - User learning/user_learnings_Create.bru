@@ -1,4 +1,3 @@
-
 meta {
   name: Create User learning
   type: http
@@ -11,7 +10,6 @@ post {
   auth: none
 }
 
-
 headers {
   x-api-key: {{API_KEY}}
   x-api-secret: {{API_SECRET}}
@@ -20,20 +18,17 @@ headers {
 }
 
 body:json {
-{
+  {
     "CourseId": "{{COURSE_ID}}",
     "LearningPathId": "{{LEARNING_PATH_ID}}",
     "CourseModuleId": "{{COURSE_MODULE_ID}}",
     "CourseContentId": "{{COURSE_CONTENT_ID}}",
     "UserId": "{{USER_ID}}",
-    "ActionId": "{{ACTION_ID}}",
-    "ProgressStatus": "InProgress",
-    "PercentageCompletion": 8827
+    "ProgressStatus": "InProgress"
   }
 }
 
 tests {
-
     try {
         var respData = res.getBody();
         bru.setEnvVar('USER_LEARNING_ID', respData.Data.id);
@@ -46,10 +41,10 @@ tests {
         var jsonRes = res.getBody();
         expect(jsonRes.Status).to.eql('success');
     });
-
+  
     test('User learnings created successfully', function () {
         var jsonRes = res.getBody();
-
+  
         expect(jsonRes.Data).to.have.property('id');
         
         expect(jsonRes.Data).to.have.property('CourseId');
@@ -60,14 +55,14 @@ tests {
         expect(jsonRes.Data).to.have.property('ActionId');
         expect(jsonRes.Data).to.have.property('ProgressStatus');
         expect(jsonRes.Data).to.have.property('PercentageCompletion');
-
+  
         expect(jsonRes.Data.CourseId).equals('{{COURSE_ID}}');
         expect(jsonRes.Data.LearningPathId).equals('{{LEARNING_PATH_ID}}');
         expect(jsonRes.Data.CourseModuleId).equals('{{COURSE_MODULE_ID}}');
         expect(jsonRes.Data.CourseContentId).equals('{{COURSE_CONTENT_ID}}');
         expect(jsonRes.Data.ProgressStatus).equals("InProgress");
         expect(jsonRes.Data.PercentageCompletion).equals(8827);
-
+  
     });
     
 }

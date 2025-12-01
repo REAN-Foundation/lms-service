@@ -1,4 +1,3 @@
-
 meta {
   name: Search Learning path
   type: http
@@ -6,11 +5,20 @@ meta {
 }
 
 get {
-  url: {{BASE_URL}}/learning-paths/search?tenantId=7d60afd9-51cb-92e8-bc24-080287f75c0f&name=Deserunt quis sed.&description=Voluptates provident distinctio.&imageUrl=Enim ducimus quisquam.&durationInDays=5350&preferenceWeight=3016&enabled=false
+  url: {{BASE_URL}}/learning-paths/search
   body: json
   auth: none
 }
 
+params:query {
+  ~tenantId: 7d60afd9-51cb-92e8-bc24-080287f75c0f
+  ~name: Deserunt quis sed
+  ~description: Voluptates provident distinctio.
+  ~imageUrl: Enim ducimus quisquam.
+  ~durationInDays: 5350
+  ~preferenceWeight: 3016
+  ~enabled: false
+}
 
 headers {
   x-api-key: {{API_KEY}}
@@ -20,13 +28,12 @@ headers {
 }
 
 tests {
-
     test('Request is successfully', function () {
         expect(res.getStatus()).to.equal(200);
         var jsonRes = res.getBody();
         expect(jsonRes.Status).to.eql('success');
     });
-
+  
     test('Learning paths records retrieved successfully', function () {
          var jsonRes = res.getBody();
           expect(jsonRes.Data).to.have.property('Items');

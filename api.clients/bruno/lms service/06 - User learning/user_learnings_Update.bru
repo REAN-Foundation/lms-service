@@ -1,4 +1,3 @@
-
 meta {
   name: Update User learning
   type: http
@@ -11,7 +10,6 @@ put {
   auth: none
 }
 
-
 headers {
   x-api-key: {{API_KEY}}
   x-api-secret: {{API_SECRET}}
@@ -20,29 +18,26 @@ headers {
 }
 
 body:json {
-{
+  {
     "CourseId": "{{COURSE_ID}}",
     "LearningPathId": "{{LEARNING_PATH_ID}}",
     "CourseModuleId": "{{COURSE_MODULE_ID}}",
     "CourseContentId": "{{COURSE_CONTENT_ID}}",
     "UserId": "{{USER_ID}}",
-    "ActionId": "{{ACTION_ID}}",
-    "ProgressStatus": "Delayed",
-    "PercentageCompletion": 7424
+    "ProgressStatus": "Delayed"
   }
 }
 
 tests {
-
     test('Request is successfully', function () {
         expect(res.getStatus()).to.equal(200);
         var jsonRes = res.getBody();
         expect(jsonRes.Status).to.eql('success');
     });
-
+  
     test('User learnings updated successfully', function () {
         var jsonRes = res.getBody();
-
+  
         expect(jsonRes.Data).to.have.property('id');
         
         expect(jsonRes.Data).to.have.property('CourseId');
@@ -53,14 +48,14 @@ tests {
         expect(jsonRes.Data).to.have.property('ActionId');
         expect(jsonRes.Data).to.have.property('ProgressStatus');
         expect(jsonRes.Data).to.have.property('PercentageCompletion');
-
+  
         expect(jsonRes.Data.CourseId).equals('{{COURSE_ID}}');
         expect(jsonRes.Data.LearningPathId).equals('{{LEARNING_PATH_ID}}');
         expect(jsonRes.Data.CourseModuleId).equals('{{COURSE_MODULE_ID}}');
         expect(jsonRes.Data.CourseContentId).equals('{{COURSE_CONTENT_ID}}');
         expect(jsonRes.Data.ProgressStatus).equals("Delayed");
         expect(jsonRes.Data.PercentageCompletion).equals(7424);
-
+  
     });
     
 }

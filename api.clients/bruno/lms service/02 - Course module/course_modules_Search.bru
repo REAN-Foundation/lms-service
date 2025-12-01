@@ -1,16 +1,22 @@
-
 meta {
-  name: Search Learning path courses
+  name: Search Course module
   type: http
   seq: 3
 }
 
 get {
-  url: {{BASE_URL}}/learning-path-courses/search?courseId=1b51532e-5482-409e-a168-2215e90cff77&learningPathId=55549f52-c609-68bb-70f3-dedcfede1d57
+  url: {{BASE_URL}}/course-modules/search
   body: json
   auth: none
 }
 
+params:query {
+  ~name: Rerum aliquam nemo
+  ~description: Veniam incidunt sint.
+  ~imageUrl: Dolor aspernatur saepe.
+  ~durationInMins: 4100
+  ~sequence: 67
+}
 
 headers {
   x-api-key: {{API_KEY}}
@@ -20,14 +26,13 @@ headers {
 }
 
 tests {
-
     test('Request is successfully', function () {
         expect(res.getStatus()).to.equal(200);
         var jsonRes = res.getBody();
         expect(jsonRes.Status).to.eql('success');
     });
-
-    test('Learning path courses records retrieved successfully', function () {
+  
+    test('Course modules records retrieved successfully', function () {
          var jsonRes = res.getBody();
           expect(jsonRes.Data).to.have.property('Items');
           expect(jsonRes.Data.Items.length).to.be.at.least(0);

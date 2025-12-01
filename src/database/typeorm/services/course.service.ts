@@ -1,4 +1,4 @@
-import { FindManyOptions, Like, Repository } from 'typeorm';
+import { FindManyOptions, In, Like, Repository } from 'typeorm';
 import { logger } from '../../../logger/logger';
 import { ErrorHandler } from '../../../common/error.handling/error.handler';
 import { uuid } from '../../../domain.types/miscellaneous/system.types';
@@ -11,6 +11,8 @@ import {
     CourseSearchResults,
     CourseUpdateModel,
 } from '../../../domain.types/course.types';
+import { CourseModuleResponseDto } from '../../../domain.types/course.module.types';
+import { CourseContentResponseDto } from '../../../domain.types/course.content.types';
 import { CourseMapper } from '../mappers/course.mapper';
 import { CourseModuleMapper } from '../mappers/course.module.mapper';
 import { CourseContentMapper } from '../mappers/course.content.mapper';
@@ -23,6 +25,8 @@ import { Certificates } from '../models/certificates.entity';
 import { LearningPath } from '../models/learning.path.entity';
 
 import { Course } from '../models/course.entity';
+
+type CourseModuleWithContents = CourseModuleResponseDto & { Contents?: CourseContentResponseDto[] };
 
 ///////////////////////////////////////////////////////////////////////
 
@@ -115,6 +119,17 @@ export class CourseService extends BaseService {
             var search = this.getSearchObject(filters);
             var { search, pageIndex, limit, order, orderByColumn } = this.addSortingAndPagination(search, filters);
             const [list, count] = await this._courseRepository.findAndCount(search);
+
+            const coursesWithModules = await this.getCourseModulesWithContents(list);
+            const items = list.map((course) => {
+                const courseDto = CourseMapper.toResponseDto(course);
+                const modules = coursesWithModules.get(course.id);
+                if (modules && modules.length > 0) {
+                    courseDto['Modules'] = modules;
+                }
+                return courseDto;
+            });
+
             const searchResults = {
                 TotalCount: count,
                 RetrievedCount: list.length,
@@ -122,7 +137,7 @@ export class CourseService extends BaseService {
                 ItemsPerPage: limit,
                 Order: order === 'DESC' ? 'descending' : 'ascending',
                 OrderedBy: orderByColumn,
-                Items: list.map((x) => CourseMapper.toResponseDto(x)),
+                Items: items,
             };
             return searchResults;
         } catch (error) {
@@ -200,6 +215,78 @@ export class CourseService extends BaseService {
     };
 
     //#region Privates
+
+    private async getCourseModulesWithContents(
+        courses: Course[]
+    ): Promise<Map<string, CourseModuleWithContents[]>> {
+        const modulesMap: Map<string, CourseModuleWithContents[]> = new Map();
+        if (!courses || courses.length === 0) {
+            return modulesMap;
+        }
+
+        const courseIds = courses.map((course) => course.id).filter((id) => !!id);
+        if (courseIds.length === 0) {
+            return modulesMap;
+        }
+
+        const modules = await this._courseModuleRepository.find({
+            where: { Course: { id: In(courseIds) } },
+            relations: { Course: true },
+        });
+
+        if (modules.length === 0) {
+            return modulesMap;
+        }
+
+        const moduleIds = modules.map((module) => module.id);
+        const contentsByModule = await this.getCourseContentsByModule(moduleIds);
+
+        for (const module of modules) {
+            const courseId = module.Course?.id;
+            if (!courseId) {
+                continue;
+            }
+            const moduleDto = CourseModuleMapper.toResponseDto(module);
+            const moduleContents = contentsByModule.get(module.id);
+            if (moduleContents && moduleContents.length > 0) {
+                moduleDto['Contents'] = moduleContents;
+            }
+            if (!modulesMap.has(courseId)) {
+                modulesMap.set(courseId, []);
+            }
+            modulesMap.get(courseId).push(moduleDto);
+        }
+
+        return modulesMap;
+    }
+
+    private async getCourseContentsByModule(
+        moduleIds: string[]
+    ): Promise<Map<string, CourseContentResponseDto[]>> {
+        const contentsMap: Map<string, CourseContentResponseDto[]> = new Map();
+        if (!moduleIds || moduleIds.length === 0) {
+            return contentsMap;
+        }
+
+        const contents = await this._courseContentRepository.find({
+            where: { CourseModule: { id: In(moduleIds) } },
+            relations: { Course: true, CourseModule: true },
+        });
+
+        for (const content of contents) {
+            const moduleId = content.CourseModule?.id;
+            if (!moduleId) {
+                continue;
+            }
+            const dto = CourseContentMapper.toResponseDto(content);
+            if (!contentsMap.has(moduleId)) {
+                contentsMap.set(moduleId, []);
+            }
+            contentsMap.get(moduleId).push(dto);
+        }
+
+        return contentsMap;
+    }
 
     private getSearchObject = (filters: CourseSearchFilters) => {
         var search: FindManyOptions<Course> = {

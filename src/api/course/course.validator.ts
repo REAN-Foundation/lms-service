@@ -17,7 +17,7 @@ export class CourseValidator extends BaseValidator {
                 ImageUrl: joi.string().max(1000).min(0).required(),
                 DurationInDays: joi.number().integer().required(),
                 Sequence: joi.number().integer().optional(),
-                LearningPathId: joi.string().uuid().optional(),
+                LearningPathIds: joi.array().items(joi.string().uuid()).optional(),
             });
             await courses.validateAsync(request.body);
             const model: CourseCreateModel = {
@@ -27,7 +27,7 @@ export class CourseValidator extends BaseValidator {
                 ImageUrl: request.body.ImageUrl ? request.body.ImageUrl : null,
                 DurationInDays: request.body.DurationInDays ? request.body.DurationInDays : null,
                 Sequence: request.body.Sequence ? request.body.Sequence : null,
-                LearningPathId: request.body.LearningPathId,
+                LearningPathIds: request.body.LearningPathIds ?? [],
             };
             return model;
         } catch (error) {
@@ -44,7 +44,7 @@ export class CourseValidator extends BaseValidator {
                 ImageUrl: joi.string().max(1000).min(0).optional(),
                 DurationInDays: joi.number().integer().optional(),
                 Sequence: joi.number().integer().optional(),
-                LearningPathId: joi.string().uuid().optional(),
+                LearningPathIds: joi.array().items(joi.string().uuid()).optional(),
             });
             await courses.validateAsync(request.body);
 
@@ -68,8 +68,8 @@ export class CourseValidator extends BaseValidator {
             if (TypeUtils.hasProperty(request.body, 'Sequence')) {
                 model.Sequence = request.body.Sequence;
             }
-            if (TypeUtils.hasProperty(request.body, 'LearningPathId')) {
-                model.LearningPathId = request.body.LearningPathId;
+            if (TypeUtils.hasProperty(request.body, 'LearningPathIds')) {
+                model.LearningPathIds = request.body.LearningPathIds ?? [];
             }
 
             return model;

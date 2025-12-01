@@ -27,6 +27,8 @@ export class LearningPathService extends BaseService {
 
     _learningPathRepository: Repository<LearningPath> = Source.getRepository(LearningPath);
 
+    _courseRepository: Repository<Course> = Source.getRepository(Course);
+
     //#endregion
 
     public create = async (createModel: LearningPathCreateModel): Promise<LearningPathResponseDto> => {
@@ -40,6 +42,10 @@ export class LearningPathService extends BaseService {
             Enabled: createModel.Enabled,
         });
         var record = await this._learningPathRepository.save(learningPath);
+        
+        // Add courses via junction table
+        await this.addCourses(record.id, createModel.CourseIds);
+        
         return LearningPathMapper.toResponseDto(record);
     };
 
@@ -141,6 +147,11 @@ export class LearningPathService extends BaseService {
             // }
             var record = await this._learningPathRepository.save(learningPath);
 
+            // Update courses via junction table
+            if (model.CourseIds !== undefined) {
+                await this.addCourses(record.id, model.CourseIds);
+            }
+
             // Pipeline: Enrich DTO with courses (matching reancare-service updateDto pattern)
             const dto = LearningPathMapper.toResponseDto(record);
             const enrichedDto = await this.updateDto(dto);
@@ -241,4 +252,47 @@ export class LearningPathService extends BaseService {
         dto['Courses'] = courses.map((x) => CourseMapper.toResponseDto(x));
         return dto;
     };
+
+    private async addCourses(learningPathId: uuid, courseIds: uuid[]) {
+        if (courseIds && courseIds.length > 0) {
+            for (const courseId of courseIds) {
+                await this.addCourse(learningPathId, courseId);
+            }
+        }
+    }
+
+    private async addCourse(learningPathId: uuid, courseId: uuid): Promise<boolean> {
+        try {
+            // Check if course exists
+            const course = await this._courseRepository.findOne({
+                where: { id: courseId },
+            });
+            if (!course) {
+                ErrorHandler.throwNotFoundError(`Course with id ${courseId} not found`);
+            }
+
+            // Check if association already exists
+            const existingAssociation = await this._learningPathCoursesRepository.findOne({
+                where: {
+                    LearningPath: { id: learningPathId },
+                    Course: { id: courseId },
+                },
+            });
+
+            if (existingAssociation) {
+                return false; // Already exists, skip
+            }
+
+            // Create new association
+            const association = this._learningPathCoursesRepository.create({
+                LearningPath: { id: learningPathId } as any,
+                Course: { id: courseId } as any,
+            });
+            await this._learningPathCoursesRepository.save(association);
+            return true;
+        } catch (error) {
+            logger.error(error.message);
+            throw error;
+        }
+    }
 }

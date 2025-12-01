@@ -12,7 +12,7 @@ export interface CourseCreateModel {
     ImageUrl: string;
     DurationInDays: number;
     Sequence?: number;
-    LearningPathId?: uuid;
+    LearningPathIds?: uuid[];
 }
 
 export interface CourseUpdateModel {
@@ -26,7 +26,7 @@ export interface CourseUpdateModel {
     ImageUrl?: string;
     DurationInDays?: number;
     Sequence?: number;
-    LearningPathId?: uuid;
+    LearningPathIds?: uuid[];
 }
 
 export interface CourseResponseDto {
@@ -37,7 +37,6 @@ export interface CourseResponseDto {
     ImageUrl: string;
     DurationInDays: number;
     Sequence?: number;
-    LearningPathId?: uuid;
 }
 
 export interface CourseSearchFilters extends BaseSearchFilters {
@@ -51,7 +50,6 @@ export interface CourseSearchFilters extends BaseSearchFilters {
     ImageUrl?: string;
     DurationInDays?: number;
     sequence?: number;
-    learningPathId?: uuid;
 }
 
 export interface CourseSearchResults extends BaseSearchResults {

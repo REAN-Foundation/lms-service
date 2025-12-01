@@ -1,8 +1,7 @@
 // import { IsUrl } from "class-validator";
 import 'reflect-metadata';
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Max, Min } from 'class-validator';
-import { LearningPath } from './learning.path.entity';
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -40,10 +39,6 @@ export class Course {
     @Max(64)
     @Min(0)
     Sequence: number;
-
-    @ManyToOne(() => LearningPath)
-    @JoinColumn({ name: 'LearningPathId', referencedColumnName: 'id' })
-    LearningPath: LearningPath;
 
     @CreateDateColumn()
     CreatedAt: Date;

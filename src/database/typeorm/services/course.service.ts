@@ -46,10 +46,6 @@ export class CourseService extends BaseService {
     //#endregion
 
     public create = async (createModel: CourseCreateModel): Promise<CourseResponseDto> => {
-        let learningPath = null;
-        if (createModel.LearningPathId) {
-            learningPath = await this.getLearningPath(createModel.LearningPathId);
-        }
         const course = this._courseRepository.create({
             TenantId: createModel.TenantId,
             Name: createModel.Name,
@@ -57,9 +53,12 @@ export class CourseService extends BaseService {
             ImageUrl: createModel.ImageUrl,
             DurationInDays: createModel.DurationInDays,
             Sequence: createModel.Sequence,
-            LearningPath: learningPath,
         });
         var record = await this._courseRepository.save(course);
+        
+        // Add learning paths via junction table
+        await this.addLearningPaths(record.id, createModel.LearningPathIds);
+        
         return CourseMapper.toResponseDto(record);
     };
 
@@ -71,7 +70,6 @@ export class CourseService extends BaseService {
                 },
                 relations: {
                     // Client: true
-                    LearningPath: true,
                 },
             });
             if (!course) {
@@ -168,16 +166,17 @@ export class CourseService extends BaseService {
                 course.Sequence = model.Sequence;
             }
 
-            if (model.LearningPathId !== undefined && model.LearningPathId != null) {
-                const learningPath = await this.getLearningPath(model.LearningPathId);
-                course.LearningPath = learningPath;
-            }
-
             // if (model.ClientId != null) {
             //     const client = await this.getClient(model.ClientId);
             //     course.Client = client;
             // }
             var record = await this._courseRepository.save(course);
+            
+            // Update learning paths via junction table
+            if (model.LearningPathIds !== undefined) {
+                await this.addLearningPaths(record.id, model.LearningPathIds);
+            }
+            
             return CourseMapper.toResponseDto(record);
         } catch (error) {
             logger.error(error.message);
@@ -251,24 +250,50 @@ export class CourseService extends BaseService {
             search.where['Sequence'] = Like(`%${filters.sequence}%`);
         }
 
-        if (filters.learningPathId) {
-            search.where['LearningPath'] = { id: filters.learningPathId };
-            search.relations['LearningPath'] = true;
-        }
-
         return search;
     };
 
-    private async getLearningPath(learningPathId: uuid) {
-        const learningPath = await this._learningPathRepository.findOne({
-            where: {
-                id: learningPathId,
-            },
-        });
-        if (!learningPath) {
-            ErrorHandler.throwNotFoundError('LearningPath cannot be found');
+    private async addLearningPaths(courseId: uuid, learningPathIds: uuid[]) {
+        if (learningPathIds && learningPathIds.length > 0) {
+            for (const learningPathId of learningPathIds) {
+                await this.addLearningPath(courseId, learningPathId);
+            }
         }
-        return learningPath;
+    }
+
+    private async addLearningPath(courseId: uuid, learningPathId: uuid): Promise<boolean> {
+        try {
+            // Check if learning path exists
+            const learningPath = await this._learningPathRepository.findOne({
+                where: { id: learningPathId },
+            });
+            if (!learningPath) {
+                ErrorHandler.throwNotFoundError(`LearningPath with id ${learningPathId} not found`);
+            }
+
+            // Check if association already exists
+            const existingAssociation = await this._learningPathCoursesRepository.findOne({
+                where: {
+                    Course: { id: courseId },
+                    LearningPath: { id: learningPathId },
+                },
+            });
+
+            if (existingAssociation) {
+                return false; // Already exists, skip
+            }
+
+            // Create new association
+            const association = this._learningPathCoursesRepository.create({
+                Course: { id: courseId } as any,
+                LearningPath: { id: learningPathId } as any,
+            });
+            await this._learningPathCoursesRepository.save(association);
+            return true;
+        } catch (error) {
+            logger.error(error.message);
+            throw error;
+        }
     }
 
     //#endregion

@@ -22,6 +22,7 @@ export class LearningPathValidator extends BaseValidator {
                 DurationInDays: joi.number().integer().required(),
                 PreferenceWeight: joi.number().integer().required(),
                 Enabled: joi.boolean().required(),
+                CourseIds: joi.array().items(joi.string().uuid()).optional(),
             });
             await learning_paths.validateAsync(request.body);
             const model: LearningPathCreateModel = {
@@ -32,6 +33,7 @@ export class LearningPathValidator extends BaseValidator {
                 DurationInDays: request.body.DurationInDays ? request.body.DurationInDays : null,
                 PreferenceWeight: request.body.PreferenceWeight ? request.body.PreferenceWeight : null,
                 Enabled: request.body.Enabled ? request.body.Enabled : null,
+                CourseIds: request.body.CourseIds ?? [],
             };
             return model;
         } catch (error) {
@@ -49,6 +51,7 @@ export class LearningPathValidator extends BaseValidator {
                 DurationInDays: joi.number().integer().optional(),
                 PreferenceWeight: joi.number().integer().optional(),
                 Enabled: joi.boolean().optional(),
+                CourseIds: joi.array().items(joi.string().uuid()).optional(),
             });
             await learning_paths.validateAsync(request.body);
 
@@ -74,6 +77,9 @@ export class LearningPathValidator extends BaseValidator {
             }
             if (TypeUtils.hasProperty(request.body, 'Enabled')) {
                 model.Enabled = request.body.Enabled;
+            }
+            if (TypeUtils.hasProperty(request.body, 'CourseIds')) {
+                model.CourseIds = request.body.CourseIds ?? [];
             }
 
             return model;

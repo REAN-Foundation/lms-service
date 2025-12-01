@@ -8,6 +8,7 @@ import { NeedleService } from '../../../common/needle.service';
 import { DefaultRoles } from '../../../domain.types/miscellaneous/role.types';
 import { RolePermission } from '../models/role.permission.entity';
 import { Source } from '../typeorm.database.connector';
+import { ErrorHandler } from '../../../common/error.handling/error.handler';
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -36,7 +37,7 @@ export class RolePrivilegeService {
             return dto;
         } catch (error) {
             logger.error(error.message);
-            throw new Error('Unable to create role privilege: ' + error.message);
+            ErrorHandler.throwDbAccessError('Unable to create role privilege!', error);
         }
     };
 
@@ -50,8 +51,7 @@ export class RolePrivilegeService {
             });
             return rolePrivileges.length > 0;
         } catch (error) {
-            logger.error('Unable to validate role and privilege: ' + error.message);
-            throw new Error('Unable to validate role and privilege: ' + error.message);
+            ErrorHandler.throwDbAccessError('Unable to validate role and privilege!', error);
         }
     };
 
@@ -77,16 +77,13 @@ export class RolePrivilegeService {
             return dto;
         } catch (error) {
             logger.error(error.message);
-            throw new Error('Unable to get role privilege: ' + error.message);
+            ErrorHandler.throwDbAccessError('Unable to retrieve role privilege!', error);
         }
     };
 
     enable = async (id: string, enable: boolean): Promise<RolePrivilegeDto> => {
         try {
             const rp = await this._rolePermissionRepository.findOne({ where: { id } });
-            if (!rp) {
-                throw new Error('Role permission not found');
-            }
             rp.Enabled = enable;
             await this._rolePermissionRepository.save(rp);
             const dto: RolePrivilegeDto = {
@@ -100,7 +97,7 @@ export class RolePrivilegeService {
             return dto;
         } catch (error) {
             logger.error(error.message);
-            throw new Error('Unable to enable/disable role privilege: ' + error.message);
+            ErrorHandler.throwDbAccessError('Unable to enable/disable role privilege!', error);
         }
     };
 
@@ -113,12 +110,6 @@ export class RolePrivilegeService {
                     continue;
                 }
                 var filepath = path.join(process.cwd(), 'seed.data', 'role.privileges', seederFile);
-                
-                if (!fs.existsSync(filepath)) {
-                    logger.info(`Seeder file not found: ${filepath}`);
-                    continue;
-                }
-                
                 var fileBuffer = fs.readFileSync(filepath, 'utf8');
                 const privilegeMap = JSON.parse(fileBuffer);
                 const privileges = Helper.convertPrivilegeMapToPrivilegeList(privilegeMap);
@@ -145,8 +136,7 @@ export class RolePrivilegeService {
                 }
             }
         } catch (error) {
-            logger.error(error.message);
-            throw new Error('Error occurred while seeding role-privileges: ' + error.message);
+            ErrorHandler.throwDbAccessError('Error occurred while seeding role-privileges!', error);
         }
           
     };
@@ -174,7 +164,7 @@ export class RolePrivilegeService {
 
               return Array.from(roleMap.values());
           } catch (error) {
-              logger.error('Failed to fetch person roles: ' + error.message);
+              ErrorHandler.throwDbAccessError('Failed to fetch person roles!', error);
               return DefaultRoles;
           }
       };

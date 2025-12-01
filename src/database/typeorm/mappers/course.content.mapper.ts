@@ -27,14 +27,6 @@ export class CourseContentMapper {
 			Description: courseContent.Course.Description,
 			ImageUrl: courseContent.Course.ImageUrl,
 			DurationInDays: courseContent.Course.DurationInDays,			} : null,
-			LearningPath: courseContent.LearningPath? {
-			TenantId: courseContent.LearningPath.TenantId,
-			Name: courseContent.LearningPath.Name,
-			Description: courseContent.LearningPath.Description,
-			ImageUrl: courseContent.LearningPath.ImageUrl,
-			DurationInDays: courseContent.LearningPath.DurationInDays,
-			PreferenceWeight: courseContent.LearningPath.PreferenceWeight,
-			Enabled: courseContent.LearningPath.Enabled,			} : null,
 			CourseModule: courseContent.CourseModule? {
 			Name: courseContent.CourseModule.Name,
 			Description: courseContent.CourseModule.Description,

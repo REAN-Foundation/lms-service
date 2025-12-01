@@ -13,12 +13,7 @@ import {
 } from '../../../domain.types/learning.path.types';
 import { LearningPathMapper } from '../mappers/learning.path.mapper';
 import { CourseMapper } from '../mappers/course.mapper';
-import { CourseModuleMapper } from '../mappers/course.module.mapper';
-import { CourseContentMapper } from '../mappers/course.content.mapper';
 import { LearningPathCourses } from '../models/learning.path.courses.entity';
-import { CourseModule } from '../models/course.module.entity';
-import { CourseContent } from '../models/course.content.entity';
-import { UserLearning } from '../models/user.learning.entity';
 import { Course } from '../models/course.entity';
 
 import { LearningPath } from '../models/learning.path.entity';
@@ -29,14 +24,6 @@ export class LearningPathService extends BaseService {
     //#region Repositories
 
     _learningPathCoursesRepository: Repository<LearningPathCourses> = Source.getRepository(LearningPathCourses);
-
-    _courseModuleRepository: Repository<CourseModule> = Source.getRepository(CourseModule);
-
-    _courseContentRepository: Repository<CourseContent> = Source.getRepository(CourseContent);
-
-    _userLearningRepository: Repository<UserLearning> = Source.getRepository(UserLearning);
-
-    _courseRepository: Repository<Course> = Source.getRepository(Course);
 
     _learningPathRepository: Repository<LearningPath> = Source.getRepository(LearningPath);
 
@@ -76,24 +63,6 @@ export class LearningPathService extends BaseService {
                 relations: { Course: true },
             });
             const courses = learningPathCourses.map((lpc) => lpc.Course);
-
-            // Pipeline: For each course, get modules
-            for (const course of courses) {
-                const modules = await this._courseModuleRepository.find({
-                    where: { Course: { id: course.id } },
-                    relations: { Course: true, LearningPath: true },
-                });
-
-                // Pipeline: For each module, get contents
-                for (const module of modules) {
-                    const contents = await this._courseContentRepository.find({
-                        where: { CourseModule: { id: module.id } },
-                        relations: { Course: true, CourseModule: true },
-                    });
-                    module['Contents'] = contents.map((x) => CourseContentMapper.toResponseDto(x));
-                }
-                course['Modules'] = modules.map((x) => CourseModuleMapper.toResponseDto(x));
-            }
 
             // Enrich learning path object
             const learningPathDto = LearningPathMapper.toResponseDto(learningPath);

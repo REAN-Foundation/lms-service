@@ -1,6 +1,7 @@
 import express from 'express';
 import { RolePrivilegeService } from '../../database/typeorm/services/role.privilege.service';
 import { ActionScope, RequestType, ResourceOwnership } from "../auth.types";
+// import { ConsentService } from "../../services/auth/consent.service";
 import { CurrentUser } from "../../domain.types/miscellaneous/current.user";
 import { logger } from '../../logger/logger';
 import { Injector } from '../../startup/injector';

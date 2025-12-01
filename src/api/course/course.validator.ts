@@ -16,6 +16,7 @@ export class CourseValidator extends BaseValidator {
                 Description: joi.string().max(2000).min(0).required(),
                 ImageUrl: joi.string().max(1000).min(0).required(),
                 DurationInDays: joi.number().integer().required(),
+                LearningPathId: joi.string().uuid().optional(),
             });
             await courses.validateAsync(request.body);
             const model: CourseCreateModel = {
@@ -24,6 +25,7 @@ export class CourseValidator extends BaseValidator {
                 Description: request.body.Description ? request.body.Description : null,
                 ImageUrl: request.body.ImageUrl ? request.body.ImageUrl : null,
                 DurationInDays: request.body.DurationInDays ? request.body.DurationInDays : null,
+                LearningPathId: request.body.LearningPathId,
             };
             return model;
         } catch (error) {
@@ -39,6 +41,7 @@ export class CourseValidator extends BaseValidator {
                 Description: joi.string().max(2000).min(0).optional(),
                 ImageUrl: joi.string().max(1000).min(0).optional(),
                 DurationInDays: joi.number().integer().optional(),
+                LearningPathId: joi.string().uuid().optional(),
             });
             await courses.validateAsync(request.body);
 
@@ -59,6 +62,9 @@ export class CourseValidator extends BaseValidator {
             if (TypeUtils.hasProperty(request.body, 'DurationInDays')) {
                 model.DurationInDays = request.body.DurationInDays;
             }
+            if (TypeUtils.hasProperty(request.body, 'LearningPathId')) {
+                model.LearningPathId = request.body.LearningPathId;
+            }
 
             return model;
         } catch (error) {
@@ -74,6 +80,7 @@ export class CourseValidator extends BaseValidator {
                 description: joi.string().max(2000).min(0).optional(),
                 imageUrl: joi.string().max(1000).min(0).optional(),
                 durationInDays: joi.number().integer().optional(),
+                learningPathId: joi.string().uuid().optional(),
                 pageIndex    : joi.number().min(0).optional(),
                 itemsPerPage : joi.number().min(1).optional(),
                 orderBy      : joi.string().max(256).optional(),
@@ -118,6 +125,10 @@ export class CourseValidator extends BaseValidator {
         var durationInDays = query.durationInDays ? query.durationInDays : null;
         if (durationInDays != null) {
             filters['DurationInDays'] = durationInDays;
+        }
+        var learningPathId = query.learningPathId ? query.learningPathId : null;
+        if (learningPathId != null) {
+            filters['LearningPathId'] = learningPathId;
         }
 
         return filters;

@@ -17,7 +17,6 @@ import {
 import { uuid } from '../../../domain.types/miscellaneous/system.types';
 import { IsEmail, Max, Min, IsUrl } from 'class-validator';
 import { Course } from './course.entity';
-import { LearningPath } from './learning.path.entity';
 import { CourseContent } from './course.content.entity';
 import { UserLearning } from './user.learning.entity';
 
@@ -56,10 +55,6 @@ export class CourseModule {
     @ManyToOne(() => Course)
     @JoinColumn({ name: 'CourseId', referencedColumnName: 'id' })
     Course: Course;
-
-    @ManyToOne(() => LearningPath)
-    @JoinColumn({ name: 'LearningPathId', referencedColumnName: 'id' })
-    LearningPath: LearningPath;
 
     @CreateDateColumn()
     CreatedAt: Date;

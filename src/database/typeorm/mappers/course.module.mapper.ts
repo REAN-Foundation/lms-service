@@ -16,22 +16,13 @@ export class CourseModuleMapper {
             DurationInMins: courseModule.DurationInMins,
             Sequence: courseModule.Sequence,
             CourseId: courseModule.Course?.id,
-            LearningPathId: courseModule.LearningPath?.id,
             /*
 			Course: courseModule.Course? {
 			TenantId: courseModule.Course.TenantId,
 			Name: courseModule.Course.Name,
 			Description: courseModule.Course.Description,
 			ImageUrl: courseModule.Course.ImageUrl,
-			DurationInDays: courseModule.Course.DurationInDays,			} : null,
-			LearningPath: courseModule.LearningPath? {
-			TenantId: courseModule.LearningPath.TenantId,
-			Name: courseModule.LearningPath.Name,
-			Description: courseModule.LearningPath.Description,
-			ImageUrl: courseModule.LearningPath.ImageUrl,
-			DurationInDays: courseModule.LearningPath.DurationInDays,
-			PreferenceWeight: courseModule.LearningPath.PreferenceWeight,
-			Enabled: courseModule.LearningPath.Enabled,			} : null
+			DurationInDays: courseModule.Course.DurationInDays,			} : null
 */
         };
         return dto;

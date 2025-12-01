@@ -11,7 +11,6 @@ export interface CourseModuleCreateModel {
     DurationInMins?: number;
     Sequence?: number;
     CourseId?: uuid;
-    LearningPathId?: uuid;
 }
 
 export interface CourseModuleUpdateModel {
@@ -24,7 +23,6 @@ export interface CourseModuleUpdateModel {
     DurationInMins?: number;
     Sequence?: number;
     CourseId?: uuid;
-    LearningPathId?: uuid;
 }
 
 export interface CourseModuleResponseDto {
@@ -35,7 +33,6 @@ export interface CourseModuleResponseDto {
     DurationInMins: number;
     Sequence: number;
     CourseId: uuid;
-    LearningPathId: uuid;
 }
 
 export interface CourseModuleSearchFilters extends BaseSearchFilters {
@@ -48,7 +45,6 @@ export interface CourseModuleSearchFilters extends BaseSearchFilters {
     DurationInMins?: number;
     Sequence?: number;
     courseId?: uuid;
-    learningPathId?: uuid;
 }
 
 export interface CourseModuleSearchResults extends BaseSearchResults {

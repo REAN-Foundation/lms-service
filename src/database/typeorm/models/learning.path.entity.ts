@@ -17,9 +17,6 @@ import {
 import { uuid } from '../../../domain.types/miscellaneous/system.types';
 import { IsEmail, Max, Min, IsUrl } from 'class-validator';
 import { LearningPathCourses } from './learning.path.courses.entity';
-import { CourseModule } from './course.module.entity';
-import { CourseContent } from './course.content.entity';
-import { UserLearning } from './user.learning.entity';
 
 ////////////////////////////////////////////////////////////////////////
 

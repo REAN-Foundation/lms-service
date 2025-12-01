@@ -11,6 +11,7 @@ export interface CourseCreateModel {
     /** @minLength 0 @maxLength 1000 */
     ImageUrl: string;
     DurationInDays: number;
+    LearningPathId?: uuid;
 }
 
 export interface CourseUpdateModel {
@@ -23,6 +24,7 @@ export interface CourseUpdateModel {
     /** @minLength 0 @maxLength 1000 */
     ImageUrl?: string;
     DurationInDays?: number;
+    LearningPathId?: uuid;
 }
 
 export interface CourseResponseDto {
@@ -32,6 +34,7 @@ export interface CourseResponseDto {
     Description: string;
     ImageUrl: string;
     DurationInDays: number;
+    LearningPathId?: uuid;
 }
 
 export interface CourseSearchFilters extends BaseSearchFilters {
@@ -44,6 +47,7 @@ export interface CourseSearchFilters extends BaseSearchFilters {
     /** @minLength 0 @maxLength 1000 */
     ImageUrl?: string;
     DurationInDays?: number;
+    learningPathId?: uuid;
 }
 
 export interface CourseSearchResults extends BaseSearchResults {

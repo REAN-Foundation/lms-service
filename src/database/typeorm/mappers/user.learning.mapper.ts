@@ -37,8 +37,7 @@ export class UserLearningMapper {
 			ImageUrl: userLearning.CourseModule.ImageUrl,
 			DurationInMins: userLearning.CourseModule.DurationInMins,
 			Sequence: userLearning.CourseModule.Sequence,
-			CourseId: userLearning.CourseModule.Course?.id,
-			LearningPathId: userLearning.CourseModule.LearningPath?.id,			} : null,
+			CourseId: userLearning.CourseModule.Course?.id,			} : null,
 			CourseContent: userLearning.CourseContent? {
 			Title: userLearning.CourseContent.Title,
 			Description: userLearning.CourseContent.Description,
@@ -49,7 +48,6 @@ export class UserLearningMapper {
 			ActionTemplateId: userLearning.CourseContent.ActionTemplateId,
 			Sequence: userLearning.CourseContent.Sequence,
 			CourseId: userLearning.CourseContent.Course?.id,
-			LearningPathId: userLearning.CourseContent.LearningPath?.id,
 			CourseModuleId: userLearning.CourseContent.CourseModule?.id,			} : null
 */
         };

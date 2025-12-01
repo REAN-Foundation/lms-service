@@ -28,7 +28,6 @@ export class CourseContentValidator extends BaseValidator {
                 ActionTemplateId: joi.string().uuid().optional(),
                 Sequence: joi.number().integer().optional(),
                 CourseId: joi.string().uuid().optional(),
-                LearningPathId: joi.string().uuid().required(),
                 CourseModuleId: joi.string().uuid().required(),
             });
             await course_contents.validateAsync(request.body);

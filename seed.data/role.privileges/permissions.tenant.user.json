@@ -1,20 +1,40 @@
-[
-    "Certificates.Search",
-    "Certificates.GetById",
-    "Course.Search",
-    "Course.GetById",
-    "CourseContent.Search",
-    "CourseContent.GetById",
-    "CourseModule.Search",
-    "CourseModule.GetById",
-    "LearningPath.Search",
-    "LearningPath.GetById",
-    "LearningPathCourses.Search",
-    "LearningPathCourses.GetById",
-    "UserLearning.Create",
-    "UserLearning.Search",
-    "UserLearning.GetById",
-    "UserLearning.Update"
-]
-
-
+{
+    "Certificates": {
+        "Search": true,
+        "GetById": true
+    },
+    "Course": {
+        "Search": true,
+        "GetById": true
+    },
+    "CourseContent": {
+        "Search": true,
+        "GetById": true,
+        "GetContentsForCourse": true
+    },
+    "CourseModule": {
+        "Search": true,
+        "GetById": true
+    },
+    "LearningPath": {
+        "Search": true,
+        "GetById": true
+    },
+    "LearningPathCourses": {
+        "Search": true,
+        "GetById": true
+    },
+    "UserLearning": {
+        "Create": true,
+        "Search": true,
+        "GetById": true,
+        "Update": true,
+        "UpdateUserLearning": true,
+        "GetUserLearningPaths": true,
+        "GetUserCourseContents": true,
+        "GetLearningPathProgress": true,
+        "GetCourseProgress": true,
+        "GetModuleProgress": true,
+        "GetContentProgress": true
+    }
+}

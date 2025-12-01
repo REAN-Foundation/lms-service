@@ -46,12 +46,17 @@ export class CourseService extends BaseService {
     //#endregion
 
     public create = async (createModel: CourseCreateModel): Promise<CourseResponseDto> => {
+        let learningPath = null;
+        if (createModel.LearningPathId) {
+            learningPath = await this.getLearningPath(createModel.LearningPathId);
+        }
         const course = this._courseRepository.create({
             TenantId: createModel.TenantId,
             Name: createModel.Name,
             Description: createModel.Description,
             ImageUrl: createModel.ImageUrl,
             DurationInDays: createModel.DurationInDays,
+            LearningPath: learningPath,
         });
         var record = await this._courseRepository.save(course);
         return CourseMapper.toResponseDto(record);
@@ -65,6 +70,7 @@ export class CourseService extends BaseService {
                 },
                 relations: {
                     // Client: true
+                    LearningPath: true,
                 },
             });
             if (!course) {
@@ -74,7 +80,7 @@ export class CourseService extends BaseService {
             // Pipeline: Get modules for course
             const modules = await this._courseModuleRepository.find({
                 where: { Course: { id: course.id } },
-                relations: { Course: true, LearningPath: true },
+                relations: { Course: true },
             });
 
             // Pipeline: For each module, get contents
@@ -157,6 +163,11 @@ export class CourseService extends BaseService {
                 course.DurationInDays = model.DurationInDays;
             }
 
+            if (model.LearningPathId !== undefined && model.LearningPathId != null) {
+                const learningPath = await this.getLearningPath(model.LearningPathId);
+                course.LearningPath = learningPath;
+            }
+
             // if (model.ClientId != null) {
             //     const client = await this.getClient(model.ClientId);
             //     course.Client = client;
@@ -230,8 +241,25 @@ export class CourseService extends BaseService {
             search.where['DurationInDays'] = Like(`%${filters.DurationInDays}%`);
         }
 
+        if (filters.learningPathId) {
+            search.where['LearningPath'] = { id: filters.learningPathId };
+            search.relations['LearningPath'] = true;
+        }
+
         return search;
     };
+
+    private async getLearningPath(learningPathId: uuid) {
+        const learningPath = await this._learningPathRepository.findOne({
+            where: {
+                id: learningPathId,
+            },
+        });
+        if (!learningPath) {
+            ErrorHandler.throwNotFoundError('LearningPath cannot be found');
+        }
+        return learningPath;
+    }
 
     //#endregion
 }

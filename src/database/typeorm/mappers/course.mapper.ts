@@ -15,6 +15,7 @@ export class CourseMapper {
             Description: course.Description,
             ImageUrl: course.ImageUrl,
             DurationInDays: course.DurationInDays,
+            LearningPathId: course.LearningPath?.id,
         };
         return dto;
     };

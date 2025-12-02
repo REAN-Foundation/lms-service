@@ -33,7 +33,14 @@
     "UserLearning.Search",
     "UserLearning.GetById",
     "UserLearning.Update",
-    "UserLearning.Delete"
+    "UserLearning.Delete",
+    "LearningEnrollment.Enroll",
+    "LearningEnrollment.Search",
+    "LearningEnrollment.GetById",
+    "LearningEnrollment.GetUserEnrollments",
+    "LearningEnrollment.GetUserActiveEnrollments",
+    "LearningEnrollment.Stop",
+    "LearningEnrollment.Delete"
 ]
 
 

@@ -5,12 +5,13 @@ meta {
 }
 
 get {
-  url: {{BASE_URL}}/courses/search
+  url: {{BASE_URL}}/courses/search?tenantId=b5ab4e21-b585-44cc-b8b3-f83bdf279b6e
   body: json
   auth: none
 }
 
 params:query {
+  tenantId: b5ab4e21-b585-44cc-b8b3-f83bdf279b6e
   ~name: Hic laborum iste.
   ~description: Voluptate qui ex.
   ~imageUrl: Laudantium architecto in.

@@ -296,6 +296,15 @@
         "Update": true,
         "Delete": true
     },
+    "LearningEnrollment":{
+        "Enroll": true,
+        "Search": true,
+        "GetById": true,
+        "GetUserEnrollments": true,
+        "GetUserActiveEnrollments": true,
+        "Stop": true,
+        "Delete": true
+    },
     "UserLearning":{
         "Create": true,
         "Search": true,

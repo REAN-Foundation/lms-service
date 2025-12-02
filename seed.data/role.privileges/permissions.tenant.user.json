@@ -24,6 +24,13 @@
         "Search": true,
         "GetById": true
     },
+    "LearningEnrollment": {
+        "Enroll": true,
+        "GetById": true,
+        "GetUserEnrollments": true,
+        "GetUserActiveEnrollments": true,
+        "Stop": true
+    },
     "UserLearning": {
         "Create": true,
         "Search": true,

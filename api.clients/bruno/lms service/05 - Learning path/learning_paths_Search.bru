@@ -1,0 +1,43 @@
+meta {
+  name: Search Learning path
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{BASE_URL}}/learning-paths/search
+  body: json
+  auth: none
+}
+
+params:query {
+  ~tenantId: 7d60afd9-51cb-92e8-bc24-080287f75c0f
+  ~name: Deserunt quis sed
+  ~description: Voluptates provident distinctio.
+  ~imageUrl: Enim ducimus quisquam.
+  ~durationInDays: 5350
+  ~preferenceWeight: 3016
+  ~enabled: false
+}
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+tests {
+    test('Request is successfully', function () {
+        expect(res.getStatus()).to.equal(200);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+  
+    test('Learning paths records retrieved successfully', function () {
+         var jsonRes = res.getBody();
+          expect(jsonRes.Data).to.have.property('Items');
+          expect(jsonRes.Data.Items.length).to.be.at.least(0);
+    });
+    
+}

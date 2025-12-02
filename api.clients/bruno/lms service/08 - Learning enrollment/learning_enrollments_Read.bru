@@ -1,0 +1,37 @@
+meta {
+  name: Read Learning enrollment
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{BASE_URL}}/learning-enrollments/{{LEARNING_ENROLLMENT_ID}}
+  body: json
+  auth: none
+}
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+tests {
+
+    test('Request is successful', function () {
+        expect(res.getStatus()).to.equal(200);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+
+    test('Learning enrollment retrieved', function () {
+        var jsonRes = res.getBody();
+
+        expect(jsonRes.Data).to.have.property('id');
+        expect(jsonRes.Data).to.have.property('UserId');
+        expect(jsonRes.Data).to.have.property('ProgressStatus');
+        expect(jsonRes.Data).to.have.property('IsActive');
+    });
+}
+

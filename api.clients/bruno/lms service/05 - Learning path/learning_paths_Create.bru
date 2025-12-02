@@ -1,0 +1,72 @@
+
+meta {
+  name: Create Learning path
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{BASE_URL}}/learning-paths
+  body: json
+  auth: none
+}
+
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+body:json {
+{
+    "TenantId": "{{TENANT_ID}}",
+    "Name": "Jaime Kozey",
+    "Description": "ut sunt",
+    "ImageUrl": "http://narciso.info",
+    "DurationInDays": 7796,
+    "PreferenceWeight": 4267,
+    "Enabled": true,
+    "CourseIds": ["{{COURSE_ID}}"]
+  }
+}
+
+tests {
+
+    try {
+        var respData = res.getBody();
+        bru.setEnvVar('LEARNING_PATH_ID', respData.Data.id);
+    }
+    catch (error) {
+        console.log(error.message);
+    }
+    test('Request is successfully', function () {
+        expect(res.getStatus()).to.equal(201);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+
+    test('Learning paths created successfully', function () {
+        var jsonRes = res.getBody();
+
+        expect(jsonRes.Data).to.have.property('id');
+        
+        expect(jsonRes.Data).to.have.property('TenantId');
+        expect(jsonRes.Data).to.have.property('Name');
+        expect(jsonRes.Data).to.have.property('Description');
+        expect(jsonRes.Data).to.have.property('ImageUrl');
+        expect(jsonRes.Data).to.have.property('DurationInDays');
+        expect(jsonRes.Data).to.have.property('PreferenceWeight');
+        expect(jsonRes.Data).to.have.property('Enabled');
+
+        expect(jsonRes.Data.Name).equals("Jaime Kozey");
+        expect(jsonRes.Data.Description).equals("ut sunt");
+        expect(jsonRes.Data.ImageUrl).equals("http://narciso.info");
+        expect(jsonRes.Data.DurationInDays).equals(7796);
+        expect(jsonRes.Data.PreferenceWeight).equals(4267);
+        expect(jsonRes.Data.Enabled).equals(true);
+
+    });
+    
+}

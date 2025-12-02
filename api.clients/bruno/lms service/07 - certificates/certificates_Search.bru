@@ -1,0 +1,49 @@
+meta {
+  name: Search Certificates
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{BASE_URL}}/certificates/search
+  body: json
+  auth: none
+}
+
+params:query {
+  ~userId: 46a252ee-81ef-89c2-b49f-ff4c1fd9f5vce
+  ~certificateNumber: Molestiae ex eos.
+  ~certificateName: Nihil eos consequatur.
+  ~certificateType: Atque exercitationem dolor.
+  ~issuedDate: Necessitatibus error ut.
+  ~expiryDate: 2025-01-27T05:32:11
+  ~certificateUrl: Illo itaque consectetur.
+  ~finalGrade: 8561.635
+  ~creditHours: 7688
+  ~skills: Vero aut dolores.
+  ~isVerified: true
+  ~verificationUrl: Atque amet ratione.
+  ~issuedBy: f14e8480-70c9-3937-275c-d914532791ef
+}
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+tests {
+    test('Request is successfully', function () {
+        expect(res.getStatus()).to.equal(200);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+  
+    test('Certificates records retrieved successfully', function () {
+         var jsonRes = res.getBody();
+          expect(jsonRes.Data).to.have.property('Items');
+          expect(jsonRes.Data.Items.length).to.be.at.least(0);
+    });
+    
+}

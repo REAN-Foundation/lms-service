@@ -1,0 +1,59 @@
+meta {
+  name: Update Course module
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{BASE_URL}}/course-modules/{{COURSE_MODULE_ID}}
+  body: json
+  auth: none
+}
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+body:json {
+  {
+    "CourseId": "{{COURSE_ID}}",
+    "Name": "Mabel Towne",
+    "Description": "officia veritatis",
+    "ImageUrl": "http://jaron.com",
+    "DurationInMins": 5549,
+    "Sequence": 4798
+  }
+}
+
+tests {
+    test('Request is successfully', function () {
+        expect(res.getStatus()).to.equal(200);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+  
+    test('Course modules updated successfully', function () {
+        var jsonRes = res.getBody();
+  
+        expect(jsonRes.Data).to.have.property('id');
+        
+        expect(jsonRes.Data).to.have.property('CourseId');
+        expect(jsonRes.Data).to.have.property('Name');
+        expect(jsonRes.Data).to.have.property('Description');
+        expect(jsonRes.Data).to.have.property('ImageUrl');
+        expect(jsonRes.Data).to.have.property('DurationInMins');
+        expect(jsonRes.Data).to.have.property('Sequence');
+  
+        expect(jsonRes.Data.CourseId).equals('{{COURSE_ID}}');
+        expect(jsonRes.Data.Name).equals("Mabel Towne");
+        expect(jsonRes.Data.Description).equals("officia veritatis");
+        expect(jsonRes.Data.ImageUrl).equals("http://jaron.com");
+        expect(jsonRes.Data.DurationInMins).equals(5549);
+        expect(jsonRes.Data.Sequence).equals(4798);
+  
+    });
+    
+}

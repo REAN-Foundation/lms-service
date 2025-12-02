@@ -1,0 +1,68 @@
+meta {
+  name: Create User learning
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{BASE_URL}}/user-learnings
+  body: json
+  auth: none
+}
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+body:json {
+  {
+    "CourseId": "{{COURSE_ID}}",
+    "LearningPathId": "{{LEARNING_PATH_ID}}",
+    "CourseModuleId": "{{COURSE_MODULE_ID}}",
+    "CourseContentId": "{{COURSE_CONTENT_ID}}",
+    "UserId": "{{USER_ID}}",
+    "ProgressStatus": "InProgress"
+  }
+}
+
+tests {
+    try {
+        var respData = res.getBody();
+        bru.setEnvVar('USER_LEARNING_ID', respData.Data.id);
+    }
+    catch (error) {
+        console.log(error.message);
+    }
+    test('Request is successfully', function () {
+        expect(res.getStatus()).to.equal(201);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+  
+    test('User learnings created successfully', function () {
+        var jsonRes = res.getBody();
+  
+        expect(jsonRes.Data).to.have.property('id');
+        
+        expect(jsonRes.Data).to.have.property('CourseId');
+        expect(jsonRes.Data).to.have.property('LearningPathId');
+        expect(jsonRes.Data).to.have.property('CourseModuleId');
+        expect(jsonRes.Data).to.have.property('CourseContentId');
+        expect(jsonRes.Data).to.have.property('UserId');
+        expect(jsonRes.Data).to.have.property('ActionId');
+        expect(jsonRes.Data).to.have.property('ProgressStatus');
+        expect(jsonRes.Data).to.have.property('PercentageCompletion');
+  
+        expect(jsonRes.Data.CourseId).equals('{{COURSE_ID}}');
+        expect(jsonRes.Data.LearningPathId).equals('{{LEARNING_PATH_ID}}');
+        expect(jsonRes.Data.CourseModuleId).equals('{{COURSE_MODULE_ID}}');
+        expect(jsonRes.Data.CourseContentId).equals('{{COURSE_CONTENT_ID}}');
+        expect(jsonRes.Data.ProgressStatus).equals("InProgress");
+        expect(jsonRes.Data.PercentageCompletion).equals(8827);
+  
+    });
+    
+}

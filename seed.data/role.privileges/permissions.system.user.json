@@ -1,0 +1,47 @@
+{
+    "Certificates": {
+        "Search": true,
+        "GetById": true
+    },
+    "Course": {
+        "Search": true,
+        "GetById": true
+    },
+    "CourseContent": {
+        "Search": true,
+        "GetById": true,
+        "GetContentsForCourse": true
+    },
+    "CourseModule": {
+        "Search": true,
+        "GetById": true
+    },
+    "LearningPath": {
+        "Search": true,
+        "GetById": true
+    },
+    "LearningPathCourses": {
+        "Search": true,
+        "GetById": true
+    },
+    "LearningEnrollment": {
+        "Enroll": true,
+        "GetById": true,
+        "GetUserEnrollments": true,
+        "GetUserActiveEnrollments": true,
+        "Stop": true
+    },
+    "UserLearning": {
+        "Create": true,
+        "Search": true,
+        "GetById": true,
+        "Update": true,
+        "UpdateUserLearning": true,
+        "GetUserLearningPaths": true,
+        "GetUserCourseContents": true,
+        "GetLearningPathProgress": true,
+        "GetCourseProgress": true,
+        "GetModuleProgress": true,
+        "GetContentProgress": true
+    }
+}

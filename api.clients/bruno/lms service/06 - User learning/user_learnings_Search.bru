@@ -1,0 +1,39 @@
+meta {
+  name: Search User learning
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{BASE_URL}}/user-learnings/search
+  body: json
+  auth: none
+}
+
+params:query {
+  ~userId: fa5304c5-e490-4cc2-87b9-03ac6cdd9443
+  ~progressStatus: nostrum
+  ~percentageCompletion: 5992
+}
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+tests {
+    test('Request is successfully', function () {
+        expect(res.getStatus()).to.equal(200);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+  
+    test('User learnings records retrieved successfully', function () {
+         var jsonRes = res.getBody();
+          expect(jsonRes.Data).to.have.property('Items');
+          expect(jsonRes.Data.Items.length).to.be.at.least(0);
+    });
+    
+}

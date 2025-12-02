@@ -1,0 +1,35 @@
+meta {
+  name: Search Learning enrollments
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{BASE_URL}}/learning-enrollments/search?pageIndex=0&itemsPerPage=10
+  body: json
+  auth: none
+}
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+tests {
+
+    test('Request is successful', function () {
+        expect(res.getStatus()).to.equal(200);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+
+    test('Learning enrollments search returned data', function () {
+        var jsonRes = res.getBody();
+
+        expect(jsonRes.Data).to.have.property('LearningEnrollments');
+        expect(jsonRes.Data.LearningEnrollments).to.have.property('Items');
+    });
+}
+

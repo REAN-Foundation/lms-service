@@ -13,9 +13,9 @@ export class CourseValidator extends BaseValidator {
             const courses = joi.object({
                 TenantId: joi.string().max(64).min(0).required(),
                 Name: joi.string().max(64).min(0).required(),
-                Description: joi.string().max(2000).min(0).required(),
-                ImageUrl: joi.string().max(1000).min(0).required(),
-                DurationInDays: joi.number().integer().required(),
+                Description: joi.string().max(2000).min(0).optional(),
+                ImageUrl: joi.string().max(1000).min(0).optional(),
+                DurationInDays: joi.number().integer().optional(),
                 Sequence: joi.number().integer().optional(),
                 LearningPathIds: joi.array().items(joi.string().uuid()).optional(),
             });

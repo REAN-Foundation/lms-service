@@ -34,6 +34,9 @@ export class LearningPathCourses {
     @JoinColumn({ name: 'LearningPathId', referencedColumnName: 'id' })
     LearningPath: LearningPath;
 
+    @Column({ type: 'integer', nullable: true })
+    Sequence: number;
+
     @CreateDateColumn()
     CreatedAt: Date;
 

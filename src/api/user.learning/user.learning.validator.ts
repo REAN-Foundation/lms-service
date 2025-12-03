@@ -20,7 +20,7 @@ export class UserLearningValidator extends BaseValidator {
                 ProgressStatus: joi
                     .string()
                     .valid(...Object.values(ProgressStatus))
-                    .required(),
+                    .optional(),
                 CourseId: joi.string().uuid().required(),
                 LearningPathId: joi.string().uuid().required(),
                 CourseModuleId: joi.string().uuid().required(),

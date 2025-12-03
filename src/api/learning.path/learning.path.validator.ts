@@ -17,11 +17,11 @@ export class LearningPathValidator extends BaseValidator {
             const learning_paths = joi.object({
                 TenantId: joi.string().uuid().required(),
                 Name: joi.string().max(64).min(0).required(),
-                Description: joi.string().max(2000).min(0).required(),
-                ImageUrl: joi.string().max(1000).min(0).required(),
-                DurationInDays: joi.number().integer().required(),
-                PreferenceWeight: joi.number().integer().required(),
-                Enabled: joi.boolean().required(),
+                Description: joi.string().max(2000).min(0).optional(),
+                ImageUrl: joi.string().max(1000).min(0).optional(),
+                DurationInDays: joi.number().integer().optional(),
+                PreferenceWeight: joi.number().integer().optional(),
+                Enabled: joi.boolean().optional(),
                 CourseIds: joi.array().items(joi.string().uuid()).optional(),
             });
             await learning_paths.validateAsync(request.body);

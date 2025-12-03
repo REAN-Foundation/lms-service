@@ -16,10 +16,10 @@ export class CourseModuleValidator extends BaseValidator {
         try {
             const course_modules = joi.object({
                 Name: joi.string().max(64).min(0).required(),
-                Description: joi.string().max(2000).min(0),
-                ImageUrl: joi.string().max(1000).min(0),
-                DurationInMins: joi.number().integer(),
-                Sequence: joi.number().integer(),
+                Description: joi.string().max(2000).min(0).optional,
+                ImageUrl: joi.string().max(1000).min(0).optional(),
+                DurationInMins: joi.number().integer().optional(),
+                Sequence: joi.number().integer().optional(),
                 CourseId: joi.string().uuid().required(),
             });
             await course_modules.validateAsync(request.body);

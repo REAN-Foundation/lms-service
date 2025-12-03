@@ -10,7 +10,7 @@ export interface CourseModuleCreateModel {
     ImageUrl?: string;
     DurationInMins?: number;
     Sequence?: number;
-    CourseId?: uuid;
+    CourseId: uuid;
 }
 
 export interface CourseModuleUpdateModel {

@@ -4,7 +4,7 @@ import { ProgressStatus } from './enums/progress.status.enum';
 
 export interface UserLearningCreateModel {
     UserId: uuid;
-    ProgressStatus: ProgressStatus;
+    ProgressStatus?: ProgressStatus;
     CourseId: uuid;
     LearningPathId: uuid;
     CourseModuleId: uuid;

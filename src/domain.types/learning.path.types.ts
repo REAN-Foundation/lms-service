@@ -6,12 +6,12 @@ export interface LearningPathCreateModel {
     /** @minLength 0 @maxLength 64 */
     Name: string;
     /** @minLength 0 @maxLength 2000 */
-    Description: string;
+    Description?: string;
     /** @minLength 0 @maxLength 1000 */
-    ImageUrl: string;
-    DurationInDays: number;
-    PreferenceWeight: number;
-    Enabled: boolean;
+    ImageUrl?: string;
+    DurationInDays?: number;
+    PreferenceWeight?: number;
+    Enabled?: boolean;
     CourseIds?: uuid[];
 }
 

@@ -7,10 +7,10 @@ export interface CourseCreateModel {
     /** @minLength 0 @maxLength 64 */
     Name: string;
     /** @minLength 0 @maxLength 2000 */
-    Description: string;
+    Description?: string;
     /** @minLength 0 @maxLength 1000 */
-    ImageUrl: string;
-    DurationInDays: number;
+    ImageUrl?: string;
+    DurationInDays?: number;
     Sequence?: number;
     LearningPathIds?: uuid[];
 }
@@ -50,6 +50,7 @@ export interface CourseSearchFilters extends BaseSearchFilters {
     ImageUrl?: string;
     DurationInDays?: number;
     sequence?: number;
+    LearningPathId?: uuid;
 }
 
 export interface CourseSearchResults extends BaseSearchResults {

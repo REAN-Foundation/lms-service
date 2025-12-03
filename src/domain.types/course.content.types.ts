@@ -15,7 +15,7 @@ export interface CourseContentCreateModel {
     ResourceLink?: string;
     ActionTemplateId?: uuid;
     Sequence?: number;
-    CourseId: uuid;
+    CourseId?: uuid;
     CourseModuleId: uuid;
 }
 

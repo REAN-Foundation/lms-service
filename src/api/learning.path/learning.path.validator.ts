@@ -98,6 +98,14 @@ export class LearningPathValidator extends BaseValidator {
                 durationInDays: joi.number().integer().optional(),
                 preferenceWeight: joi.number().integer().optional(),
                 enabled: joi.boolean().optional(),
+                pageIndex: joi.number().min(0).optional(),
+                itemsPerPage: joi.number().min(1).optional(),
+                orderBy: joi.string().max(256).optional(),
+                order: joi
+                    .string()
+                    .valid('ascending', 'descending')
+                    .optional()
+                    .error(() => new Error("order param: 'ascending' and 'descending' are the only valid values.")),
             });
             await learning_paths.validateAsync(request.query);
             const filters = this.getSearchFilters(request.query);

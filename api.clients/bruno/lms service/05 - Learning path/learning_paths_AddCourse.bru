@@ -1,0 +1,32 @@
+meta {
+  name: Add Course to Learning Path
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{BASE_URL}}/learning-paths/{{LEARNING_PATH_ID}}/courses/{{COURSE_ID}}
+  body: none
+  auth: none
+}
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+tests {
+    test('Request is successful', function () {
+        expect(res.getStatus()).to.equal(200);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+
+    test('Course added to learning path successfully', function () {
+        var jsonRes = res.getBody();
+        expect(jsonRes.Data).to.have.property('id');
+    });
+}
+

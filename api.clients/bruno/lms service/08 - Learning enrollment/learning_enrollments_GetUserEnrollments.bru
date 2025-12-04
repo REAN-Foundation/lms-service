@@ -1,11 +1,11 @@
 meta {
-  name: Get User Learning enrollments
+  name: Get User All Enrollments
   type: http
-  seq: 4
+  seq: 3
 }
 
 get {
-  url: {{BASE_URL}}/learning-enrollments/users/{{USER_ID}}/enrollments?includeInactive=true
+  url: {{BASE_URL}}/enrollments/users/{{USER_ID}}?includeInactive=true
   body: json
   auth: none
 }
@@ -25,10 +25,34 @@ tests {
         expect(jsonRes.Status).to.eql('success');
     });
 
-    test('User enrollments retrieved', function () {
+    test('User enrollments retrieved with both course and learning path enrollments', function () {
         var jsonRes = res.getBody();
 
-        expect(jsonRes.Data).to.have.property('Enrollments');
+        expect(jsonRes.Data).to.have.property('CourseEnrollments');
+        expect(jsonRes.Data).to.have.property('LearningPathEnrollments');
+        expect(jsonRes.Data.CourseEnrollments).to.be.an('array');
+        expect(jsonRes.Data.LearningPathEnrollments).to.be.an('array');
+    });
+
+    test('Enrollment structure is correct', function () {
+        var jsonRes = res.getBody();
+        
+        if (jsonRes.Data.CourseEnrollments.length > 0) {
+            var enrollment = jsonRes.Data.CourseEnrollments[0];
+            expect(enrollment).to.have.property('id');
+            expect(enrollment).to.have.property('UserId');
+            expect(enrollment).to.have.property('CourseId');
+            expect(enrollment).to.have.property('IsActive');
+            expect(enrollment).to.have.property('StartDate');
+        }
+        
+        if (jsonRes.Data.LearningPathEnrollments.length > 0) {
+            var enrollment = jsonRes.Data.LearningPathEnrollments[0];
+            expect(enrollment).to.have.property('id');
+            expect(enrollment).to.have.property('UserId');
+            expect(enrollment).to.have.property('LearningPathId');
+            expect(enrollment).to.have.property('IsActive');
+        }
     });
 }
 

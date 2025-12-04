@@ -35,10 +35,9 @@ export class Course {
     @Min(0)
     DurationInDays: number;
 
-    @Column({ type: 'int', nullable: true })
-    @Max(64)
-    @Min(0)
-    Sequence: number;
+    // String uuid array of module ids
+    @Column({ type: 'json', nullable: true })
+    ModuleSequence: string;
 
     @CreateDateColumn()
     CreatedAt: Date;

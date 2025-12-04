@@ -1,0 +1,39 @@
+meta {
+  name: Reorder Courses in Learning Path
+  type: http
+  seq: 8
+}
+
+put {
+  url: {{BASE_URL}}/learning-paths/reorder-courses
+  body: json
+  auth: none
+}
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+body:json {
+  {
+    "LearningPathId": "{{LEARNING_PATH_ID}}",
+    "CourseIds": ["{{COURSE_ID}}", "{{COURSE_ID_2}}"]
+  }
+}
+
+tests {
+    test('Request is successful', function () {
+        expect(res.getStatus()).to.equal(200);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+
+    test('Courses reordered successfully', function () {
+        var jsonRes = res.getBody();
+        expect(jsonRes.Data).to.be.an('object');
+    });
+}
+

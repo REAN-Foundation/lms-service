@@ -1,11 +1,11 @@
 meta {
-  name: Delete Enrollment
+  name: Delete Learning Path Enrollment
   type: http
-  seq: 7
+  seq: 17
 }
 
 delete {
-  url: {{BASE_URL}}/enrollments/{{COURSE_ENROLLMENT_ID}}
+  url: {{BASE_URL}}/enrollments/{{LEARNING_PATH_ENROLLMENT_ID}}
   body: json
   auth: none
 }
@@ -25,15 +25,10 @@ tests {
         expect(jsonRes.Status).to.eql('success');
     });
 
-    test('Enrollment deleted successfully', function () {
+    test('Learning path enrollment deleted successfully', function () {
         var jsonRes = res.getBody();
         expect(jsonRes.Data).to.have.property('Deleted');
         expect(jsonRes.Data.Deleted).to.be.true;
-    });
-
-    test('Deleted enrollment cannot be retrieved', function () {
-        // This test would require a follow-up GET request
-        // which would verify the enrollment no longer exists
     });
 }
 

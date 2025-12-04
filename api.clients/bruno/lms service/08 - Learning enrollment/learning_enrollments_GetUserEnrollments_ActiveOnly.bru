@@ -1,11 +1,11 @@
 meta {
-  name: Get User Active Enrollments
+  name: Get User Enrollments - Active Only
   type: http
-  seq: 4
+  seq: 14
 }
 
 get {
-  url: {{BASE_URL}}/enrollments/users/{{USER_ID}}/active
+  url: {{BASE_URL}}/enrollments/users/{{USER_ID}}?includeInactive=false
   body: json
   auth: none
 }
@@ -25,17 +25,11 @@ tests {
         expect(jsonRes.Status).to.eql('success');
     });
 
-    test('Active enrollments retrieved with both course and learning path enrollments', function () {
+    test('Only active enrollments are returned', function () {
         var jsonRes = res.getBody();
-        
+
         expect(jsonRes.Data).to.have.property('CourseEnrollments');
         expect(jsonRes.Data).to.have.property('LearningPathEnrollments');
-        expect(jsonRes.Data.CourseEnrollments).to.be.an('array');
-        expect(jsonRes.Data.LearningPathEnrollments).to.be.an('array');
-    });
-
-    test('All returned enrollments are active', function () {
-        var jsonRes = res.getBody();
         
         jsonRes.Data.CourseEnrollments.forEach(function(enrollment) {
             expect(enrollment.IsActive).to.be.true;

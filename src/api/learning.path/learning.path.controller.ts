@@ -82,4 +82,40 @@ export class LearningPathController {
             ResponseHandler.handleError(request, response, error);
         }
     };
+
+    addCourse = async (request: express.Request, response: express.Response) => {
+        try {
+            const learningPathId = await this._validator.requestParamAsUUID(request, 'id');
+            const courseId = await this._validator.requestParamAsUUID(request, 'courseId');
+            const updatedRecord = await this._service.addCourse(learningPathId, courseId);
+            const message = 'Course added to learning path successfully!';
+            ResponseHandler.success(request, response, message, 200, updatedRecord);
+        } catch (error) {
+            ResponseHandler.handleError(request, response, error);
+        }
+    };
+    
+    removeCourse = async (request: express.Request, response: express.Response) => {
+        try {
+            const learningPathId = await this._validator.requestParamAsUUID(request, 'id');
+            const courseId = await this._validator.requestParamAsUUID(request, 'courseId');
+            const updatedRecord = await this._service.removeCourse(learningPathId, courseId);
+            const message = 'Course removed from learning path successfully!';
+            ResponseHandler.success(request, response, message, 200, updatedRecord);
+        } catch (error) {
+            ResponseHandler.handleError(request, response, error);
+        }
+    };
+    
+    reorderCourses = async (request: express.Request, response: express.Response) => {
+        try {
+            const learningPathId = await this._validator.requestParamAsUUID(request, 'id');
+            const courseIds: uuid[] = await this._validator.reorderCoursesRequest(request);
+            const updatedRecord = await this._service.reorderCourses(learningPathId, courseIds);
+            const message = 'Courses reordered in learning path successfully!';
+            ResponseHandler.success(request, response, message, 200, updatedRecord);
+        } catch (error) {
+            ResponseHandler.handleError(request, response, error);
+        }
+    };
 }

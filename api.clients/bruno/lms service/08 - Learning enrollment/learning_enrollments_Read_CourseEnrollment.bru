@@ -1,7 +1,7 @@
 meta {
-  name: Get Enrollment by ID
+  name: Get Course Enrollment by ID
   type: http
-  seq: 5
+  seq: 16
 }
 
 get {
@@ -25,11 +25,12 @@ tests {
         expect(jsonRes.Status).to.eql('success');
     });
 
-    test('Enrollment retrieved with all required fields', function () {
+    test('Course enrollment retrieved with all required fields', function () {
         var jsonRes = res.getBody();
 
         expect(jsonRes.Data).to.have.property('id');
         expect(jsonRes.Data).to.have.property('UserId');
+        expect(jsonRes.Data).to.have.property('CourseId');
         expect(jsonRes.Data).to.have.property('IsActive');
         expect(jsonRes.Data).to.have.property('StartDate');
         expect(jsonRes.Data).to.have.property('ExpectedEndDate');
@@ -38,13 +39,13 @@ tests {
         expect(jsonRes.Data).to.have.property('UpdatedAt');
     });
 
-    test('Enrollment has either CourseId or LearningPathId', function () {
+    test('Course enrollment includes course details', function () {
         var jsonRes = res.getBody();
         
-        var hasCourseId = jsonRes.Data.hasOwnProperty('CourseId') && jsonRes.Data.CourseId !== null;
-        var hasLearningPathId = jsonRes.Data.hasOwnProperty('LearningPathId') && jsonRes.Data.LearningPathId !== null;
-        
-        expect(hasCourseId || hasLearningPathId).to.be.true;
+        if (jsonRes.Data.Course) {
+            expect(jsonRes.Data.Course).to.have.property('id');
+            expect(jsonRes.Data.Course).to.have.property('Name');
+        }
     });
 }
 

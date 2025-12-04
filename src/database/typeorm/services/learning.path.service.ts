@@ -255,13 +255,13 @@ export class LearningPathService extends BaseService {
 
     private async addCourses(learningPathId: uuid, courseIds: uuid[]) {
         if (courseIds && courseIds.length > 0) {
-            for (const courseId of courseIds) {
-                await this.addCourse(learningPathId, courseId);
+            for (let i = 0; i < courseIds.length; i++) {
+                await this.addCourse(learningPathId, courseIds[i], i + 1);
             }
         }
     }
 
-    private async addCourse(learningPathId: uuid, courseId: uuid): Promise<boolean> {
+    private async addCourse(learningPathId: uuid, courseId: uuid, sequence: number): Promise<boolean> {
         try {
             // Check if course exists
             const course = await this._courseRepository.findOne({
@@ -287,6 +287,7 @@ export class LearningPathService extends BaseService {
             const association = this._learningPathCoursesRepository.create({
                 LearningPath: { id: learningPathId } as any,
                 Course: { id: courseId } as any,
+                Sequence: sequence,
             });
             await this._learningPathCoursesRepository.save(association);
             return true;

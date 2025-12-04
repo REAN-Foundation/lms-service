@@ -145,4 +145,17 @@ export class LearningPathValidator extends BaseValidator {
 
         return filters;
     };
+
+    public reorderCoursesRequest = async (request: express.Request): Promise<string[]> => {
+        try {
+            const schema = joi.object({
+                CourseIds: joi.array().items(joi.string().uuid()).required(),
+            });
+            await schema.validateAsync(request.body);
+            return request.body.CourseIds;
+        } catch (error) {
+            ErrorHandler.handleValidationError(error);
+        }
+    };
+    
 }

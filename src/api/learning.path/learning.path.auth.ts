@@ -8,7 +8,7 @@ export class LearningPathAuth {
     static readonly create: AuthOptions = {
         ...DefaultAuthOptions,
         Context: `${this._baseContext}.Create`,
-        Ownership: ResourceOwnership.System,
+        Ownership: ResourceOwnership.Tenant,
         ActionScope: ActionScope.Tenant,
         RequestType: RequestType.CreateOne,
     };
@@ -16,7 +16,7 @@ export class LearningPathAuth {
     static readonly update: AuthOptions = {
         ...DefaultAuthOptions,
         Context: `${this._baseContext}.Update`,
-        Ownership: ResourceOwnership.System,
+        Ownership: ResourceOwnership.Tenant,
         ActionScope: ActionScope.Tenant,
         RequestType: RequestType.UpdateOne,
     };
@@ -24,7 +24,7 @@ export class LearningPathAuth {
     static readonly delete: AuthOptions = {
         ...DefaultAuthOptions,
         Context: `${this._baseContext}.Delete`,
-        Ownership: ResourceOwnership.System,
+        Ownership: ResourceOwnership.Tenant,
         ActionScope: ActionScope.Tenant,
         RequestType: RequestType.DeleteOne,
     };
@@ -32,7 +32,7 @@ export class LearningPathAuth {
     static readonly search: AuthOptions = {
         ...DefaultAuthOptions,
         Context: `${this._baseContext}.Search`,
-        Ownership: ResourceOwnership.System,
+        Ownership: ResourceOwnership.Tenant,
         ActionScope: ActionScope.Tenant,
         RequestType: RequestType.Search,
     };
@@ -40,8 +40,33 @@ export class LearningPathAuth {
     static readonly getById: AuthOptions = {
         ...DefaultAuthOptions,
         Context: `${this._baseContext}.GetById`,
-        Ownership: ResourceOwnership.System,
+        Ownership: ResourceOwnership.Tenant,
         ActionScope: ActionScope.Tenant,
         RequestType: RequestType.GetOne,
     };
+
+    static readonly addCourse: AuthOptions = {
+        ...DefaultAuthOptions,
+        Context: `${this._baseContext}.AddCourse`,
+        Ownership: ResourceOwnership.Tenant,
+        ActionScope: ActionScope.Tenant,
+        RequestType: RequestType.UpdateOne,
+    };
+
+    static readonly removeCourse: AuthOptions = {
+        ...DefaultAuthOptions,
+        Context: `${this._baseContext}.RemoveCourse`,
+        Ownership: ResourceOwnership.Tenant,
+        ActionScope: ActionScope.Tenant,
+        RequestType: RequestType.UpdateOne,
+    };
+
+    static readonly reorderCourses: AuthOptions = {
+        ...DefaultAuthOptions,
+        Context: `${this._baseContext}.ReorderCourses`,
+        Ownership: ResourceOwnership.Tenant,
+        ActionScope: ActionScope.Tenant,
+        RequestType: RequestType.UpdateMany,
+    };
+
 }

@@ -47,10 +47,9 @@ export class CourseModule {
     @Min(0)
     DurationInMins: number;
 
-    @Column({ type: 'int', nullable: true })
-    @Max(64)
-    @Min(0)
-    Sequence: number;
+    // String uuid array of content ids
+    @Column({ type: 'json', nullable: true })
+    ContentSequence: string;
 
     @ManyToOne(() => Course)
     @JoinColumn({ name: 'CourseId', referencedColumnName: 'id' })

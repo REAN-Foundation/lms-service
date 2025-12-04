@@ -23,7 +23,7 @@ export class LearningEnrollmentValidator extends BaseValidator {
             const schema = joi
                 .object({
                     StartDate: joi.date().iso().optional(),
-                    ExpecctedEndDate: joi.date().iso().optional(),
+                    ExpectedEndDate: joi.date().iso().optional(),
                 });
             await schema.validateAsync(request.body);
 
@@ -49,7 +49,7 @@ export class LearningEnrollmentValidator extends BaseValidator {
             const schema = joi
                 .object({
                     StartDate: joi.date().iso().optional(),
-                    ExpecctedEndDate: joi.date().iso().optional(),
+                    ExpectedEndDate: joi.date().iso().optional(),
                 });
             await schema.validateAsync(request.body);
 

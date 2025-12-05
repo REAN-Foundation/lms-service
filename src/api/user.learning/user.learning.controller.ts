@@ -200,4 +200,78 @@ export class UserLearningController {
             ResponseHandler.handleError(request, response, error);
         }
     };
+
+    getUserCourses = async (request: express.Request, response: express.Response): Promise<void> => {
+        try {
+            const userId: uuid = await this._validator.requestParamAsUUID(request, 'userId');
+            const courses = await this._service.getUserCourses(userId);
+            if (courses == null) {
+                ErrorHandler.throwNotFoundError('User courses cannot be retrieved.');
+            }
+            const message = 'User courses retrieved successfully!';
+            ResponseHandler.success(request, response, message, 200, { UserCourses: courses });
+        } catch (error) {
+            ResponseHandler.handleError(request, response, error);
+        }
+    };
+
+    getLearningPathCompletionState = async (request: express.Request, response: express.Response): Promise<void> => {
+        try {
+            const userId: uuid = await this._validator.requestParamAsUUID(request, 'userId');
+            const learningPathId: uuid = await this._validator.requestParamAsUUID(request, 'learningPathId');
+            const completionState = await this._service.getLearningPathCompletionState(userId, learningPathId);
+            if (completionState == null) {
+                ErrorHandler.throwNotFoundError('Learning path completion state cannot be retrieved.');
+            }
+            const message = 'Learning path completion state retrieved successfully!';
+            ResponseHandler.success(request, response, message, 200, { LearningPathCompletionState: completionState });
+        } catch (error) {
+            ResponseHandler.handleError(request, response, error);
+        }
+    };
+
+    getCourseCompletionState = async (request: express.Request, response: express.Response): Promise<void> => {
+        try {
+            const userId: uuid = await this._validator.requestParamAsUUID(request, 'userId');
+            const courseId: uuid = await this._validator.requestParamAsUUID(request, 'courseId');
+            const completionState = await this._service.getCourseCompletionState(userId, courseId);
+            if (completionState == null) {
+                ErrorHandler.throwNotFoundError('Course completion state cannot be retrieved.');
+            }
+            const message = 'Course completion state retrieved successfully!';
+            ResponseHandler.success(request, response, message, 200, { CourseCompletionState: completionState });
+        } catch (error) {
+            ResponseHandler.handleError(request, response, error);
+        }
+    };
+
+    getModuleCompletionState = async (request: express.Request, response: express.Response): Promise<void> => {
+        try {
+            const userId: uuid = await this._validator.requestParamAsUUID(request, 'userId');
+            const moduleId: uuid = await this._validator.requestParamAsUUID(request, 'moduleId');
+            const completionState = await this._service.getModuleCompletionState(userId, moduleId);
+            if (completionState == null) {
+                ErrorHandler.throwNotFoundError('Module completion state cannot be retrieved.');
+            }
+            const message = 'Module completion state retrieved successfully!';
+            ResponseHandler.success(request, response, message, 200, { ModuleCompletionState: completionState });
+        } catch (error) {
+            ResponseHandler.handleError(request, response, error);
+        }
+    };
+
+    getContentCompletionState = async (request: express.Request, response: express.Response): Promise<void> => {
+        try {
+            const userId: uuid = await this._validator.requestParamAsUUID(request, 'userId');
+            const contentId: uuid = await this._validator.requestParamAsUUID(request, 'contentId');
+            const completionState = await this._service.getContentCompletionState(userId, contentId);
+            if (completionState == null) {
+                ErrorHandler.throwNotFoundError('Content completion state cannot be retrieved.');
+            }
+            const message = 'Content completion state retrieved successfully!';
+            ResponseHandler.success(request, response, message, 200, { ContentCompletionState: completionState });
+        } catch (error) {
+            ResponseHandler.handleError(request, response, error);
+        }
+    };
 }

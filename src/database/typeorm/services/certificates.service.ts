@@ -217,6 +217,7 @@ export class CertificatesService extends BaseService {
                     Description: true,
                     ImageUrl: true,
                     DurationInDays: true,
+                    ModuleSequence: true,
                 },
 
                 // Client       : {

@@ -100,4 +100,44 @@ export class UserLearningAuth {
         ActionScope: ActionScope.Owner,
         RequestType: RequestType.GetOne,
     };
+
+    static readonly getUserCourses: AuthOptions = {
+        ...DefaultAuthOptions,
+        Context: `${this._baseContext}.GetUserCourses`,
+        Ownership: ResourceOwnership.Owner,
+        ActionScope: ActionScope.Owner,
+        RequestType: RequestType.GetMany,
+    };
+
+    static readonly getLearningPathCompletionState: AuthOptions = {
+        ...DefaultAuthOptions,
+        Context: `${this._baseContext}.GetLearningPathCompletionState`,
+        Ownership: ResourceOwnership.Owner,
+        ActionScope: ActionScope.Owner,
+        RequestType: RequestType.GetOne,
+    };
+
+    static readonly getCourseCompletionState: AuthOptions = {
+        ...DefaultAuthOptions,
+        Context: `${this._baseContext}.GetCourseCompletionState`,
+        Ownership: ResourceOwnership.Owner,
+        ActionScope: ActionScope.Owner,
+        RequestType: RequestType.GetOne,
+    };
+
+    static readonly getModuleCompletionState: AuthOptions = {
+        ...DefaultAuthOptions,
+        Context: `${this._baseContext}.GetModuleCompletionState`,
+        Ownership: ResourceOwnership.Owner,
+        ActionScope: ActionScope.Owner,
+        RequestType: RequestType.GetOne,
+    };
+
+    static readonly getContentCompletionState: AuthOptions = {
+        ...DefaultAuthOptions,
+        Context: `${this._baseContext}.GetContentCompletionState`,
+        Ownership: ResourceOwnership.Owner,
+        ActionScope: ActionScope.Owner,
+        RequestType: RequestType.GetOne,
+    };
 }

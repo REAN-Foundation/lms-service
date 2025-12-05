@@ -33,13 +33,15 @@ export interface LearningPathUpdateModel {
 
 export interface LearningPathResponseDto {
     id: uuid;
-    TenantId: uuid;
-    Name: string;
-    Description: string;
-    ImageUrl: string;
-    DurationInDays: number;
-    PreferenceWeight: number;
-    Enabled: boolean;
+    TenantId?: uuid;
+    Name?: string;
+    Description?: string;
+    ImageUrl?: string;
+    DurationInDays?: number;
+    PreferenceWeight?: number;
+    Enabled?: boolean;
+    CreatedAt: Date;
+    UpdatedAt: Date;
 }
 
 export interface LearningPathSearchFilters extends BaseSearchFilters {

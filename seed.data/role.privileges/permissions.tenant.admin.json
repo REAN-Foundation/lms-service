@@ -62,10 +62,15 @@
         "Delete": true,
         "UpdateUserLearning": true,
         "GetUserLearningPaths": true,
+        "GetUserCourses": true,
         "GetUserCourseContents": true,
         "GetLearningPathProgress": true,
         "GetCourseProgress": true,
         "GetModuleProgress": true,
-        "GetContentProgress": true
+        "GetContentProgress": true,
+        "GetLearningPathCompletionState": true,
+        "GetCourseCompletionState": true,
+        "GetModuleCompletionState": true,
+        "GetContentCompletionState": true
     }
 }

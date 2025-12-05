@@ -14,17 +14,10 @@ export class CourseModuleMapper {
             Description: courseModule.Description,
             ImageUrl: courseModule.ImageUrl,
             DurationInMins: courseModule.DurationInMins,
-            // Sequence: courseModule.Sequence,
             ContentSequence: courseModule.ContentSequence,
             CourseId: courseModule.Course?.id,
-            /*
-			Course: courseModule.Course? {
-			TenantId: courseModule.Course.TenantId,
-			Name: courseModule.Course.Name,
-			Description: courseModule.Course.Description,
-			ImageUrl: courseModule.Course.ImageUrl,
-			DurationInDays: courseModule.Course.DurationInDays,			} : null
-*/
+            CreatedAt: courseModule.CreatedAt,
+            UpdatedAt: courseModule.UpdatedAt,
         };
         return dto;
     };

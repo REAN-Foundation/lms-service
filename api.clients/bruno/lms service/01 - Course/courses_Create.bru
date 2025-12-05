@@ -28,7 +28,10 @@ body:json {
       "{{COURSE_MODULE_ID}}": 1,
       "c89b9cc1-8384-4940-928a-57183f0ea88c": 2,
       "a12b34c5-6789-0123-4567-890123456789": 3
-    }
+    },
+    "LearningPathIds": [
+      "{{LEARNING_PATH_ID}}"
+    ]
   }
 }
 
@@ -57,6 +60,8 @@ tests {
         expect(jsonRes.Data).to.have.property('ImageUrl');
         expect(jsonRes.Data).to.have.property('DurationInDays');
         expect(jsonRes.Data).to.have.property('ModuleSequence');
+        expect(jsonRes.Data).to.have.property('CreatedAt');
+        expect(jsonRes.Data).to.have.property('UpdatedAt');
   
         expect(jsonRes.Data.Name).equals("Dewey Leannon");
         expect(jsonRes.Data.Description).equals("minus ea");

@@ -51,20 +51,22 @@ export interface CertificatesUpdateModel {
 
 export interface CertificatesResponseDto {
     id: uuid;
-    UserId: uuid;
-    CertificateNumber: string;
-    CertificateName: string;
-    CertificateType: string;
-    IssuedDate: string;
-    ExpiryDate: Date;
-    CertificateUrl: string;
-    FinalGrade: number;
-    CreditHours: number;
-    Skills: string;
-    IsVerified: boolean;
-    VerificationUrl: string;
-    IssuedBy: uuid;
-    CourseId: uuid;
+    UserId?: uuid;
+    CertificateNumber?: string;
+    CertificateName?: string;
+    CertificateType?: string;
+    IssuedDate?: string;
+    ExpiryDate?: Date;
+    CertificateUrl?: string;
+    FinalGrade?: number;
+    CreditHours?: number;
+    Skills?: string;
+    IsVerified?: boolean;
+    VerificationUrl?: string;
+    IssuedBy?: uuid;
+    CourseId?: uuid;
+    CreatedAt: Date;
+    UpdatedAt: Date;
 }
 
 export interface CertificatesSearchFilters extends BaseSearchFilters {

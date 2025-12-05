@@ -30,12 +30,14 @@ export interface CourseModuleUpdateModel {
 export interface CourseModuleResponseDto {
     id: uuid;
     Name: string;
-    Description: string;
-    ImageUrl: string;
-    DurationInMins: number;
+    Description?: string;
+    ImageUrl?: string;
+    DurationInMins?: number;
     /** JSON object: { "content-uuid": sequence_number } */
     ContentSequence?: Record<string, number>;
     CourseId: uuid;
+    CreatedAt: Date;
+    UpdatedAt: Date;
 }
 
 export interface CourseModuleSearchFilters extends BaseSearchFilters {

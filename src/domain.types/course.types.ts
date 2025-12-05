@@ -40,6 +40,8 @@ export interface CourseResponseDto {
     DurationInDays?: number;
     /** JSON object: { "module-uuid": sequence_number } */
     ModuleSequence?: Record<string, number>;
+    CreatedAt: Date;
+    UpdatedAt: Date;
 }
 
 export interface CourseSearchFilters extends BaseSearchFilters {

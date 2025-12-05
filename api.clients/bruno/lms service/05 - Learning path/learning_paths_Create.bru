@@ -62,6 +62,8 @@ tests {
         expect(jsonRes.Data).to.have.property('DurationInDays');
         expect(jsonRes.Data).to.have.property('PreferenceWeight');
         expect(jsonRes.Data).to.have.property('Enabled');
+        expect(jsonRes.Data).to.have.property('CreatedAt');
+        expect(jsonRes.Data).to.have.property('UpdatedAt');
   
         expect(jsonRes.Data.Name).equals("Jaime Kozey2");
         expect(jsonRes.Data.Description).equals("ut sunt");

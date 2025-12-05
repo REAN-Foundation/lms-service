@@ -190,6 +190,7 @@ export class CourseModuleService extends BaseService {
                     Description: true,
                     ImageUrl: true,
                     DurationInDays: true,
+                    ModuleSequence: true,
                 },
 
                 // Client       : {
@@ -218,6 +219,9 @@ export class CourseModuleService extends BaseService {
             search.where['DurationInMins'] = Like(`%${filters.DurationInMins}%`);
         }
 
+        if (filters.courseId) {
+            search.where['Course'] = { id: filters.courseId };
+        }
 
         return search;
     };

@@ -12,8 +12,15 @@ get {
 
 params:query {
   ~userId: fa5304c5-e490-4cc2-87b9-03ac6cdd9443
-  ~progressStatus: nostrum
-  ~percentageCompletion: 5992
+  ~progressStatus: InProgress
+  ~courseId: {{COURSE_ID}}
+  ~learningPathId: {{LEARNING_PATH_ID}}
+  ~courseModuleId: {{COURSE_MODULE_ID}}
+  ~courseContentId: {{COURSE_CONTENT_ID}}
+  ~pageIndex: 0
+  ~itemsPerPage: 10
+  ~orderBy: CreatedAt
+  ~order: descending
 }
 
 headers {

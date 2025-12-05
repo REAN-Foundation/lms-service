@@ -215,7 +215,7 @@ export class UserLearningService extends BaseService {
                     Description: true,
                     ImageUrl: true,
                     DurationInMins: true,
-                    Sequence: true,
+                    // Sequence: true,
                 },
                 CourseContent: {
                     id: true,

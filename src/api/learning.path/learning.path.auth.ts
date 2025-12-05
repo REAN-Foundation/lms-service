@@ -45,7 +45,7 @@ export class LearningPathAuth {
         RequestType: RequestType.GetOne,
     };
 
-    static readonly addCourse: AuthOptions = {
+    static readonly addCourseToLearningPath: AuthOptions = {
         ...DefaultAuthOptions,
         Context: `${this._baseContext}.AddCourse`,
         Ownership: ResourceOwnership.Tenant,
@@ -53,7 +53,7 @@ export class LearningPathAuth {
         RequestType: RequestType.UpdateOne,
     };
 
-    static readonly removeCourse: AuthOptions = {
+    static readonly removeCourseFromLearningPath: AuthOptions = {
         ...DefaultAuthOptions,
         Context: `${this._baseContext}.RemoveCourse`,
         Ownership: ResourceOwnership.Tenant,
@@ -61,7 +61,7 @@ export class LearningPathAuth {
         RequestType: RequestType.UpdateOne,
     };
 
-    static readonly reorderCourses: AuthOptions = {
+    static readonly reorderCoursesInLearningPath: AuthOptions = {
         ...DefaultAuthOptions,
         Context: `${this._baseContext}.ReorderCourses`,
         Ownership: ResourceOwnership.Tenant,

@@ -83,11 +83,11 @@ export class LearningPathController {
         }
     };
 
-    addCourse = async (request: express.Request, response: express.Response) => {
+    addCourseToLearningPath = async (request: express.Request, response: express.Response) => {
         try {
             const learningPathId = await this._validator.requestParamAsUUID(request, 'id');
             const courseId = await this._validator.requestParamAsUUID(request, 'courseId');
-            const updatedRecord = await this._service.addCourse(learningPathId, courseId);
+            const updatedRecord = await this._service.addCourseToLearningPath(learningPathId, courseId);
             const message = 'Course added to learning path successfully!';
             ResponseHandler.success(request, response, message, 200, updatedRecord);
         } catch (error) {
@@ -95,11 +95,11 @@ export class LearningPathController {
         }
     };
     
-    removeCourse = async (request: express.Request, response: express.Response) => {
+    removeCourseFromLearningPath = async (request: express.Request, response: express.Response) => {
         try {
             const learningPathId = await this._validator.requestParamAsUUID(request, 'id');
             const courseId = await this._validator.requestParamAsUUID(request, 'courseId');
-            const updatedRecord = await this._service.removeCourse(learningPathId, courseId);
+            const updatedRecord = await this._service.removeCourseFromLearningPath(learningPathId, courseId);
             const message = 'Course removed from learning path successfully!';
             ResponseHandler.success(request, response, message, 200, updatedRecord);
         } catch (error) {
@@ -107,11 +107,11 @@ export class LearningPathController {
         }
     };
     
-    reorderCourses = async (request: express.Request, response: express.Response) => {
+    reorderCoursesInLearningPath = async (request: express.Request, response: express.Response) => {
         try {
             const learningPathId = await this._validator.requestParamAsUUID(request, 'id');
-            const courseIds: uuid[] = await this._validator.reorderCoursesRequest(request);
-            const updatedRecord = await this._service.reorderCourses(learningPathId, courseIds);
+            const courseSequence: Record<string, number> = await this._validator.reorderCoursesRequest(request);
+            const updatedRecord = await this._service.reorderCoursesInLearningPath(learningPathId, courseSequence);
             const message = 'Courses reordered in learning path successfully!';
             ResponseHandler.success(request, response, message, 200, updatedRecord);
         } catch (error) {

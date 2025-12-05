@@ -19,7 +19,13 @@ headers {
 
 body:json {
   {
-    "CourseIds": ["{{COURSE_ID}}", "{{COURSE_ID_2}}"]
+    "CourseSequence": {
+      "313c60c4-efbf-47ec-9b2f-82ac89bb4289": 1,
+      "5b99902d-0188-4f79-84fa-f3dbd29f2b76": 2,
+      "69ac399b-2e58-469e-9519-81fc1575c430": 3,
+      "79273545-9899-4620-92f0-b26d534f6203": 4,
+      "86ba5e87-1abb-42af-ba02-c5923084a42d": 5
+    }
   }
 }
 
@@ -29,7 +35,7 @@ tests {
         var jsonRes = res.getBody();
         expect(jsonRes.Status).to.eql('success');
     });
-
+  
     test('Courses reordered successfully', function () {
         var jsonRes = res.getBody();
         expect(jsonRes.Data).to.be.an('object');
@@ -37,7 +43,7 @@ tests {
         expect(jsonRes.Data).to.have.property('Courses');
         expect(jsonRes.Data.Courses).to.be.an('array');
     });
-
+  
     test('Courses are in the correct order', function () {
         var jsonRes = res.getBody();
         var courses = jsonRes.Data.Courses || [];
@@ -51,4 +57,3 @@ tests {
         }
     });
 }
-

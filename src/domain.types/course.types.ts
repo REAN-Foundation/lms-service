@@ -33,11 +33,11 @@ export interface CourseUpdateModel {
 
 export interface CourseResponseDto {
     id: uuid;
-    TenantId: string;
-    Name: string;
-    Description: string;
-    ImageUrl: string;
-    DurationInDays: number;
+    TenantId?: string;
+    Name?: string;
+    Description?: string;
+    ImageUrl?: string;
+    DurationInDays?: number;
     /** JSON object: { "module-uuid": sequence_number } */
     ModuleSequence?: Record<string, number>;
 }

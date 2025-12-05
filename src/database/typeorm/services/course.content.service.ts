@@ -237,8 +237,7 @@ export class CourseContentService extends BaseService {
                     Name: true,
                     Description: true,
                     ImageUrl: true,
-                    DurationInMins: true,
-                    Sequence: true,
+                    DurationInMins: true
                 },
 
                 // Client       : {

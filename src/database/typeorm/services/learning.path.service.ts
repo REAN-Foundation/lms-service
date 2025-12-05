@@ -43,8 +43,8 @@ export class LearningPathService extends BaseService {
         });
         var record = await this._learningPathRepository.save(learningPath);
         
-        // Add courses via junction table
-        await this.addCourses(record.id, createModel.CourseIds);
+        // Add courses via junction table with sequence
+        await this.addCoursesWithSequence(record.id, createModel.CourseSequence);
         
         return LearningPathMapper.toResponseDto(record);
     };
@@ -147,9 +147,9 @@ export class LearningPathService extends BaseService {
             // }
             var record = await this._learningPathRepository.save(learningPath);
 
-            // Update courses via junction table
-            if (model.CourseIds !== undefined) {
-                await this.addCourses(record.id, model.CourseIds);
+            // Update courses via junction table with sequence
+            if (model.CourseSequence !== undefined) {
+                await this.addCoursesWithSequence(record.id, model.CourseSequence);
             }
 
             // Pipeline: Enrich DTO with courses (matching reancare-service updateDto pattern)
@@ -253,10 +253,19 @@ export class LearningPathService extends BaseService {
         return dto;
     };
 
-    private async addCourses(learningPathId: uuid, courseIds: uuid[]) {
-        if (courseIds && courseIds.length > 0) {
-            for (let i = 0; i < courseIds.length; i++) {
-                await this.addCourseWithSequence(learningPathId, courseIds[i], i + 1);
+    private async addCoursesWithSequence(learningPathId: uuid, courseSequence: Record<string, number>) {
+        if (courseSequence && Object.keys(courseSequence).length > 0) {
+            // First, remove all existing course associations for this learning path
+            const existingAssociations = await this._learningPathCoursesRepository.find({
+                where: { LearningPath: { id: learningPathId } },
+            });
+            if (existingAssociations.length > 0) {
+                await this._learningPathCoursesRepository.remove(existingAssociations);
+            }
+
+            // Add courses with their specified sequences
+            for (const [courseId, sequence] of Object.entries(courseSequence)) {
+                await this.addCourseWithSequence(learningPathId, courseId as uuid, sequence);
             }
         }
     }
@@ -298,7 +307,7 @@ export class LearningPathService extends BaseService {
     }
 
     // Public method to add a course to learning path
-    public addCourse = async (learningPathId: uuid, courseId: uuid): Promise<LearningPathResponseDto> => {
+    public addCourseToLearningPath = async (learningPathId: uuid, courseId: uuid): Promise<LearningPathResponseDto> => {
         try {
             // Verify learning path exists
             const learningPath = await this._learningPathRepository.findOne({
@@ -358,7 +367,7 @@ export class LearningPathService extends BaseService {
     };
 
     // Public method to remove a course from learning path
-    public removeCourse = async (learningPathId: uuid, courseId: uuid): Promise<LearningPathResponseDto> => {
+    public removeCourseFromLearningPath = async (learningPathId: uuid, courseId: uuid): Promise<LearningPathResponseDto> => {
         try {
             // Verify learning path exists
             const learningPath = await this._learningPathRepository.findOne({
@@ -404,7 +413,7 @@ export class LearningPathService extends BaseService {
     };
 
     // Public method to reorder courses in learning path
-    public reorderCourses = async (learningPathId: uuid, courseIds: uuid[]): Promise<LearningPathResponseDto> => {
+    public reorderCoursesInLearningPath = async (learningPathId: uuid, courseSequence: Record<string, number>): Promise<LearningPathResponseDto> => {
         try {
             // Verify learning path exists
             const learningPath = await this._learningPathRepository.findOne({
@@ -414,25 +423,23 @@ export class LearningPathService extends BaseService {
                 ErrorHandler.throwNotFoundError('Learning path not found!');
             }
 
-            // Get all current course associations
+            // Get all current course associations, ordered by current sequence
             const currentAssociations = await this._learningPathCoursesRepository.find({
                 where: { LearningPath: { id: learningPathId } },
                 relations: { Course: true },
+                order: { Sequence: 'ASC' },
             });
+
+            // Extract course IDs from the CourseSequence object
+            const providedCourseIds = Object.keys(courseSequence);
+            const providedSequences = new Set(Object.values(courseSequence));
 
             // Verify all provided course IDs exist in the learning path
             const existingCourseIds = currentAssociations.map((a) => a.Course.id);
-            const invalidCourseIds = courseIds.filter((id) => !existingCourseIds.includes(id));
+            const invalidCourseIds = providedCourseIds.filter((id) => !existingCourseIds.includes(id));
             if (invalidCourseIds.length > 0) {
                 ErrorHandler.throwInputValidationError([
                     `The following course IDs are not associated with this learning path: ${invalidCourseIds.join(', ')}`
-                ]);
-            }
-
-            // Verify all courses in learning path are included in the reorder request
-            if (courseIds.length !== currentAssociations.length) {
-                ErrorHandler.throwInputValidationError([
-                    'All courses in the learning path must be included in the reorder request'
                 ]);
             }
 
@@ -442,13 +449,50 @@ export class LearningPathService extends BaseService {
                 associationMap.set(assoc.Course.id, assoc);
             });
 
-            // Update sequences based on the order in courseIds array
-            for (let i = 0; i < courseIds.length; i++) {
-                const association = associationMap.get(courseIds[i]);
-                if (association) {
-                    association.Sequence = i + 1;
-                    await this._learningPathCoursesRepository.save(association);
+            // Find the maximum sequence number from the provided CourseSequence
+            const maxProvidedSequence = providedSequences.size > 0 ? Math.max(...Array.from(providedSequences)) : 0;
+
+            // Separate courses into two groups: those with explicit sequences and those without
+            const coursesWithSequence: { association: LearningPathCourses; sequence: number }[] = [];
+            const coursesWithoutSequence: LearningPathCourses[] = [];
+
+            for (const association of currentAssociations) {
+                const courseId = association.Course.id;
+                if (providedCourseIds.includes(courseId)) {
+                    // Course has explicit sequence
+                    coursesWithSequence.push({
+                        association,
+                        sequence: courseSequence[courseId],
+                    });
+                } else {
+                    // Course doesn't have explicit sequence - will be auto-assigned
+                    coursesWithoutSequence.push(association);
                 }
+            }
+
+            // Sort courses with explicit sequences by their sequence number
+            coursesWithSequence.sort((a, b) => a.sequence - b.sequence);
+
+            // Assign sequences to courses without explicit sequences
+            // They will be placed after the explicitly sequenced courses, maintaining their relative order
+            let nextSequence = maxProvidedSequence + 1;
+            for (const association of coursesWithoutSequence) {
+                // Check if this sequence conflicts with any explicitly provided sequence
+                while (providedSequences.has(nextSequence)) {
+                    nextSequence++;
+                }
+                association.Sequence = nextSequence;
+                nextSequence++;
+            }
+
+            // Update all courses with their new sequences
+            for (const { association, sequence } of coursesWithSequence) {
+                association.Sequence = sequence;
+                await this._learningPathCoursesRepository.save(association);
+            }
+
+            for (const association of coursesWithoutSequence) {
+                await this._learningPathCoursesRepository.save(association);
             }
 
             // Return updated learning path with courses

@@ -12,7 +12,8 @@ export interface LearningPathCreateModel {
     DurationInDays?: number;
     PreferenceWeight?: number;
     Enabled?: boolean;
-    CourseIds?: uuid[];
+    /** JSON object: { "course-uuid": sequence_number } */
+    CourseSequence?: Record<string, number>;
 }
 
 export interface LearningPathUpdateModel {
@@ -26,7 +27,8 @@ export interface LearningPathUpdateModel {
     DurationInDays?: number;
     PreferenceWeight?: number;
     Enabled?: boolean;
-    CourseIds?: uuid[];
+    /** JSON object: { "course-uuid": sequence_number } */
+    CourseSequence?: Record<string, number>;
 }
 
 export interface LearningPathResponseDto {

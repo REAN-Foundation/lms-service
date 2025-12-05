@@ -33,7 +33,10 @@
         "Search": true,
         "GetById": true,
         "Update": true,
-        "Delete": true
+        "Delete": true,
+        "AddCourse": true,
+        "RemoveCourse": true,
+        "ReorderCourses": true
     },
     "LearningPathCourses": {
         "Create": true,

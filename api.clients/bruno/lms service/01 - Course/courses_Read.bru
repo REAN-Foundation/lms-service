@@ -36,6 +36,8 @@ tests {
         expect(jsonRes.Data).to.have.property('ImageUrl');
         expect(jsonRes.Data).to.have.property('DurationInDays');
         expect(jsonRes.Data).to.have.property('ModuleSequence');
+        expect(jsonRes.Data).to.have.property('CreatedAt');
+        expect(jsonRes.Data).to.have.property('UpdatedAt');
         
         if (jsonRes.Data.ModuleSequence) {
             expect(jsonRes.Data.ModuleSequence).to.be.an('object');

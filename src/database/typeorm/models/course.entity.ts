@@ -35,9 +35,10 @@ export class Course {
     @Min(0)
     DurationInDays: number;
 
-    // String uuid array of module ids
+    // JSON object: { "module-uuid": sequence_number }
+    // Example: { "abc-123-uuid": 1, "def-456-uuid": 2, "ghi-789-uuid": 3 }
     @Column({ type: 'json', nullable: true })
-    ModuleSequence: string;
+    ModuleSequence: Record<string, number>;
 
     @CreateDateColumn()
     CreatedAt: Date;

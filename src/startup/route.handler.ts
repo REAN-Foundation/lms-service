@@ -34,7 +34,7 @@ export class RouteHandler {
                 registerCourseRoutes(expressApp);
                 registerLearningPathRoutes(expressApp);
                 registerLearningEnrollmentRoutes(expressApp);
-                registerUserLearningRoutes(expressApp);
+                // registerUserLearningRoutes(expressApp);
                 registerCertificatesRoutes(expressApp);
                 // Routes end here <--
 

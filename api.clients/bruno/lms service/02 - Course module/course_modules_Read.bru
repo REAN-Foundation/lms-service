@@ -35,8 +35,11 @@ tests {
         expect(jsonRes.Data).to.have.property('Description');
         expect(jsonRes.Data).to.have.property('ImageUrl');
         expect(jsonRes.Data).to.have.property('DurationInMins');
-        expect(jsonRes.Data).to.have.property('Sequence');
-
+        expect(jsonRes.Data).to.have.property('ContentSequence');
+        
+        if (jsonRes.Data.ContentSequence) {
+            expect(jsonRes.Data.ContentSequence).to.be.an('object');
+        }
 
     });
     

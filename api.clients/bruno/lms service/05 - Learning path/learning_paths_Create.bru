@@ -1,4 +1,3 @@
-
 meta {
   name: Create Learning path
   type: http
@@ -11,7 +10,6 @@ post {
   auth: none
 }
 
-
 headers {
   x-api-key: {{API_KEY}}
   x-api-secret: {{API_SECRET}}
@@ -20,20 +18,19 @@ headers {
 }
 
 body:json {
-{
+  {
     "TenantId": "{{TENANT_ID}}",
-    "Name": "Jaime Kozey",
+    "Name": "Jaime Kozey2",
     "Description": "ut sunt",
     "ImageUrl": "http://narciso.info",
     "DurationInDays": 7796,
     "PreferenceWeight": 4267,
     "Enabled": true,
-    "CourseIds": ["{{COURSE_ID}}"]
+    "CourseIds": []
   }
 }
 
 tests {
-
     try {
         var respData = res.getBody();
         bru.setEnvVar('LEARNING_PATH_ID', respData.Data.id);
@@ -46,10 +43,10 @@ tests {
         var jsonRes = res.getBody();
         expect(jsonRes.Status).to.eql('success');
     });
-
+  
     test('Learning paths created successfully', function () {
         var jsonRes = res.getBody();
-
+  
         expect(jsonRes.Data).to.have.property('id');
         
         expect(jsonRes.Data).to.have.property('TenantId');
@@ -59,14 +56,14 @@ tests {
         expect(jsonRes.Data).to.have.property('DurationInDays');
         expect(jsonRes.Data).to.have.property('PreferenceWeight');
         expect(jsonRes.Data).to.have.property('Enabled');
-
+  
         expect(jsonRes.Data.Name).equals("Jaime Kozey");
         expect(jsonRes.Data.Description).equals("ut sunt");
         expect(jsonRes.Data.ImageUrl).equals("http://narciso.info");
         expect(jsonRes.Data.DurationInDays).equals(7796);
         expect(jsonRes.Data.PreferenceWeight).equals(4267);
         expect(jsonRes.Data.Enabled).equals(true);
-
+  
     });
     
 }

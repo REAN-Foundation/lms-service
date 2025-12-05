@@ -1,0 +1,52 @@
+meta {
+  name: Create Course - Minimal Data
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{BASE_URL}}/courses
+  body: json
+  auth: none
+}
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+body:json {
+  {
+    "TenantId": "{{TENANT_ID}}",
+    "Name": "Basic Course"
+  }
+}
+
+tests {
+    try {
+        var respData = res.getBody();
+        if (respData.Data && respData.Data.id) {
+            bru.setEnvVar('COURSE_ID', respData.Data.id);
+        }
+    }
+    catch (error) {
+        console.log(error.message);
+    }
+
+    test('Request is successful with minimal data', function () {
+        expect(res.getStatus()).to.equal(201);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+
+    test('Course created successfully without ModuleSequence', function () {
+        var jsonRes = res.getBody();
+
+        expect(jsonRes.Data).to.have.property('id');
+        expect(jsonRes.Data).to.have.property('Name');
+        // ModuleSequence is optional, may be null or undefined
+    });
+}
+

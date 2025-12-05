@@ -14,7 +14,8 @@ export class CourseModuleMapper {
             Description: courseModule.Description,
             ImageUrl: courseModule.ImageUrl,
             DurationInMins: courseModule.DurationInMins,
-            Sequence: courseModule.Sequence,
+            // Sequence: courseModule.Sequence,
+            ContentSequence: courseModule.ContentSequence,
             CourseId: courseModule.Course?.id,
             /*
 			Course: courseModule.Course? {

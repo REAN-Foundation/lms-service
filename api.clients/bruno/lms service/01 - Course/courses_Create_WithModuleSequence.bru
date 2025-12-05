@@ -1,0 +1,71 @@
+meta {
+  name: Create Course - With Module Sequence
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{BASE_URL}}/courses
+  body: json
+  auth: none
+}
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+body:json {
+  {
+    "TenantId": "{{TENANT_ID}}",
+    "Name": "Advanced Web Development",
+    "Description": "Complete course on modern web development",
+    "ImageUrl": "https://example.com/course-image.jpg",
+    "DurationInDays": 30,
+    "ModuleSequence": {
+      "c89b9cc1-8384-4940-928a-57183f0ea88c": 1,
+      "a12b34c5-6789-0123-4567-890123456789": 2,
+      "b23c45d6-7890-1234-5678-901234567890": 3,
+      "d34e56f7-8901-2345-6789-012345678901": 4
+    }
+  }
+}
+
+tests {
+    try {
+        var respData = res.getBody();
+        if (respData.Data && respData.Data.id) {
+            bru.setEnvVar('COURSE_ID', respData.Data.id);
+        }
+    }
+    catch (error) {
+        console.log(error.message);
+    }
+
+    test('Request is successful', function () {
+        expect(res.getStatus()).to.equal(201);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+
+    test('Course created with ModuleSequence', function () {
+        var jsonRes = res.getBody();
+
+        expect(jsonRes.Data).to.have.property('id');
+        expect(jsonRes.Data).to.have.property('ModuleSequence');
+        expect(jsonRes.Data.ModuleSequence).to.be.an('object');
+        
+        // Verify sequence structure
+        var moduleIds = Object.keys(jsonRes.Data.ModuleSequence);
+        expect(moduleIds.length).to.be.greaterThan(0);
+        
+        // Verify sequence values are numbers
+        moduleIds.forEach(function(moduleId) {
+            expect(jsonRes.Data.ModuleSequence[moduleId]).to.be.a('number');
+            expect(jsonRes.Data.ModuleSequence[moduleId]).to.be.greaterThan(0);
+        });
+    });
+}
+

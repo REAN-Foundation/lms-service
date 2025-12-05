@@ -27,6 +27,15 @@ tests {
     test('Course removed from learning path successfully', function () {
         var jsonRes = res.getBody();
         expect(jsonRes.Data).to.have.property('id');
+        expect(jsonRes.Data).to.have.property('Courses');
+        expect(jsonRes.Data.Courses).to.be.an('array');
+    });
+
+    test('Learning path no longer contains the removed course', function () {
+        var jsonRes = res.getBody();
+        var courses = jsonRes.Data.Courses || [];
+        var courseIds = courses.map(c => c.id);
+        expect(courseIds).to.not.include('{{COURSE_ID}}');
     });
 }
 

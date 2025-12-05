@@ -35,7 +35,11 @@ tests {
         expect(jsonRes.Data).to.have.property('Description');
         expect(jsonRes.Data).to.have.property('ImageUrl');
         expect(jsonRes.Data).to.have.property('DurationInDays');
-
+        expect(jsonRes.Data).to.have.property('ModuleSequence');
+        
+        if (jsonRes.Data.ModuleSequence) {
+            expect(jsonRes.Data.ModuleSequence).to.be.an('object');
+        }
 
     });
     

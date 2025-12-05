@@ -24,7 +24,11 @@ body:json {
     "Description": "officia veritatis",
     "ImageUrl": "http://jaron.com",
     "DurationInMins": 5549,
-    "Sequence": 4798
+    "ContentSequence": {
+      "{{COURSE_CONTENT_ID}}": 1,
+      "f8c44d8d-23fe-4572-9425-b5b87d9373e9": 2,
+      "b23c45d6-7890-1234-5678-901234567890": 3
+    }
   }
 }
 
@@ -45,14 +49,14 @@ tests {
         expect(jsonRes.Data).to.have.property('Description');
         expect(jsonRes.Data).to.have.property('ImageUrl');
         expect(jsonRes.Data).to.have.property('DurationInMins');
-        expect(jsonRes.Data).to.have.property('Sequence');
+        expect(jsonRes.Data).to.have.property('ContentSequence');
   
         expect(jsonRes.Data.CourseId).equals('{{COURSE_ID}}');
         expect(jsonRes.Data.Name).equals("Mabel Towne");
         expect(jsonRes.Data.Description).equals("officia veritatis");
         expect(jsonRes.Data.ImageUrl).equals("http://jaron.com");
         expect(jsonRes.Data.DurationInMins).equals(5549);
-        expect(jsonRes.Data.Sequence).equals(4798);
+        expect(jsonRes.Data.ContentSequence).to.be.an('object');
   
     });
     

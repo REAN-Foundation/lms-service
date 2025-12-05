@@ -11,9 +11,9 @@ export const register = (app: express.Application): void => {
 
     router.post('/:id/courses/:courseId', auth(LearningPathAuth.addCourse), controller.addCourse);
     router.delete('/:id/courses/:courseId', auth(LearningPathAuth.removeCourse), controller.removeCourse);
-    router.put('reorder-courses', auth(LearningPathAuth.reorderCourses), controller.reorderCourses);
+    router.put('/:id/reorder-courses', auth(LearningPathAuth.reorderCourses), controller.reorderCourses);
     
-    router.post('/', controller.create);
+    router.post('/', auth(LearningPathAuth.create), controller.create);
     router.get('/search', auth(LearningPathAuth.search), controller.search);
     router.get('/:id', auth(LearningPathAuth.getById), controller.getById);
     router.put('/:id', auth(LearningPathAuth.update), controller.update);

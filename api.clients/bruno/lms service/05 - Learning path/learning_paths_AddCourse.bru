@@ -27,6 +27,15 @@ tests {
     test('Course added to learning path successfully', function () {
         var jsonRes = res.getBody();
         expect(jsonRes.Data).to.have.property('id');
+        expect(jsonRes.Data).to.have.property('Courses');
+        expect(jsonRes.Data.Courses).to.be.an('array');
+    });
+
+    test('Learning path contains the added course', function () {
+        var jsonRes = res.getBody();
+        var courses = jsonRes.Data.Courses || [];
+        var courseIds = courses.map(c => c.id);
+        expect(courseIds).to.include('{{COURSE_ID}}');
     });
 }
 

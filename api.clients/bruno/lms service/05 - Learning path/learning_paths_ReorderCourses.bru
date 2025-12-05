@@ -5,7 +5,7 @@ meta {
 }
 
 put {
-  url: {{BASE_URL}}/learning-paths/reorder-courses
+  url: {{BASE_URL}}/learning-paths/{{LEARNING_PATH_ID}}/reorder-courses
   body: json
   auth: none
 }
@@ -19,7 +19,6 @@ headers {
 
 body:json {
   {
-    "LearningPathId": "{{LEARNING_PATH_ID}}",
     "CourseIds": ["{{COURSE_ID}}", "{{COURSE_ID_2}}"]
   }
 }
@@ -34,6 +33,22 @@ tests {
     test('Courses reordered successfully', function () {
         var jsonRes = res.getBody();
         expect(jsonRes.Data).to.be.an('object');
+        expect(jsonRes.Data).to.have.property('id');
+        expect(jsonRes.Data).to.have.property('Courses');
+        expect(jsonRes.Data.Courses).to.be.an('array');
+    });
+
+    test('Courses are in the correct order', function () {
+        var jsonRes = res.getBody();
+        var courses = jsonRes.Data.Courses || [];
+        var courseIds = courses.map(c => c.id);
+        var expectedOrder = ['{{COURSE_ID}}', '{{COURSE_ID_2}}'];
+        // Verify that courses appear in the expected order (if both are provided)
+        if (expectedOrder[0] && expectedOrder[1]) {
+            var index1 = courseIds.indexOf(expectedOrder[0]);
+            var index2 = courseIds.indexOf(expectedOrder[1]);
+            expect(index1).to.be.lessThan(index2);
+        }
     });
 }
 

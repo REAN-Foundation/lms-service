@@ -1,11 +1,11 @@
 meta {
-  name: Get User Active Enrollments
+  name: Get Active Enrollments by Tenant
   type: http
-  seq: 4
+  seq: 8
 }
 
 get {
-  url: {{BASE_URL}}/enrollments/users/{{USER_ID}}/active
+  url: {{BASE_URL}}/enrollments/tenants/{{TENANT_ID}}/active
   body: json
   auth: none
 }
@@ -25,7 +25,7 @@ tests {
         expect(jsonRes.Status).to.eql('success');
     });
 
-    test('Active enrollments retrieved with both course and learning path enrollments', function () {
+    test('Active enrollments retrieved for tenant with both types', function () {
         var jsonRes = res.getBody();
         
         expect(jsonRes.Data).to.have.property('CourseEnrollments');
@@ -34,16 +34,30 @@ tests {
         expect(jsonRes.Data.LearningPathEnrollments).to.be.an('array');
     });
 
-    test('All returned enrollments are active', function () {
+    test('All enrollments belong to the specified tenant and are active', function () {
         var jsonRes = res.getBody();
         
         jsonRes.Data.CourseEnrollments.forEach(function(enrollment) {
+            expect(enrollment.TenantId).to.equal('{{TENANT_ID}}');
             expect(enrollment.IsActive).to.be.true;
         });
         
         jsonRes.Data.LearningPathEnrollments.forEach(function(enrollment) {
+            expect(enrollment.TenantId).to.equal('{{TENANT_ID}}');
             expect(enrollment.IsActive).to.be.true;
         });
+    });
+
+    test('Enrollments are sorted by creation date (newest first)', function () {
+        var jsonRes = res.getBody();
+        
+        if (jsonRes.Data.CourseEnrollments.length > 1) {
+            for (var i = 0; i < jsonRes.Data.CourseEnrollments.length - 1; i++) {
+                var current = new Date(jsonRes.Data.CourseEnrollments[i].CreatedAt);
+                var next = new Date(jsonRes.Data.CourseEnrollments[i + 1].CreatedAt);
+                expect(current.getTime()).to.be.at.least(next.getTime());
+            }
+        }
     });
 }
 

@@ -54,6 +54,8 @@ tests {
         expect(jsonRes.Data).to.have.property('ResourceLink');
         expect(jsonRes.Data).to.have.property('ActionTemplateId');
         expect(jsonRes.Data).to.have.property('Sequence');
+        expect(jsonRes.Data).to.have.property('CreatedAt');
+        expect(jsonRes.Data).to.have.property('UpdatedAt');
   
         expect(jsonRes.Data.CourseId).equals('{{COURSE_ID}}');
         expect(jsonRes.Data.CourseModuleId).equals('{{COURSE_MODULE_ID}}');

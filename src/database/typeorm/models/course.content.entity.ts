@@ -1,4 +1,3 @@
-// import { IsUrl } from "class-validator";
 import 'reflect-metadata';
 import {
     Column,
@@ -6,20 +5,14 @@ import {
     DeleteDateColumn,
     Entity,
     JoinColumn,
-    OneToOne,
     ManyToOne,
-    OneToMany,
-    ManyToMany,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
-    JoinTable,
 } from 'typeorm';
-import { uuid } from '../../../domain.types/miscellaneous/system.types';
-import { IsEmail, Max, Min, IsUrl } from 'class-validator';
+import { Max, Min } from 'class-validator';
 import { CourseContentType } from '../../../domain.types/enums/course.content.type.enum';
 import { Course } from './course.entity';
 import { CourseModule } from './course.module.entity';
-import { UserLearning } from './user.learning.entity';
 
 ////////////////////////////////////////////////////////////////////////
 

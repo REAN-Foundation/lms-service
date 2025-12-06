@@ -1,4 +1,3 @@
-// import { IsUrl } from "class-validator";
 import 'reflect-metadata';
 import {
     Column,
@@ -6,19 +5,12 @@ import {
     DeleteDateColumn,
     Entity,
     JoinColumn,
-    OneToOne,
     ManyToOne,
-    OneToMany,
-    ManyToMany,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
-    JoinTable,
 } from 'typeorm';
-import { uuid } from '../../../domain.types/miscellaneous/system.types';
-import { IsEmail, Max, Min, IsUrl } from 'class-validator';
+import { Max, Min } from 'class-validator';
 import { Course } from './course.entity';
-import { CourseContent } from './course.content.entity';
-import { UserLearning } from './user.learning.entity';
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -47,10 +39,10 @@ export class CourseModule {
     @Min(0)
     DurationInMins: number;
 
-    @Column({ type: 'int', nullable: true })
-    @Max(64)
-    @Min(0)
-    Sequence: number;
+    // JSON object: { "content-uuid": sequence_number }
+    // Example: { "abc-123-uuid": 1, "def-456-uuid": 2, "ghi-789-uuid": 3 }
+    @Column({ type: 'json', nullable: true })
+    ContentSequence: Record<string, number>;
 
     @ManyToOne(() => Course)
     @JoinColumn({ name: 'CourseId', referencedColumnName: 'id' })

@@ -3,41 +3,61 @@ import express from 'express';
 import { ErrorHandler } from '../../common/error.handling/error.handler';
 import BaseValidator from '../base.validator';
 import {
-    LearningEnrollmentCreateModel,
-    LearningEnrollmentSearchFilters,
-} from '../../domain.types/learning.enrollment.types';
-import { ProgressStatus } from '../../domain.types/enums/progress.status.enum';
+    CourseEnrollmentCreateModel,
+    CourseEnrollmentSearchFilters,
+} from '../../domain.types/course.enrollment.types';
+import {
+    LearningPathEnrollmentCreateModel,
+    LearningPathEnrollmentSearchFilters,
+} from '../../domain.types/learning.path.enrollment.types';
 import { uuid } from '../../domain.types/miscellaneous/system.types';
 
 export class LearningEnrollmentValidator extends BaseValidator {
-    public validateEnrollRequest = async (
+
+    public validateEnrollToLearningPathRequest = async (
         request: express.Request
-    ): Promise<LearningEnrollmentCreateModel> => {
+    ): Promise<LearningPathEnrollmentCreateModel> => {
         try {
             const userId = await this.requestParamAsUUID(request, 'userId');
+            const learningPathId = await this.requestParamAsUUID(request, 'learningPathId');
             const schema = joi
                 .object({
-                    CourseId: joi.string().uuid().optional(),
-                    LearningPathId: joi.string().uuid().optional(),
-                    TenantId: joi.string().uuid().optional(),
                     StartDate: joi.date().iso().optional(),
-                    EndDate: joi.date().iso().optional(),
-                    ProgressStatus: joi
-                        .string()
-                        .valid(...Object.values(ProgressStatus))
-                        .optional(),
-                })
-                .or('CourseId', 'LearningPathId');
+                    ExpectedEndDate: joi.date().iso().optional(),
+                });
             await schema.validateAsync(request.body);
 
-            const model: LearningEnrollmentCreateModel = {
+            const model: LearningPathEnrollmentCreateModel = {
                 UserId: userId,
-                CourseId: request.body.CourseId ?? null,
-                LearningPathId: request.body.LearningPathId ?? null,
-                TenantId: request.body.TenantId ?? null,
+                LearningPathId: learningPathId,
                 StartDate: request.body.StartDate ? new Date(request.body.StartDate) : undefined,
-                EndDate: request.body.EndDate ? new Date(request.body.EndDate) : undefined,
-                ProgressStatus: request.body.ProgressStatus ?? null,
+                ExpectedEndDate: request.body.ExpectedEndDate ? new Date(request.body.ExpectedEndDate) : undefined,
+            };
+
+            return model;
+        } catch (error) {
+            ErrorHandler.handleValidationError(error);
+        }
+    };
+
+    public validateEnrollToCourseRequest = async (
+        request: express.Request
+    ): Promise<CourseEnrollmentCreateModel> => {
+        try {
+            const userId = await this.requestParamAsUUID(request, 'userId');
+            const courseId = await this.requestParamAsUUID(request, 'courseId');
+            const schema = joi
+                .object({
+                    StartDate: joi.date().iso().optional(),
+                    ExpectedEndDate: joi.date().iso().optional(),
+                });
+            await schema.validateAsync(request.body);
+
+            const model: CourseEnrollmentCreateModel = {
+                UserId: userId,
+                CourseId: courseId,
+                StartDate: request.body.StartDate ? new Date(request.body.StartDate) : undefined,
+                ExpectedEndDate: request.body.ExpectedEndDate ? new Date(request.body.ExpectedEndDate) : undefined,
             };
 
             return model;
@@ -48,46 +68,44 @@ export class LearningEnrollmentValidator extends BaseValidator {
 
     public validateSearchRequest = async (
         request: express.Request
-    ): Promise<LearningEnrollmentSearchFilters> => {
+    ): Promise<{ courseFilters?: CourseEnrollmentSearchFilters; learningPathFilters?: LearningPathEnrollmentSearchFilters }> => {
         try {
             const schema = joi.object({
                 userId: joi.string().uuid().optional(),
                 courseId: joi.string().uuid().optional(),
                 learningPathId: joi.string().uuid().optional(),
-                progressStatus: joi
-                    .string()
-                    .valid(...Object.values(ProgressStatus))
-                    .optional(),
                 isActive: joi.boolean().optional(),
                 tenantId: joi.string().uuid().optional(),
             });
             await schema.validateAsync(request.query);
             const baseFilters = this.getBaseSearchFilters(request);
-            const filters = this.getSearchFilters(request.query);
-            return {
+            
+            const courseFilters: CourseEnrollmentSearchFilters = {
                 ...baseFilters,
-                ...filters,
             };
+            if (request.query.userId) courseFilters.UserId = request.query.userId as uuid;
+            if (request.query.courseId) courseFilters.CourseId = request.query.courseId as uuid;
+            if (request.query.isActive !== undefined) {
+                const isActiveValue = String(request.query.isActive);
+                courseFilters.IsActive = isActiveValue === 'true' || isActiveValue === '1';
+            }
+            if (request.query.tenantId) courseFilters.TenantId = request.query.tenantId as uuid;
+
+            const learningPathFilters: LearningPathEnrollmentSearchFilters = {
+                ...baseFilters,
+            };
+            if (request.query.userId) learningPathFilters.UserId = request.query.userId as uuid;
+            if (request.query.learningPathId) learningPathFilters.LearningPathId = request.query.learningPathId as uuid;
+            if (request.query.isActive !== undefined) {
+                const isActiveValue = String(request.query.isActive);
+                learningPathFilters.IsActive = isActiveValue === 'true' || isActiveValue === '1';
+            }
+            if (request.query.tenantId) learningPathFilters.TenantId = request.query.tenantId as uuid;
+
+            return { courseFilters, learningPathFilters };
         } catch (error) {
             ErrorHandler.handleValidationError(error);
         }
-    };
-
-    public validateStopRequest = async (
-        request: express.Request
-    ): Promise<{ id: uuid; status?: ProgressStatus }> => {
-        const id = await this.requestParamAsUUID(request, 'id');
-        const schema = joi.object({
-            ProgressStatus: joi
-                .string()
-                .valid(...Object.values(ProgressStatus))
-                .optional(),
-        });
-        await schema.validateAsync(request.body ?? {});
-        return {
-            id,
-            status: request.body?.ProgressStatus,
-        };
     };
 
     public async validateUserContext(request: express.Request): Promise<{ userId: uuid }> {
@@ -95,29 +113,9 @@ export class LearningEnrollmentValidator extends BaseValidator {
         return { userId };
     }
 
-    private getSearchFilters(query): LearningEnrollmentSearchFilters {
-        const filters: LearningEnrollmentSearchFilters = {};
-
-        if (query.userId) {
-            filters.UserId = query.userId;
-        }
-        if (query.courseId) {
-            filters.CourseId = query.courseId;
-        }
-        if (query.learningPathId) {
-            filters.LearningPathId = query.learningPathId;
-        }
-        if (query.progressStatus) {
-            filters.ProgressStatus = query.progressStatus;
-        }
-        if (query.isActive !== undefined) {
-            filters.IsActive = query.isActive === 'true' || query.isActive === true;
-        }
-        if (query.tenantId) {
-            filters.TenantId = query.tenantId;
-        }
-
-        return filters;
+    public async validateTenantContext(request: express.Request): Promise<{ tenantId: uuid }> {
+        const tenantId = await this.requestParamAsUUID(request, 'tenantId');
+        return { tenantId };
     }
 }
 

@@ -15,7 +15,9 @@ export class CourseMapper {
             Description: course.Description,
             ImageUrl: course.ImageUrl,
             DurationInDays: course.DurationInDays,
-            Sequence: course.Sequence,
+            ModuleSequence: course.ModuleSequence,
+            CreatedAt: course.CreatedAt,
+            UpdatedAt: course.UpdatedAt,
         };
         return dto;
     };

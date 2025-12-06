@@ -15,6 +15,7 @@ import {
 import { UserLearningMapper } from '../mappers/user.learning.mapper';
 import { LearningPathMapper } from '../mappers/learning.path.mapper';
 import { CourseContentMapper } from '../mappers/course.content.mapper';
+import { CourseMapper } from '../mappers/course.mapper';
 import { Course } from '../models/course.entity';
 import { LearningPath } from '../models/learning.path.entity';
 import { CourseModule } from '../models/course.module.entity';
@@ -190,6 +191,7 @@ export class UserLearningService extends BaseService {
                 id: true,
                 UserId: true,
                 ProgressStatus: true,
+                PercentageCompletion: true,
 
                 Course: {
                     id: true,
@@ -198,6 +200,7 @@ export class UserLearningService extends BaseService {
                     Description: true,
                     ImageUrl: true,
                     DurationInDays: true,
+                    ModuleSequence: true,
                 },
                 LearningPath: {
                     id: true,
@@ -215,7 +218,7 @@ export class UserLearningService extends BaseService {
                     Description: true,
                     ImageUrl: true,
                     DurationInMins: true,
-                    Sequence: true,
+                    ContentSequence: true,
                 },
                 CourseContent: {
                     id: true,
@@ -247,7 +250,21 @@ export class UserLearningService extends BaseService {
             search.where['ProgressStatus'] = Like(`%${filters.ProgressStatus}%`);
         }
 
-  
+        if (filters.CourseId) {
+            search.where['Course'] = { id: filters.CourseId };
+        }
+
+        if (filters.LearningPathId) {
+            search.where['LearningPath'] = { id: filters.LearningPathId };
+        }
+
+        if (filters.CourseModuleId) {
+            search.where['CourseModule'] = { id: filters.CourseModuleId };
+        }
+
+        if (filters.CourseContentId) {
+            search.where['CourseContent'] = { id: filters.CourseContentId };
+        }
 
         return search;
     };
@@ -562,6 +579,105 @@ export class UserLearningService extends BaseService {
                 return userLearning.PercentageCompletion;
             }
             return 0;
+        } catch (error) {
+            logger.error(error.message);
+            ErrorHandler.throwInternalServerError(error.message, error);
+        }
+    };
+
+    public getUserCourses = async (userId: uuid): Promise<any[]> => {
+        try {
+            const userLearnings = await this._userLearningRepository.find({
+                where: { UserId: userId },
+                relations: { Course: true },
+            });
+            if (userLearnings.length === 0) {
+                return [];
+            }
+            const uniqueCourseIds = [...new Set(userLearnings.map((x) => x.Course?.id).filter(Boolean))];
+            const userCourses = [];
+            for (const courseId of uniqueCourseIds) {
+                const course = await this._courseRepository.findOne({
+                    where: { id: courseId },
+                });
+                if (course) {
+                    const courseDto = CourseMapper.toResponseDto(course);
+                    const progress = await this.getCourseProgress(userId, courseId);
+                    courseDto['PercentageCompletion'] = progress;
+                    userCourses.push(courseDto);
+                }
+            }
+            return userCourses;
+        } catch (error) {
+            logger.error(error.message);
+            ErrorHandler.throwInternalServerError(error.message, error);
+        }
+    };
+
+    public getLearningPathCompletionState = async (userId: uuid, learningPathId: uuid): Promise<{ IsCompleted: boolean; ProgressStatus: ProgressStatus }> => {
+        try {
+            const progress = await this.getLearningPathProgress(userId, learningPathId);
+            // Progress is returned as a fraction (0-1), so check if >= 1.0 (100%)
+            const isCompleted = progress >= 1.0;
+            return {
+                IsCompleted: isCompleted,
+                ProgressStatus: isCompleted ? ProgressStatus.Completed : (progress > 0 ? ProgressStatus.InProgress : ProgressStatus.Pending),
+            };
+        } catch (error) {
+            logger.error(error.message);
+            ErrorHandler.throwInternalServerError(error.message, error);
+        }
+    };
+
+    public getCourseCompletionState = async (userId: uuid, courseId: uuid): Promise<{ IsCompleted: boolean; ProgressStatus: ProgressStatus }> => {
+        try {
+            const progress = await this.getCourseProgress(userId, courseId);
+            // Progress is returned as a fraction (0-1), so check if >= 1.0 (100%)
+            const isCompleted = progress >= 1.0;
+            return {
+                IsCompleted: isCompleted,
+                ProgressStatus: isCompleted ? ProgressStatus.Completed : (progress > 0 ? ProgressStatus.InProgress : ProgressStatus.Pending),
+            };
+        } catch (error) {
+            logger.error(error.message);
+            ErrorHandler.throwInternalServerError(error.message, error);
+        }
+    };
+
+    public getModuleCompletionState = async (userId: uuid, moduleId: uuid): Promise<{ IsCompleted: boolean; ProgressStatus: ProgressStatus }> => {
+        try {
+            const progress = await this.getModuleProgress(userId, moduleId);
+            // Progress is returned as a fraction (0-1), so check if >= 1.0 (100%)
+            const isCompleted = progress >= 1.0;
+            return {
+                IsCompleted: isCompleted,
+                ProgressStatus: isCompleted ? ProgressStatus.Completed : (progress > 0 ? ProgressStatus.InProgress : ProgressStatus.Pending),
+            };
+        } catch (error) {
+            logger.error(error.message);
+            ErrorHandler.throwInternalServerError(error.message, error);
+        }
+    };
+
+    public getContentCompletionState = async (userId: uuid, contentId: uuid): Promise<{ IsCompleted: boolean; ProgressStatus: ProgressStatus }> => {
+        try {
+            const userLearning = await this._userLearningRepository.findOne({
+                where: {
+                    UserId: userId,
+                    CourseContent: { id: contentId },
+                },
+            });
+            if (userLearning) {
+                const isCompleted = userLearning.PercentageCompletion >= 100 || userLearning.ProgressStatus === ProgressStatus.Completed;
+                return {
+                    IsCompleted: isCompleted,
+                    ProgressStatus: userLearning.ProgressStatus || (isCompleted ? ProgressStatus.Completed : ProgressStatus.InProgress),
+                };
+            }
+            return {
+                IsCompleted: false,
+                ProgressStatus: ProgressStatus.Pending,
+            };
         } catch (error) {
             logger.error(error.message);
             ErrorHandler.throwInternalServerError(error.message, error);

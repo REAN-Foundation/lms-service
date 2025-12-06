@@ -231,6 +231,7 @@ export class CourseContentService extends BaseService {
                     Description: true,
                     ImageUrl: true,
                     DurationInDays: true,
+                    ModuleSequence: true,
                 },
                 CourseModule: {
                     id: true,
@@ -238,7 +239,7 @@ export class CourseContentService extends BaseService {
                     Description: true,
                     ImageUrl: true,
                     DurationInMins: true,
-                    Sequence: true,
+                    ContentSequence: true,
                 },
 
                 // Client       : {
@@ -281,6 +282,14 @@ export class CourseContentService extends BaseService {
 
         if (filters.Sequence) {
             search.where['Sequence'] = Like(`%${filters.Sequence}%`);
+        }
+
+        if (filters.courseId) {
+            search.where['Course'] = { id: filters.courseId };
+        }
+
+        if (filters.courseModuleId) {
+            search.where['CourseModule'] = { id: filters.courseModuleId };
         }
 
         return search;

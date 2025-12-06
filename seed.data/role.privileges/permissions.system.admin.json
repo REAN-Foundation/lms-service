@@ -33,7 +33,10 @@
         "Search": true,
         "GetById": true,
         "Update": true,
-        "Delete": true
+        "Delete": true,
+        "AddCourse": true,
+        "RemoveCourse": true,
+        "ReorderCourses": true
     },
     "LearningPathCourses": {
         "Create": true,
@@ -59,10 +62,15 @@
         "Delete": true,
         "UpdateUserLearning": true,
         "GetUserLearningPaths": true,
+        "GetUserCourses": true,
         "GetUserCourseContents": true,
         "GetLearningPathProgress": true,
         "GetCourseProgress": true,
         "GetModuleProgress": true,
-        "GetContentProgress": true
+        "GetContentProgress": true,
+        "GetLearningPathCompletionState": true,
+        "GetCourseCompletionState": true,
+        "GetModuleCompletionState": true,
+        "GetContentCompletionState": true
     }
 }

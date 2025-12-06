@@ -22,7 +22,7 @@ export class LearningPathValidator extends BaseValidator {
                 DurationInDays: joi.number().integer().optional(),
                 PreferenceWeight: joi.number().integer().optional(),
                 Enabled: joi.boolean().optional(),
-                CourseIds: joi.array().items(joi.string().uuid()).optional(),
+                CourseSequence: joi.object().pattern(joi.string().uuid(), joi.number().integer().min(1)).optional(),
             });
             await learning_paths.validateAsync(request.body);
             const model: LearningPathCreateModel = {
@@ -33,7 +33,7 @@ export class LearningPathValidator extends BaseValidator {
                 DurationInDays: request.body.DurationInDays ? request.body.DurationInDays : null,
                 PreferenceWeight: request.body.PreferenceWeight ? request.body.PreferenceWeight : null,
                 Enabled: request.body.Enabled ? request.body.Enabled : null,
-                CourseIds: request.body.CourseIds ?? [],
+                CourseSequence: request.body.CourseSequence ? request.body.CourseSequence : null,
             };
             return model;
         } catch (error) {
@@ -51,7 +51,7 @@ export class LearningPathValidator extends BaseValidator {
                 DurationInDays: joi.number().integer().optional(),
                 PreferenceWeight: joi.number().integer().optional(),
                 Enabled: joi.boolean().optional(),
-                CourseIds: joi.array().items(joi.string().uuid()).optional(),
+                CourseSequence: joi.object().pattern(joi.string().uuid(), joi.number().integer().min(1)).optional(),
             });
             await learning_paths.validateAsync(request.body);
 
@@ -78,8 +78,8 @@ export class LearningPathValidator extends BaseValidator {
             if (TypeUtils.hasProperty(request.body, 'Enabled')) {
                 model.Enabled = request.body.Enabled;
             }
-            if (TypeUtils.hasProperty(request.body, 'CourseIds')) {
-                model.CourseIds = request.body.CourseIds ?? [];
+            if (TypeUtils.hasProperty(request.body, 'CourseSequence')) {
+                model.CourseSequence = request.body.CourseSequence;
             }
 
             return model;
@@ -145,4 +145,17 @@ export class LearningPathValidator extends BaseValidator {
 
         return filters;
     };
+
+    public reorderCoursesRequest = async (request: express.Request): Promise<Record<string, number>> => {
+        try {
+            const schema = joi.object({
+                CourseSequence: joi.object().pattern(joi.string().uuid(), joi.number().integer().min(1)).required(),
+            });
+            await schema.validateAsync(request.body);
+            return request.body.CourseSequence;
+        } catch (error) {
+            ErrorHandler.handleValidationError(error);
+        }
+    };
+    
 }

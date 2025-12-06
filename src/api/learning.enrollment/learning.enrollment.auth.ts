@@ -43,12 +43,12 @@ export class LearningEnrollmentAuth {
         RequestType: RequestType.GetMany,
     };
 
-    static readonly stop: AuthOptions = {
+    static readonly getActiveEnrollments: AuthOptions = {
         ...DefaultAuthOptions,
-        Context: `${this._baseContext}.Stop`,
-        Ownership: ResourceOwnership.Owner,
-        ActionScope: ActionScope.Owner,
-        RequestType: RequestType.UpdateOne,
+        Context: `${this._baseContext}.GetActiveEnrollments`,
+        Ownership: ResourceOwnership.System,
+        ActionScope: ActionScope.Tenant,
+        RequestType: RequestType.GetMany,
     };
 
     static readonly delete: AuthOptions = {

@@ -1,19 +1,29 @@
 import express from 'express';
 import { ResponseHandler } from '../../common/handlers/response.handler';
-import { LearningEnrollmentService } from '../../database/typeorm/services/learning.enrollment.service';
+import { CourseEnrollmentService } from '../../database/typeorm/services/course.enrollment.service';
+import { LearningPathEnrollmentService } from '../../database/typeorm/services/learning.path.enrollment.service';
 import { LearningEnrollmentValidator } from './learning.enrollment.validator';
-import { LearningEnrollmentSearchFilters } from '../../domain.types/learning.enrollment.types';
 
 export class LearningEnrollmentController {
-    _service: LearningEnrollmentService = new LearningEnrollmentService();
-
+    _courseEnrollmentService: CourseEnrollmentService = new CourseEnrollmentService();
+    _learningPathEnrollmentService: LearningPathEnrollmentService = new LearningPathEnrollmentService();
     _validator: LearningEnrollmentValidator = new LearningEnrollmentValidator();
 
-    enroll = async (request: express.Request, response: express.Response) => {
+    enrollToCourse = async (request: express.Request, response: express.Response) => {
         try {
-            const model = await this._validator.validateEnrollRequest(request);
-            const record = await this._service.enroll(model);
-            ResponseHandler.success(request, response, 'Enrollment created successfully!', 201, record);
+            const model = await this._validator.validateEnrollToCourseRequest(request);
+            const record = await this._courseEnrollmentService.enroll(model);
+            ResponseHandler.success(request, response, 'Course enrollment created successfully!', 201, record);
+        } catch (error) {
+            ResponseHandler.handleError(request, response, error);
+        }
+    };
+
+    enrollToLearningPath = async (request: express.Request, response: express.Response) => {
+        try {
+            const model = await this._validator.validateEnrollToLearningPathRequest(request);
+            const record = await this._learningPathEnrollmentService.enroll(model);
+            ResponseHandler.success(request, response, 'Learning path enrollment created successfully!', 201, record);
         } catch (error) {
             ResponseHandler.handleError(request, response, error);
         }
@@ -21,10 +31,13 @@ export class LearningEnrollmentController {
 
     search = async (request: express.Request, response: express.Response) => {
         try {
-            const filters: LearningEnrollmentSearchFilters = await this._validator.validateSearchRequest(request);
-            const results = await this._service.search(filters);
-            ResponseHandler.success(request, response, 'Learning enrollments retrieved successfully!', 200, {
-                LearningEnrollments: results,
+            const { courseFilters, learningPathFilters } = await this._validator.validateSearchRequest(request);
+            const courseResults = courseFilters ? await this._courseEnrollmentService.search(courseFilters) : null;
+            const learningPathResults = learningPathFilters ? await this._learningPathEnrollmentService.search(learningPathFilters) : null;
+            
+            ResponseHandler.success(request, response, 'Enrollments retrieved successfully!', 200, {
+                CourseEnrollments: courseResults,
+                LearningPathEnrollments: learningPathResults,
             });
         } catch (error) {
             ResponseHandler.handleError(request, response, error);
@@ -34,8 +47,22 @@ export class LearningEnrollmentController {
     getById = async (request: express.Request, response: express.Response) => {
         try {
             const id = await this._validator.requestParamAsUUID(request, 'id');
-            const record = await this._service.getById(id);
-            ResponseHandler.success(request, response, 'Learning enrollment retrieved successfully!', 200, record);
+            
+            // Try course enrollment first
+            let record = null;
+            try {
+                record = await this._courseEnrollmentService.getById(id);
+                if (record) {
+                    ResponseHandler.success(request, response, 'Course enrollment retrieved successfully!', 200, record);
+                    return;
+                }
+            } catch (error) {
+                // If not found, try learning path enrollment
+            }
+            
+            // Try learning path enrollment
+            record = await this._learningPathEnrollmentService.getById(id);
+            ResponseHandler.success(request, response, 'Learning path enrollment retrieved successfully!', 200, record);
         } catch (error) {
             ResponseHandler.handleError(request, response, error);
         }
@@ -49,9 +76,13 @@ export class LearningEnrollmentController {
                 includeInactiveParam === undefined
                     ? true
                     : includeInactiveParam.toString().toLowerCase() === 'true';
-            const enrollments = await this._service.getUserEnrollments(userId, includeInactive);
+            
+            const courseEnrollments = await this._courseEnrollmentService.getUserEnrollments(userId, includeInactive);
+            const learningPathEnrollments = await this._learningPathEnrollmentService.getUserEnrollments(userId, includeInactive);
+            
             ResponseHandler.success(request, response, 'User enrollments retrieved successfully!', 200, {
-                Enrollments: enrollments,
+                CourseEnrollments: courseEnrollments,
+                LearningPathEnrollments: learningPathEnrollments,
             });
         } catch (error) {
             ResponseHandler.handleError(request, response, error);
@@ -61,20 +92,28 @@ export class LearningEnrollmentController {
     getUserActiveEnrollments = async (request: express.Request, response: express.Response) => {
         try {
             const { userId } = await this._validator.validateUserContext(request);
-            const enrollments = await this._service.getUserActiveEnrollments(userId);
+            const courseEnrollments = await this._courseEnrollmentService.getUserActiveEnrollments(userId);
+            const learningPathEnrollments = await this._learningPathEnrollmentService.getUserActiveEnrollments(userId);
+            
             ResponseHandler.success(request, response, 'User active enrollments retrieved successfully!', 200, {
-                Enrollments: enrollments,
+                CourseEnrollments: courseEnrollments,
+                LearningPathEnrollments: learningPathEnrollments,
             });
         } catch (error) {
             ResponseHandler.handleError(request, response, error);
         }
     };
 
-    stop = async (request: express.Request, response: express.Response) => {
+    getActiveEnrollments = async (request: express.Request, response: express.Response) => {
         try {
-            const { id, status } = await this._validator.validateStopRequest(request);
-            const enrollment = await this._service.stop(id, status);
-            ResponseHandler.success(request, response, 'Enrollment stopped successfully!', 200, enrollment);
+            const { tenantId } = await this._validator.validateTenantContext(request);
+            const courseEnrollments = await this._courseEnrollmentService.getActiveEnrollmentsByTenant(tenantId);
+            const learningPathEnrollments = await this._learningPathEnrollmentService.getActiveEnrollmentsByTenant(tenantId);
+            
+            ResponseHandler.success(request, response, 'Active enrollments retrieved successfully!', 200, {
+                CourseEnrollments: courseEnrollments,
+                LearningPathEnrollments: learningPathEnrollments,
+            });
         } catch (error) {
             ResponseHandler.handleError(request, response, error);
         }
@@ -83,8 +122,22 @@ export class LearningEnrollmentController {
     delete = async (request: express.Request, response: express.Response) => {
         try {
             const id = await this._validator.requestParamAsUUID(request, 'id');
-            const deleted = await this._service.delete(id);
-            ResponseHandler.success(request, response, 'Enrollment deleted successfully!', 200, { Deleted: deleted });
+            
+            // Try course enrollment first
+            let deleted = false;
+            try {
+                deleted = await this._courseEnrollmentService.delete(id);
+                if (deleted) {
+                    ResponseHandler.success(request, response, 'Course enrollment deleted successfully!', 200, { Deleted: deleted });
+                    return;
+                }
+            } catch (error) {
+                // If not found, try learning path enrollment
+            }
+            
+            // Try learning path enrollment
+            deleted = await this._learningPathEnrollmentService.delete(id);
+            ResponseHandler.success(request, response, 'Learning path enrollment deleted successfully!', 200, { Deleted: deleted });
         } catch (error) {
             ResponseHandler.handleError(request, response, error);
         }

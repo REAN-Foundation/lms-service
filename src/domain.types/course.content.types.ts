@@ -38,16 +38,18 @@ export interface CourseContentUpdateModel {
 
 export interface CourseContentResponseDto {
     id: uuid;
-    Title: string;
-    Description: string;
-    ImageUrl: string;
-    DurationInMins: number;
-    ContentType: CourseContentType;
-    ResourceLink: string;
-    ActionTemplateId: uuid;
-    Sequence: number;
-    CourseId: uuid;
-    CourseModuleId: uuid;
+    Title?: string;
+    Description?: string;
+    ImageUrl?: string;
+    DurationInMins?: number;
+    ContentType?: CourseContentType;
+    ResourceLink?: string;
+    ActionTemplateId?: uuid;
+    Sequence?: number;
+    CourseId?: uuid;
+    CourseModuleId?: uuid;
+    CreatedAt: Date;
+    UpdatedAt: Date;
 }
 
 export interface CourseContentSearchFilters extends BaseSearchFilters {

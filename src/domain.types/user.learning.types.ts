@@ -22,12 +22,15 @@ export interface UserLearningUpdateModel {
 
 export interface UserLearningResponseDto {
     id: uuid;
-    UserId: uuid;
-    ProgressStatus: ProgressStatus;
-    CourseId: uuid;
-    LearningPathId: uuid;
-    CourseModuleId: uuid;
-    CourseContentId: uuid;
+    UserId?: uuid;
+    ProgressStatus?: ProgressStatus;
+    PercentageCompletion?: number;
+    CourseId?: uuid;
+    LearningPathId?: uuid;
+    CourseModuleId?: uuid;
+    CourseContentId?: uuid;
+    CreatedAt: Date;
+    UpdatedAt: Date;
 }
 
 export interface UserLearningSearchFilters extends BaseSearchFilters {

@@ -1,22 +1,13 @@
-// import { IsUrl } from "class-validator";
 import 'reflect-metadata';
 import {
     Column,
     CreateDateColumn,
     DeleteDateColumn,
     Entity,
-    JoinColumn,
-    OneToOne,
-    ManyToOne,
-    OneToMany,
-    ManyToMany,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
-    JoinTable,
 } from 'typeorm';
-import { uuid } from '../../../domain.types/miscellaneous/system.types';
-import { IsEmail, Max, Min, IsUrl } from 'class-validator';
-import { LearningPathCourses } from './learning.path.courses.entity';
+import { Max, Min } from 'class-validator';
 
 ////////////////////////////////////////////////////////////////////////
 

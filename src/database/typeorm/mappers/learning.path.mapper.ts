@@ -17,6 +17,8 @@ export class LearningPathMapper {
             DurationInDays: learningPath.DurationInDays,
             PreferenceWeight: learningPath.PreferenceWeight,
             Enabled: learningPath.Enabled,
+            CreatedAt: learningPath.CreatedAt,
+            UpdatedAt: learningPath.UpdatedAt,
         };
         return dto;
     };

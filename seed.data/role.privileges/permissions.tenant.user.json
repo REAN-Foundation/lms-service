@@ -1,47 +1,76 @@
 {
     "Certificates": {
-        "Search": true,
-        "GetById": true
-    },
-    "Course": {
-        "Search": true,
-        "GetById": true
-    },
-    "CourseContent": {
+        "Create": false,
         "Search": true,
         "GetById": true,
-        "GetContentsForCourse": true
+        "Update": false,
+        "Delete": false
+    },
+    "Course": {
+        "Create": false,
+        "Search": true,
+        "GetById": true,
+        "Update": false,
+        "Delete": false
+    },
+    "CourseContent": {
+        "Create": false,
+        "Search": true,
+        "GetById": true,
+        "GetContentsForCourse": true,
+        "Update": false,
+        "Delete": false
     },
     "CourseModule": {
+        "Create": false,
         "Search": true,
-        "GetById": true
+        "GetById": true,
+        "Update": false,
+        "Delete": false
     },
     "LearningPath": {
+        "Create": false,
         "Search": true,
-        "GetById": true
+        "GetById": true,
+        "Update": false,
+        "Delete": false,
+        "AddCourse": false,
+        "RemoveCourse": false,
+        "ReorderCourses": false
     },
     "LearningPathCourses": {
+        "Create": false,
         "Search": true,
-        "GetById": true
+        "GetById": true,
+        "Update": false,
+        "Delete": false
     },
     "LearningEnrollment": {
         "Enroll": true,
+        "Search": false,
         "GetById": true,
         "GetUserEnrollments": true,
         "GetUserActiveEnrollments": true,
-        "Stop": true
+        "Stop": true,
+        "Delete": false
     },
     "UserLearning": {
         "Create": true,
-        "Search": true,
+        "Search": false,
         "GetById": true,
         "Update": true,
+        "Delete": false,
         "UpdateUserLearning": true,
         "GetUserLearningPaths": true,
+        "GetUserCourses": true,
         "GetUserCourseContents": true,
         "GetLearningPathProgress": true,
         "GetCourseProgress": true,
         "GetModuleProgress": true,
-        "GetContentProgress": true
+        "GetContentProgress": true,
+        "GetLearningPathCompletionState": true,
+        "GetCourseCompletionState": true,
+        "GetModuleCompletionState": true,
+        "GetContentCompletionState": true
     }
 }

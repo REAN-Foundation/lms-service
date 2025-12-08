@@ -1,0 +1,3047 @@
+{
+  "info": {
+    "_postman_id": "a043f89b-0faa-4656-8be1-abc54cecdf8d",
+    "name": "lmsservice_db",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "CourseModule",
+      "item": [
+        {
+          "name": "Create",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "",
+                  "try {",
+                  "    var respData = pm.response.json();",
+                  "    pm.environment.set(\"COURSE_MODULE_ID\", respData.Data.id);",
+                  "}",
+                  "catch (error) {",
+                  "    console.log(error.message);",
+                  "}",
+                  "",
+                  "pm.test(\"Request is successfull\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Status).to.eql('success');",
+                  "});",
+                  "",
+                  "pm.test(\"Course Module created successfully\", function () {",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Data).to.have.property('id');",
+                  "    pm.expect(jsonRes.Data).to.have.property('CourseId');\n    pm.expect(jsonRes.Data).to.have.property('LearningPathId');\n    pm.expect(jsonRes.Data).to.have.property('Name');\n    pm.expect(jsonRes.Data).to.have.property('Description');\n    pm.expect(jsonRes.Data).to.have.property('ImageUrl');\n    pm.expect(jsonRes.Data).to.have.property('DurationInMins');\n    pm.expect(jsonRes.Data).to.have.property('Sequence');\n\n    pm.expect(jsonRes.Data.CourseId).to.eql('{{COURSE_ID}}');\n    pm.expect(jsonRes.Data.LearningPathId).to.eql('{{LEARNING_PATH_ID}}');\n    pm.expect(jsonRes.Data.Name).to.eql(\"Vivian Vandervort\");\n    pm.expect(jsonRes.Data.Description).to.eql(\"repellendus reiciendis\");\n    pm.expect(jsonRes.Data.ImageUrl).to.eql(\"http://garrett.info\");\n    pm.expect(jsonRes.Data.DurationInMins).to.eql(4121);\n    pm.expect(jsonRes.Data.Sequence).to.eql(5326);",
+                  "});",
+                  "\n"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "",
+                  "var phonenumber = (Math.floor(Math.random() * 9000000000) + 1000000000).toString();",
+                  "var rand = (Math.floor(Math.random() * 900000) + 100000).toString();",
+                  "var password = \"\";",
+                  "pm.environment.set(\"PHONE_NUMBER\", phonenumber);",
+                  "pm.environment.set(\"EMAIL\", `client.${rand}@nodomain.com`);",
+                  "pm.environment.set(\"PASSWORD\", password);",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "x-api-secret",
+                "value": "{{API_SECRET}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{USER_ACCESS_TOKEN}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"CourseId\": \"{{COURSE_ID}}\",\r\n  \"LearningPathId\": \"{{LEARNING_PATH_ID}}\",\r\n  \"Name\": \"Vivian Vandervort\",\r\n  \"Description\": \"repellendus reiciendis\",\r\n  \"ImageUrl\": \"http://garrett.info\",\r\n  \"DurationInMins\": 4121,\r\n  \"Sequence\": 5326\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "course-modules",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "course-modules"
+              ],
+              "query": null
+            },
+            "description": null
+          },
+          "response": []
+        },
+        {
+          "name": "Get",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "",
+                  "pm.test(\"Request is successfull\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Status).to.eql('success');",
+                  "});",
+                  "",
+                  "pm.test(\"Course Module retreived successfully\", function () {",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Data).to.have.property('id');",
+                  "    pm.expect(jsonRes.Data).to.have.property('Name');\n    pm.expect(jsonRes.Data).to.have.property('Description');\n    pm.expect(jsonRes.Data).to.have.property('ImageUrl');\n    pm.expect(jsonRes.Data).to.have.property('DurationInMins');\n    pm.expect(jsonRes.Data).to.have.property('Sequence');",
+                  "});",
+                  "\n"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "",
+                  "var phonenumber = (Math.floor(Math.random() * 9000000000) + 1000000000).toString();",
+                  "var rand = (Math.floor(Math.random() * 900000) + 100000).toString();",
+                  "var password = \"\";",
+                  "pm.environment.set(\"PHONE_NUMBER\", phonenumber);",
+                  "pm.environment.set(\"EMAIL\", `client.${rand}@nodomain.com`);",
+                  "pm.environment.set(\"PASSWORD\", password);",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "x-api-secret",
+                "value": "{{API_SECRET}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{USER_ACCESS_TOKEN}}",
+                "type": "text"
+              }
+            ],
+            "body": null,
+            "url": {
+              "raw": "course-modules/{{COURSE_MODULE_ID}}",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "course-modules",
+                "{{COURSE_MODULE_ID}}"
+              ],
+              "query": null
+            },
+            "description": null
+          },
+          "response": []
+        },
+        {
+          "name": "Search",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "",
+                  "pm.test(\"Request is successfull\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Status).to.eql('success');",
+                  "});",
+                  "",
+                  "pm.test('Course Module records retrieved successfully', function () {",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Data).to.have.property('Items');",
+                  "    pm.expect(jsonRes.Data.Items.length).to.be.at.least(0);",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "",
+                  "var phonenumber = (Math.floor(Math.random() * 9000000000) + 1000000000).toString();",
+                  "var rand = (Math.floor(Math.random() * 900000) + 100000).toString();",
+                  "var password = \"\";",
+                  "pm.environment.set(\"PHONE_NUMBER\", phonenumber);",
+                  "pm.environment.set(\"EMAIL\", `client.${rand}@nodomain.com`);",
+                  "pm.environment.set(\"PASSWORD\", password);",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "x-api-secret",
+                "value": "{{API_SECRET}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{USER_ACCESS_TOKEN}}",
+                "type": "text"
+              }
+            ],
+            "body": null,
+            "url": {
+              "raw": "course-modules/search?name=Praesentium et blanditiis.&description=Voluptas dolorum sed.&imageUrl=Ipsa aperiam fuga.&durationInMins=1634&sequence=4923",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "course-modules",
+                "search?name=Praesentium et blanditiis.&description=Voluptas dolorum sed.&imageUrl=Ipsa aperiam fuga.&durationInMins=1634&sequence=4923"
+              ],
+              "query": null
+            },
+            "description": null
+          },
+          "response": []
+        },
+        {
+          "name": "Update",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "",
+                  "pm.test(\"Request is successfull\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Status).to.eql('success');",
+                  "});",
+                  "",
+                  "pm.test(\"Course Module updated successfully\", function () {",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Data).to.have.property('id');",
+                  "    pm.expect(jsonRes.Data).to.have.property('CourseId');\n    pm.expect(jsonRes.Data).to.have.property('LearningPathId');\n    pm.expect(jsonRes.Data).to.have.property('Name');\n    pm.expect(jsonRes.Data).to.have.property('Description');\n    pm.expect(jsonRes.Data).to.have.property('ImageUrl');\n    pm.expect(jsonRes.Data).to.have.property('DurationInMins');\n    pm.expect(jsonRes.Data).to.have.property('Sequence');\n\n    pm.expect(jsonRes.Data.CourseId).to.eql('{{COURSE_ID}}');\n    pm.expect(jsonRes.Data.LearningPathId).to.eql('{{LEARNING_PATH_ID}}');\n    pm.expect(jsonRes.Data.Name).to.eql(\"Jan Legros\");\n    pm.expect(jsonRes.Data.Description).to.eql(\"necessitatibus rerum\");\n    pm.expect(jsonRes.Data.ImageUrl).to.eql(\"http://vito.name\");\n    pm.expect(jsonRes.Data.DurationInMins).to.eql(8150);\n    pm.expect(jsonRes.Data.Sequence).to.eql(1765);",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "",
+                  "var phonenumber = (Math.floor(Math.random() * 9000000000) + 1000000000).toString();",
+                  "var rand = (Math.floor(Math.random() * 900000) + 100000).toString();",
+                  "var password = \"\";",
+                  "pm.environment.set(\"PHONE_NUMBER\", phonenumber);",
+                  "pm.environment.set(\"EMAIL\", `client.${rand}@nodomain.com`);",
+                  "pm.environment.set(\"PASSWORD\", password);",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "x-api-secret",
+                "value": "{{API_SECRET}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{USER_ACCESS_TOKEN}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"CourseId\": \"{{COURSE_ID}}\",\r\n  \"LearningPathId\": \"{{LEARNING_PATH_ID}}\",\r\n  \"Name\": \"Jan Legros\",\r\n  \"Description\": \"necessitatibus rerum\",\r\n  \"ImageUrl\": \"http://vito.name\",\r\n  \"DurationInMins\": 8150,\r\n  \"Sequence\": 1765\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "course-modules/{{COURSE_MODULE_ID}}",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "course-modules",
+                "{{COURSE_MODULE_ID}}"
+              ],
+              "query": null
+            },
+            "description": null
+          },
+          "response": []
+        },
+        {
+          "name": "Delete",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "",
+                  "pm.test(\"Request is successfull\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Status).to.eql('success');",
+                  "});",
+                  "",
+                  "pm.test('Course Module deleted successfully', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Status).to.eql('success');",
+                  "    pm.expect(jsonRes.Data).to.have.property('deleted', true);",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "",
+                  "var phonenumber = (Math.floor(Math.random() * 9000000000) + 1000000000).toString();",
+                  "var rand = (Math.floor(Math.random() * 900000) + 100000).toString();",
+                  "var password = \"\";",
+                  "pm.environment.set(\"PHONE_NUMBER\", phonenumber);",
+                  "pm.environment.set(\"EMAIL\", `client.${rand}@nodomain.com`);",
+                  "pm.environment.set(\"PASSWORD\", password);",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "x-api-secret",
+                "value": "{{API_SECRET}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{USER_ACCESS_TOKEN}}",
+                "type": "text"
+              }
+            ],
+            "body": null,
+            "url": {
+              "raw": "course-modules/{{COURSE_MODULE_ID}}",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "course-modules",
+                "{{COURSE_MODULE_ID}}"
+              ],
+              "query": null
+            },
+            "description": null
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "CourseContent",
+      "item": [
+        {
+          "name": "Create",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "",
+                  "try {",
+                  "    var respData = pm.response.json();",
+                  "    pm.environment.set(\"COURSE_CONTENT_ID\", respData.Data.id);",
+                  "}",
+                  "catch (error) {",
+                  "    console.log(error.message);",
+                  "}",
+                  "",
+                  "pm.test(\"Request is successfull\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Status).to.eql('success');",
+                  "});",
+                  "",
+                  "pm.test(\"Course Content created successfully\", function () {",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Data).to.have.property('id');",
+                  "    pm.expect(jsonRes.Data).to.have.property('CourseId');\n    pm.expect(jsonRes.Data).to.have.property('LearningPathId');\n    pm.expect(jsonRes.Data).to.have.property('CourseModuleId');\n    pm.expect(jsonRes.Data).to.have.property('Title');\n    pm.expect(jsonRes.Data).to.have.property('Description');\n    pm.expect(jsonRes.Data).to.have.property('ImageUrl');\n    pm.expect(jsonRes.Data).to.have.property('DurationInMins');\n    pm.expect(jsonRes.Data).to.have.property('ContentType');\n    pm.expect(jsonRes.Data).to.have.property('ResourceLink');\n    pm.expect(jsonRes.Data).to.have.property('Sequence');\n\n    pm.expect(jsonRes.Data.CourseId).to.eql('{{COURSE_ID}}');\n    pm.expect(jsonRes.Data.LearningPathId).to.eql('{{LEARNING_PATH_ID}}');\n    pm.expect(jsonRes.Data.CourseModuleId).to.eql('{{COURSE_MODULE_ID}}');\n    pm.expect(jsonRes.Data.Title).to.eql(\"Est harum doloremque.\");\n    pm.expect(jsonRes.Data.Description).to.eql(\"repellendus dolorem\");\n    pm.expect(jsonRes.Data.ImageUrl).to.eql(\"http://will.info\");\n    pm.expect(jsonRes.Data.DurationInMins).to.eql(4987);\n    pm.expect(jsonRes.Data.ContentType).to.eql(\"Assessment\");\n    pm.expect(jsonRes.Data.ResourceLink).to.eql(\"Magni excepturi aut.\");\n    pm.expect(jsonRes.Data.Sequence).to.eql(7692);",
+                  "});",
+                  "\n"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "",
+                  "var phonenumber = (Math.floor(Math.random() * 9000000000) + 1000000000).toString();",
+                  "var rand = (Math.floor(Math.random() * 900000) + 100000).toString();",
+                  "var password = \"\";",
+                  "pm.environment.set(\"PHONE_NUMBER\", phonenumber);",
+                  "pm.environment.set(\"EMAIL\", `client.${rand}@nodomain.com`);",
+                  "pm.environment.set(\"PASSWORD\", password);",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "x-api-secret",
+                "value": "{{API_SECRET}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{USER_ACCESS_TOKEN}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"CourseId\": \"{{COURSE_ID}}\",\r\n  \"LearningPathId\": \"{{LEARNING_PATH_ID}}\",\r\n  \"CourseModuleId\": \"{{COURSE_MODULE_ID}}\",\r\n  \"Title\": \"Est harum doloremque.\",\r\n  \"Description\": \"repellendus dolorem\",\r\n  \"ImageUrl\": \"http://will.info\",\r\n  \"DurationInMins\": 4987,\r\n  \"ContentType\": \"Assessment\",\r\n  \"ResourceLink\": \"Magni excepturi aut.\",\r\n  \"ActionTemplateId\": \"{{ACTION_TEMPLATE_ID}}\",\r\n  \"Sequence\": 7692\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "course-contents",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "course-contents"
+              ],
+              "query": null
+            },
+            "description": null
+          },
+          "response": []
+        },
+        {
+          "name": "Get",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "",
+                  "pm.test(\"Request is successfull\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Status).to.eql('success');",
+                  "});",
+                  "",
+                  "pm.test(\"Course Content retreived successfully\", function () {",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Data).to.have.property('id');",
+                  "    pm.expect(jsonRes.Data).to.have.property('Title');\n    pm.expect(jsonRes.Data).to.have.property('Description');\n    pm.expect(jsonRes.Data).to.have.property('ImageUrl');\n    pm.expect(jsonRes.Data).to.have.property('DurationInMins');\n    pm.expect(jsonRes.Data).to.have.property('ContentType');\n    pm.expect(jsonRes.Data).to.have.property('ResourceLink');\n    pm.expect(jsonRes.Data).to.have.property('Sequence');",
+                  "});",
+                  "\n"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "",
+                  "var phonenumber = (Math.floor(Math.random() * 9000000000) + 1000000000).toString();",
+                  "var rand = (Math.floor(Math.random() * 900000) + 100000).toString();",
+                  "var password = \"\";",
+                  "pm.environment.set(\"PHONE_NUMBER\", phonenumber);",
+                  "pm.environment.set(\"EMAIL\", `client.${rand}@nodomain.com`);",
+                  "pm.environment.set(\"PASSWORD\", password);",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "x-api-secret",
+                "value": "{{API_SECRET}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{USER_ACCESS_TOKEN}}",
+                "type": "text"
+              }
+            ],
+            "body": null,
+            "url": {
+              "raw": "course-contents/{{COURSE_CONTENT_ID}}",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "course-contents",
+                "{{COURSE_CONTENT_ID}}"
+              ],
+              "query": null
+            },
+            "description": null
+          },
+          "response": []
+        },
+        {
+          "name": "Search",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "",
+                  "pm.test(\"Request is successfull\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Status).to.eql('success');",
+                  "});",
+                  "",
+                  "pm.test('Course Content records retrieved successfully', function () {",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Data).to.have.property('Items');",
+                  "    pm.expect(jsonRes.Data.Items.length).to.be.at.least(0);",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "",
+                  "var phonenumber = (Math.floor(Math.random() * 9000000000) + 1000000000).toString();",
+                  "var rand = (Math.floor(Math.random() * 900000) + 100000).toString();",
+                  "var password = \"\";",
+                  "pm.environment.set(\"PHONE_NUMBER\", phonenumber);",
+                  "pm.environment.set(\"EMAIL\", `client.${rand}@nodomain.com`);",
+                  "pm.environment.set(\"PASSWORD\", password);",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "x-api-secret",
+                "value": "{{API_SECRET}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{USER_ACCESS_TOKEN}}",
+                "type": "text"
+              }
+            ],
+            "body": null,
+            "url": {
+              "raw": "course-contents/search?title=Rerum eum qui.&description=Dolor sequi incidunt.&imageUrl=Temporibus ut itaque.&durationInMins=7667&contentType=sit&resourceLink=Ipsa ullam est.&actionTemplateId=c2f3dc81-ceff-b8af-48d8-f51a84f5f42f&sequence=5055",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "course-contents",
+                "search?title=Rerum eum qui.&description=Dolor sequi incidunt.&imageUrl=Temporibus ut itaque.&durationInMins=7667&contentType=sit&resourceLink=Ipsa ullam est.&actionTemplateId=c2f3dc81-ceff-b8af-48d8-f51a84f5f42f&sequence=5055"
+              ],
+              "query": null
+            },
+            "description": null
+          },
+          "response": []
+        },
+        {
+          "name": "Update",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "",
+                  "pm.test(\"Request is successfull\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Status).to.eql('success');",
+                  "});",
+                  "",
+                  "pm.test(\"Course Content updated successfully\", function () {",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Data).to.have.property('id');",
+                  "    pm.expect(jsonRes.Data).to.have.property('CourseId');\n    pm.expect(jsonRes.Data).to.have.property('LearningPathId');\n    pm.expect(jsonRes.Data).to.have.property('CourseModuleId');\n    pm.expect(jsonRes.Data).to.have.property('Title');\n    pm.expect(jsonRes.Data).to.have.property('Description');\n    pm.expect(jsonRes.Data).to.have.property('ImageUrl');\n    pm.expect(jsonRes.Data).to.have.property('DurationInMins');\n    pm.expect(jsonRes.Data).to.have.property('ContentType');\n    pm.expect(jsonRes.Data).to.have.property('ResourceLink');\n    pm.expect(jsonRes.Data).to.have.property('Sequence');\n\n    pm.expect(jsonRes.Data.CourseId).to.eql('{{COURSE_ID}}');\n    pm.expect(jsonRes.Data.LearningPathId).to.eql('{{LEARNING_PATH_ID}}');\n    pm.expect(jsonRes.Data.CourseModuleId).to.eql('{{COURSE_MODULE_ID}}');\n    pm.expect(jsonRes.Data.Title).to.eql(\"Qui eos quas.\");\n    pm.expect(jsonRes.Data.Description).to.eql(\"et eveniet\");\n    pm.expect(jsonRes.Data.ImageUrl).to.eql(\"http://roel.com\");\n    pm.expect(jsonRes.Data.DurationInMins).to.eql(9462);\n    pm.expect(jsonRes.Data.ContentType).to.eql(\"Text\");\n    pm.expect(jsonRes.Data.ResourceLink).to.eql(\"Voluptates provident placeat.\");\n    pm.expect(jsonRes.Data.Sequence).to.eql(9960);",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "",
+                  "var phonenumber = (Math.floor(Math.random() * 9000000000) + 1000000000).toString();",
+                  "var rand = (Math.floor(Math.random() * 900000) + 100000).toString();",
+                  "var password = \"\";",
+                  "pm.environment.set(\"PHONE_NUMBER\", phonenumber);",
+                  "pm.environment.set(\"EMAIL\", `client.${rand}@nodomain.com`);",
+                  "pm.environment.set(\"PASSWORD\", password);",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "x-api-secret",
+                "value": "{{API_SECRET}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{USER_ACCESS_TOKEN}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"CourseId\": \"{{COURSE_ID}}\",\r\n  \"LearningPathId\": \"{{LEARNING_PATH_ID}}\",\r\n  \"CourseModuleId\": \"{{COURSE_MODULE_ID}}\",\r\n  \"Title\": \"Qui eos quas.\",\r\n  \"Description\": \"et eveniet\",\r\n  \"ImageUrl\": \"http://roel.com\",\r\n  \"DurationInMins\": 9462,\r\n  \"ContentType\": \"Text\",\r\n  \"ResourceLink\": \"Voluptates provident placeat.\",\r\n  \"ActionTemplateId\": \"{{ACTION_TEMPLATE_ID}}\",\r\n  \"Sequence\": 9960\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "course-contents/{{COURSE_CONTENT_ID}}",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "course-contents",
+                "{{COURSE_CONTENT_ID}}"
+              ],
+              "query": null
+            },
+            "description": null
+          },
+          "response": []
+        },
+        {
+          "name": "Delete",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "",
+                  "pm.test(\"Request is successfull\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Status).to.eql('success');",
+                  "});",
+                  "",
+                  "pm.test('Course Content deleted successfully', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Status).to.eql('success');",
+                  "    pm.expect(jsonRes.Data).to.have.property('deleted', true);",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "",
+                  "var phonenumber = (Math.floor(Math.random() * 9000000000) + 1000000000).toString();",
+                  "var rand = (Math.floor(Math.random() * 900000) + 100000).toString();",
+                  "var password = \"\";",
+                  "pm.environment.set(\"PHONE_NUMBER\", phonenumber);",
+                  "pm.environment.set(\"EMAIL\", `client.${rand}@nodomain.com`);",
+                  "pm.environment.set(\"PASSWORD\", password);",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "x-api-secret",
+                "value": "{{API_SECRET}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{USER_ACCESS_TOKEN}}",
+                "type": "text"
+              }
+            ],
+            "body": null,
+            "url": {
+              "raw": "course-contents/{{COURSE_CONTENT_ID}}",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "course-contents",
+                "{{COURSE_CONTENT_ID}}"
+              ],
+              "query": null
+            },
+            "description": null
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Course",
+      "item": [
+        {
+          "name": "Create",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "",
+                  "try {",
+                  "    var respData = pm.response.json();",
+                  "    pm.environment.set(\"COURSE_ID\", respData.Data.id);",
+                  "}",
+                  "catch (error) {",
+                  "    console.log(error.message);",
+                  "}",
+                  "",
+                  "pm.test(\"Request is successfull\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Status).to.eql('success');",
+                  "});",
+                  "",
+                  "pm.test(\"Course created successfully\", function () {",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Data).to.have.property('id');",
+                  "    pm.expect(jsonRes.Data).to.have.property('Name');\n    pm.expect(jsonRes.Data).to.have.property('Description');\n    pm.expect(jsonRes.Data).to.have.property('ImageUrl');\n    pm.expect(jsonRes.Data).to.have.property('DurationInDays');\n\n    pm.expect(jsonRes.Data.Name).to.eql(\"Beulah McLaughlin\");\n    pm.expect(jsonRes.Data.Description).to.eql(\"delectus nulla\");\n    pm.expect(jsonRes.Data.ImageUrl).to.eql(\"https://adelle.net\");\n    pm.expect(jsonRes.Data.DurationInDays).to.eql(2239);",
+                  "});",
+                  "\n"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "",
+                  "var phonenumber = (Math.floor(Math.random() * 9000000000) + 1000000000).toString();",
+                  "var rand = (Math.floor(Math.random() * 900000) + 100000).toString();",
+                  "var password = \"\";",
+                  "pm.environment.set(\"PHONE_NUMBER\", phonenumber);",
+                  "pm.environment.set(\"EMAIL\", `client.${rand}@nodomain.com`);",
+                  "pm.environment.set(\"PASSWORD\", password);",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "x-api-secret",
+                "value": "{{API_SECRET}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{USER_ACCESS_TOKEN}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"TenantId\": \"{{TENANT_ID}}\",\r\n  \"Name\": \"Beulah McLaughlin\",\r\n  \"Description\": \"delectus nulla\",\r\n  \"ImageUrl\": \"https://adelle.net\",\r\n  \"DurationInDays\": 2239\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "courses",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "courses"
+              ],
+              "query": null
+            },
+            "description": null
+          },
+          "response": []
+        },
+        {
+          "name": "Get",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "",
+                  "pm.test(\"Request is successfull\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Status).to.eql('success');",
+                  "});",
+                  "",
+                  "pm.test(\"Course retreived successfully\", function () {",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Data).to.have.property('id');",
+                  "    pm.expect(jsonRes.Data).to.have.property('Name');\n    pm.expect(jsonRes.Data).to.have.property('Description');\n    pm.expect(jsonRes.Data).to.have.property('ImageUrl');\n    pm.expect(jsonRes.Data).to.have.property('DurationInDays');",
+                  "});",
+                  "\n"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "",
+                  "var phonenumber = (Math.floor(Math.random() * 9000000000) + 1000000000).toString();",
+                  "var rand = (Math.floor(Math.random() * 900000) + 100000).toString();",
+                  "var password = \"\";",
+                  "pm.environment.set(\"PHONE_NUMBER\", phonenumber);",
+                  "pm.environment.set(\"EMAIL\", `client.${rand}@nodomain.com`);",
+                  "pm.environment.set(\"PASSWORD\", password);",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "x-api-secret",
+                "value": "{{API_SECRET}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{USER_ACCESS_TOKEN}}",
+                "type": "text"
+              }
+            ],
+            "body": null,
+            "url": {
+              "raw": "courses/{{COURSE_ID}}",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "courses",
+                "{{COURSE_ID}}"
+              ],
+              "query": null
+            },
+            "description": null
+          },
+          "response": []
+        },
+        {
+          "name": "Search",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "",
+                  "pm.test(\"Request is successfull\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Status).to.eql('success');",
+                  "});",
+                  "",
+                  "pm.test('Course records retrieved successfully', function () {",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Data).to.have.property('Items');",
+                  "    pm.expect(jsonRes.Data.Items.length).to.be.at.least(0);",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "",
+                  "var phonenumber = (Math.floor(Math.random() * 9000000000) + 1000000000).toString();",
+                  "var rand = (Math.floor(Math.random() * 900000) + 100000).toString();",
+                  "var password = \"\";",
+                  "pm.environment.set(\"PHONE_NUMBER\", phonenumber);",
+                  "pm.environment.set(\"EMAIL\", `client.${rand}@nodomain.com`);",
+                  "pm.environment.set(\"PASSWORD\", password);",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "x-api-secret",
+                "value": "{{API_SECRET}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{USER_ACCESS_TOKEN}}",
+                "type": "text"
+              }
+            ],
+            "body": null,
+            "url": {
+              "raw": "courses/search?tenantId=Qui illum voluptas.&name=Non repellendus qui.&description=Omnis est quo.&imageUrl=Omnis facere quia.&durationInDays=809",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "courses",
+                "search?tenantId=Qui illum voluptas.&name=Non repellendus qui.&description=Omnis est quo.&imageUrl=Omnis facere quia.&durationInDays=809"
+              ],
+              "query": null
+            },
+            "description": null
+          },
+          "response": []
+        },
+        {
+          "name": "Update",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "",
+                  "pm.test(\"Request is successfull\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Status).to.eql('success');",
+                  "});",
+                  "",
+                  "pm.test(\"Course updated successfully\", function () {",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Data).to.have.property('id');",
+                  "    pm.expect(jsonRes.Data).to.have.property('Name');\n    pm.expect(jsonRes.Data).to.have.property('Description');\n    pm.expect(jsonRes.Data).to.have.property('ImageUrl');\n    pm.expect(jsonRes.Data).to.have.property('DurationInDays');\n\n    pm.expect(jsonRes.Data.Name).to.eql(\"Jane Zboncak\");\n    pm.expect(jsonRes.Data.Description).to.eql(\"minus est\");\n    pm.expect(jsonRes.Data.ImageUrl).to.eql(\"https://wilbert.org\");\n    pm.expect(jsonRes.Data.DurationInDays).to.eql(4327);",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "",
+                  "var phonenumber = (Math.floor(Math.random() * 9000000000) + 1000000000).toString();",
+                  "var rand = (Math.floor(Math.random() * 900000) + 100000).toString();",
+                  "var password = \"\";",
+                  "pm.environment.set(\"PHONE_NUMBER\", phonenumber);",
+                  "pm.environment.set(\"EMAIL\", `client.${rand}@nodomain.com`);",
+                  "pm.environment.set(\"PASSWORD\", password);",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "x-api-secret",
+                "value": "{{API_SECRET}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{USER_ACCESS_TOKEN}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"TenantId\": \"{{TENANT_ID}}\",\r\n  \"Name\": \"Jane Zboncak\",\r\n  \"Description\": \"minus est\",\r\n  \"ImageUrl\": \"https://wilbert.org\",\r\n  \"DurationInDays\": 4327\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "courses/{{COURSE_ID}}",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "courses",
+                "{{COURSE_ID}}"
+              ],
+              "query": null
+            },
+            "description": null
+          },
+          "response": []
+        },
+        {
+          "name": "Delete",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "",
+                  "pm.test(\"Request is successfull\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Status).to.eql('success');",
+                  "});",
+                  "",
+                  "pm.test('Course deleted successfully', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Status).to.eql('success');",
+                  "    pm.expect(jsonRes.Data).to.have.property('deleted', true);",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "",
+                  "var phonenumber = (Math.floor(Math.random() * 9000000000) + 1000000000).toString();",
+                  "var rand = (Math.floor(Math.random() * 900000) + 100000).toString();",
+                  "var password = \"\";",
+                  "pm.environment.set(\"PHONE_NUMBER\", phonenumber);",
+                  "pm.environment.set(\"EMAIL\", `client.${rand}@nodomain.com`);",
+                  "pm.environment.set(\"PASSWORD\", password);",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "x-api-secret",
+                "value": "{{API_SECRET}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{USER_ACCESS_TOKEN}}",
+                "type": "text"
+              }
+            ],
+            "body": null,
+            "url": {
+              "raw": "courses/{{COURSE_ID}}",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "courses",
+                "{{COURSE_ID}}"
+              ],
+              "query": null
+            },
+            "description": null
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "LearningPathCourses",
+      "item": [
+        {
+          "name": "Create",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "",
+                  "try {",
+                  "    var respData = pm.response.json();",
+                  "    pm.environment.set(\"LEARNING_PATH_COURSES_ID\", respData.Data.id);",
+                  "}",
+                  "catch (error) {",
+                  "    console.log(error.message);",
+                  "}",
+                  "",
+                  "pm.test(\"Request is successfull\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Status).to.eql('success');",
+                  "});",
+                  "",
+                  "pm.test(\"Learning Path Courses created successfully\", function () {",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Data).to.have.property('id');",
+                  "    pm.expect(jsonRes.Data).to.have.property('CourseId');\n    pm.expect(jsonRes.Data).to.have.property('LearningPathId');\n\n    pm.expect(jsonRes.Data.CourseId).to.eql('{{COURSE_ID}}');\n    pm.expect(jsonRes.Data.LearningPathId).to.eql('{{LEARNING_PATH_ID}}');",
+                  "});",
+                  "\n"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "",
+                  "var phonenumber = (Math.floor(Math.random() * 9000000000) + 1000000000).toString();",
+                  "var rand = (Math.floor(Math.random() * 900000) + 100000).toString();",
+                  "var password = \"\";",
+                  "pm.environment.set(\"PHONE_NUMBER\", phonenumber);",
+                  "pm.environment.set(\"EMAIL\", `client.${rand}@nodomain.com`);",
+                  "pm.environment.set(\"PASSWORD\", password);",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "x-api-secret",
+                "value": "{{API_SECRET}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{USER_ACCESS_TOKEN}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"CourseId\": \"{{COURSE_ID}}\",\r\n  \"LearningPathId\": \"{{LEARNING_PATH_ID}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "learning-path-courses",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "learning-path-courses"
+              ],
+              "query": null
+            },
+            "description": null
+          },
+          "response": []
+        },
+        {
+          "name": "Get",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "",
+                  "pm.test(\"Request is successfull\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Status).to.eql('success');",
+                  "});",
+                  "",
+                  "pm.test(\"Learning Path Courses retreived successfully\", function () {",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Data).to.have.property('id');",
+                  "",
+                  "});",
+                  "\n"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "",
+                  "var phonenumber = (Math.floor(Math.random() * 9000000000) + 1000000000).toString();",
+                  "var rand = (Math.floor(Math.random() * 900000) + 100000).toString();",
+                  "var password = \"\";",
+                  "pm.environment.set(\"PHONE_NUMBER\", phonenumber);",
+                  "pm.environment.set(\"EMAIL\", `client.${rand}@nodomain.com`);",
+                  "pm.environment.set(\"PASSWORD\", password);",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "x-api-secret",
+                "value": "{{API_SECRET}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{USER_ACCESS_TOKEN}}",
+                "type": "text"
+              }
+            ],
+            "body": null,
+            "url": {
+              "raw": "learning-path-courses/{{LEARNING_PATH_COURSES_ID}}",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "learning-path-courses",
+                "{{LEARNING_PATH_COURSES_ID}}"
+              ],
+              "query": null
+            },
+            "description": null
+          },
+          "response": []
+        },
+        {
+          "name": "Search",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "",
+                  "pm.test(\"Request is successfull\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Status).to.eql('success');",
+                  "});",
+                  "",
+                  "pm.test('Learning Path Courses records retrieved successfully', function () {",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Data).to.have.property('Items');",
+                  "    pm.expect(jsonRes.Data.Items.length).to.be.at.least(0);",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "",
+                  "var phonenumber = (Math.floor(Math.random() * 9000000000) + 1000000000).toString();",
+                  "var rand = (Math.floor(Math.random() * 900000) + 100000).toString();",
+                  "var password = \"\";",
+                  "pm.environment.set(\"PHONE_NUMBER\", phonenumber);",
+                  "pm.environment.set(\"EMAIL\", `client.${rand}@nodomain.com`);",
+                  "pm.environment.set(\"PASSWORD\", password);",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "x-api-secret",
+                "value": "{{API_SECRET}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{USER_ACCESS_TOKEN}}",
+                "type": "text"
+              }
+            ],
+            "body": null,
+            "url": {
+              "raw": "learning-path-courses/search?",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "learning-path-courses",
+                "search?"
+              ],
+              "query": null
+            },
+            "description": null
+          },
+          "response": []
+        },
+        {
+          "name": "Update",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "",
+                  "pm.test(\"Request is successfull\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Status).to.eql('success');",
+                  "});",
+                  "",
+                  "pm.test(\"Learning Path Courses updated successfully\", function () {",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Data).to.have.property('id');",
+                  "    pm.expect(jsonRes.Data).to.have.property('CourseId');\n    pm.expect(jsonRes.Data).to.have.property('LearningPathId');\n\n    pm.expect(jsonRes.Data.CourseId).to.eql('{{COURSE_ID}}');\n    pm.expect(jsonRes.Data.LearningPathId).to.eql('{{LEARNING_PATH_ID}}');",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "",
+                  "var phonenumber = (Math.floor(Math.random() * 9000000000) + 1000000000).toString();",
+                  "var rand = (Math.floor(Math.random() * 900000) + 100000).toString();",
+                  "var password = \"\";",
+                  "pm.environment.set(\"PHONE_NUMBER\", phonenumber);",
+                  "pm.environment.set(\"EMAIL\", `client.${rand}@nodomain.com`);",
+                  "pm.environment.set(\"PASSWORD\", password);",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "x-api-secret",
+                "value": "{{API_SECRET}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{USER_ACCESS_TOKEN}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"CourseId\": \"{{COURSE_ID}}\",\r\n  \"LearningPathId\": \"{{LEARNING_PATH_ID}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "learning-path-courses/{{LEARNING_PATH_COURSES_ID}}",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "learning-path-courses",
+                "{{LEARNING_PATH_COURSES_ID}}"
+              ],
+              "query": null
+            },
+            "description": null
+          },
+          "response": []
+        },
+        {
+          "name": "Delete",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "",
+                  "pm.test(\"Request is successfull\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Status).to.eql('success');",
+                  "});",
+                  "",
+                  "pm.test('Learning Path Courses deleted successfully', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Status).to.eql('success');",
+                  "    pm.expect(jsonRes.Data).to.have.property('deleted', true);",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "",
+                  "var phonenumber = (Math.floor(Math.random() * 9000000000) + 1000000000).toString();",
+                  "var rand = (Math.floor(Math.random() * 900000) + 100000).toString();",
+                  "var password = \"\";",
+                  "pm.environment.set(\"PHONE_NUMBER\", phonenumber);",
+                  "pm.environment.set(\"EMAIL\", `client.${rand}@nodomain.com`);",
+                  "pm.environment.set(\"PASSWORD\", password);",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "x-api-secret",
+                "value": "{{API_SECRET}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{USER_ACCESS_TOKEN}}",
+                "type": "text"
+              }
+            ],
+            "body": null,
+            "url": {
+              "raw": "learning-path-courses/{{LEARNING_PATH_COURSES_ID}}",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "learning-path-courses",
+                "{{LEARNING_PATH_COURSES_ID}}"
+              ],
+              "query": null
+            },
+            "description": null
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "LearningPath",
+      "item": [
+        {
+          "name": "Create",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "",
+                  "try {",
+                  "    var respData = pm.response.json();",
+                  "    pm.environment.set(\"LEARNING_PATH_ID\", respData.Data.id);",
+                  "}",
+                  "catch (error) {",
+                  "    console.log(error.message);",
+                  "}",
+                  "",
+                  "pm.test(\"Request is successfull\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Status).to.eql('success');",
+                  "});",
+                  "",
+                  "pm.test(\"Learning Path created successfully\", function () {",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Data).to.have.property('id');",
+                  "    pm.expect(jsonRes.Data).to.have.property('Name');\n    pm.expect(jsonRes.Data).to.have.property('Description');\n    pm.expect(jsonRes.Data).to.have.property('ImageUrl');\n    pm.expect(jsonRes.Data).to.have.property('DurationInDays');\n    pm.expect(jsonRes.Data).to.have.property('PreferenceWeight');\n    pm.expect(jsonRes.Data).to.have.property('Enabled');\n\n    pm.expect(jsonRes.Data.Name).to.eql(\"Marcos Kutch\");\n    pm.expect(jsonRes.Data.Description).to.eql(\"voluptates velit\");\n    pm.expect(jsonRes.Data.ImageUrl).to.eql(\"http://carissa.org\");\n    pm.expect(jsonRes.Data.DurationInDays).to.eql(7248);\n    pm.expect(jsonRes.Data.PreferenceWeight).to.eql(4757);\n    pm.expect(jsonRes.Data.Enabled).to.eql(false);",
+                  "});",
+                  "\n"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "",
+                  "var phonenumber = (Math.floor(Math.random() * 9000000000) + 1000000000).toString();",
+                  "var rand = (Math.floor(Math.random() * 900000) + 100000).toString();",
+                  "var password = \"\";",
+                  "pm.environment.set(\"PHONE_NUMBER\", phonenumber);",
+                  "pm.environment.set(\"EMAIL\", `client.${rand}@nodomain.com`);",
+                  "pm.environment.set(\"PASSWORD\", password);",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "x-api-secret",
+                "value": "{{API_SECRET}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{USER_ACCESS_TOKEN}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"TenantId\": \"{{TENANT_ID}}\",\r\n  \"Name\": \"Marcos Kutch\",\r\n  \"Description\": \"voluptates velit\",\r\n  \"ImageUrl\": \"http://carissa.org\",\r\n  \"DurationInDays\": 7248,\r\n  \"PreferenceWeight\": 4757,\r\n  \"Enabled\": false\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "learning-paths",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "learning-paths"
+              ],
+              "query": null
+            },
+            "description": null
+          },
+          "response": []
+        },
+        {
+          "name": "Get",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "",
+                  "pm.test(\"Request is successfull\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Status).to.eql('success');",
+                  "});",
+                  "",
+                  "pm.test(\"Learning Path retreived successfully\", function () {",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Data).to.have.property('id');",
+                  "    pm.expect(jsonRes.Data).to.have.property('Name');\n    pm.expect(jsonRes.Data).to.have.property('Description');\n    pm.expect(jsonRes.Data).to.have.property('ImageUrl');\n    pm.expect(jsonRes.Data).to.have.property('DurationInDays');\n    pm.expect(jsonRes.Data).to.have.property('PreferenceWeight');\n    pm.expect(jsonRes.Data).to.have.property('Enabled');",
+                  "});",
+                  "\n"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "",
+                  "var phonenumber = (Math.floor(Math.random() * 9000000000) + 1000000000).toString();",
+                  "var rand = (Math.floor(Math.random() * 900000) + 100000).toString();",
+                  "var password = \"\";",
+                  "pm.environment.set(\"PHONE_NUMBER\", phonenumber);",
+                  "pm.environment.set(\"EMAIL\", `client.${rand}@nodomain.com`);",
+                  "pm.environment.set(\"PASSWORD\", password);",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "x-api-secret",
+                "value": "{{API_SECRET}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{USER_ACCESS_TOKEN}}",
+                "type": "text"
+              }
+            ],
+            "body": null,
+            "url": {
+              "raw": "learning-paths/{{LEARNING_PATH_ID}}",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "learning-paths",
+                "{{LEARNING_PATH_ID}}"
+              ],
+              "query": null
+            },
+            "description": null
+          },
+          "response": []
+        },
+        {
+          "name": "Search",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "",
+                  "pm.test(\"Request is successfull\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Status).to.eql('success');",
+                  "});",
+                  "",
+                  "pm.test('Learning Path records retrieved successfully', function () {",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Data).to.have.property('Items');",
+                  "    pm.expect(jsonRes.Data.Items.length).to.be.at.least(0);",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "",
+                  "var phonenumber = (Math.floor(Math.random() * 9000000000) + 1000000000).toString();",
+                  "var rand = (Math.floor(Math.random() * 900000) + 100000).toString();",
+                  "var password = \"\";",
+                  "pm.environment.set(\"PHONE_NUMBER\", phonenumber);",
+                  "pm.environment.set(\"EMAIL\", `client.${rand}@nodomain.com`);",
+                  "pm.environment.set(\"PASSWORD\", password);",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "x-api-secret",
+                "value": "{{API_SECRET}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{USER_ACCESS_TOKEN}}",
+                "type": "text"
+              }
+            ],
+            "body": null,
+            "url": {
+              "raw": "learning-paths/search?tenantId=a1f62d60-24b1-0514-4b18-97cd73e6b6af&name=Sed dolorum vel.&description=Placeat dolores modi.&imageUrl=Laborum autem autem.&durationInDays=7324&preferenceWeight=6246&enabled=true",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "learning-paths",
+                "search?tenantId=a1f62d60-24b1-0514-4b18-97cd73e6b6af&name=Sed dolorum vel.&description=Placeat dolores modi.&imageUrl=Laborum autem autem.&durationInDays=7324&preferenceWeight=6246&enabled=true"
+              ],
+              "query": null
+            },
+            "description": null
+          },
+          "response": []
+        },
+        {
+          "name": "Update",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "",
+                  "pm.test(\"Request is successfull\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Status).to.eql('success');",
+                  "});",
+                  "",
+                  "pm.test(\"Learning Path updated successfully\", function () {",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Data).to.have.property('id');",
+                  "    pm.expect(jsonRes.Data).to.have.property('Name');\n    pm.expect(jsonRes.Data).to.have.property('Description');\n    pm.expect(jsonRes.Data).to.have.property('ImageUrl');\n    pm.expect(jsonRes.Data).to.have.property('DurationInDays');\n    pm.expect(jsonRes.Data).to.have.property('PreferenceWeight');\n    pm.expect(jsonRes.Data).to.have.property('Enabled');\n\n    pm.expect(jsonRes.Data.Name).to.eql(\"Pauline Crooks\");\n    pm.expect(jsonRes.Data.Description).to.eql(\"voluptatem impedit\");\n    pm.expect(jsonRes.Data.ImageUrl).to.eql(\"https://antoinette.org\");\n    pm.expect(jsonRes.Data.DurationInDays).to.eql(1291);\n    pm.expect(jsonRes.Data.PreferenceWeight).to.eql(9644);\n    pm.expect(jsonRes.Data.Enabled).to.eql(false);",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "",
+                  "var phonenumber = (Math.floor(Math.random() * 9000000000) + 1000000000).toString();",
+                  "var rand = (Math.floor(Math.random() * 900000) + 100000).toString();",
+                  "var password = \"\";",
+                  "pm.environment.set(\"PHONE_NUMBER\", phonenumber);",
+                  "pm.environment.set(\"EMAIL\", `client.${rand}@nodomain.com`);",
+                  "pm.environment.set(\"PASSWORD\", password);",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "x-api-secret",
+                "value": "{{API_SECRET}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{USER_ACCESS_TOKEN}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"TenantId\": \"{{TENANT_ID}}\",\r\n  \"Name\": \"Pauline Crooks\",\r\n  \"Description\": \"voluptatem impedit\",\r\n  \"ImageUrl\": \"https://antoinette.org\",\r\n  \"DurationInDays\": 1291,\r\n  \"PreferenceWeight\": 9644,\r\n  \"Enabled\": false\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "learning-paths/{{LEARNING_PATH_ID}}",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "learning-paths",
+                "{{LEARNING_PATH_ID}}"
+              ],
+              "query": null
+            },
+            "description": null
+          },
+          "response": []
+        },
+        {
+          "name": "Delete",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "",
+                  "pm.test(\"Request is successfull\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Status).to.eql('success');",
+                  "});",
+                  "",
+                  "pm.test('Learning Path deleted successfully', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Status).to.eql('success');",
+                  "    pm.expect(jsonRes.Data).to.have.property('deleted', true);",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "",
+                  "var phonenumber = (Math.floor(Math.random() * 9000000000) + 1000000000).toString();",
+                  "var rand = (Math.floor(Math.random() * 900000) + 100000).toString();",
+                  "var password = \"\";",
+                  "pm.environment.set(\"PHONE_NUMBER\", phonenumber);",
+                  "pm.environment.set(\"EMAIL\", `client.${rand}@nodomain.com`);",
+                  "pm.environment.set(\"PASSWORD\", password);",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "x-api-secret",
+                "value": "{{API_SECRET}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{USER_ACCESS_TOKEN}}",
+                "type": "text"
+              }
+            ],
+            "body": null,
+            "url": {
+              "raw": "learning-paths/{{LEARNING_PATH_ID}}",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "learning-paths",
+                "{{LEARNING_PATH_ID}}"
+              ],
+              "query": null
+            },
+            "description": null
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "UserLearning",
+      "item": [
+        {
+          "name": "Create",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "",
+                  "try {",
+                  "    var respData = pm.response.json();",
+                  "    pm.environment.set(\"USER_LEARNING_ID\", respData.Data.id);",
+                  "}",
+                  "catch (error) {",
+                  "    console.log(error.message);",
+                  "}",
+                  "",
+                  "pm.test(\"Request is successfull\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Status).to.eql('success');",
+                  "});",
+                  "",
+                  "pm.test(\"User Learning created successfully\", function () {",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Data).to.have.property('id');",
+                  "    pm.expect(jsonRes.Data).to.have.property('CourseId');\n    pm.expect(jsonRes.Data).to.have.property('LearningPathId');\n    pm.expect(jsonRes.Data).to.have.property('CourseModuleId');\n    pm.expect(jsonRes.Data).to.have.property('CourseContentId');\n    pm.expect(jsonRes.Data).to.have.property('ProgressStatus');\n    pm.expect(jsonRes.Data).to.have.property('PercentageCompletion');\n\n    pm.expect(jsonRes.Data.CourseId).to.eql('{{COURSE_ID}}');\n    pm.expect(jsonRes.Data.LearningPathId).to.eql('{{LEARNING_PATH_ID}}');\n    pm.expect(jsonRes.Data.CourseModuleId).to.eql('{{COURSE_MODULE_ID}}');\n    pm.expect(jsonRes.Data.CourseContentId).to.eql('{{COURSE_CONTENT_ID}}');\n    pm.expect(jsonRes.Data.ProgressStatus).to.eql(\"InProgress\");\n    pm.expect(jsonRes.Data.PercentageCompletion).to.eql(9621);",
+                  "});",
+                  "\n"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "",
+                  "var phonenumber = (Math.floor(Math.random() * 9000000000) + 1000000000).toString();",
+                  "var rand = (Math.floor(Math.random() * 900000) + 100000).toString();",
+                  "var password = \"\";",
+                  "pm.environment.set(\"PHONE_NUMBER\", phonenumber);",
+                  "pm.environment.set(\"EMAIL\", `client.${rand}@nodomain.com`);",
+                  "pm.environment.set(\"PASSWORD\", password);",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "x-api-secret",
+                "value": "{{API_SECRET}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{USER_ACCESS_TOKEN}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"CourseId\": \"{{COURSE_ID}}\",\r\n  \"LearningPathId\": \"{{LEARNING_PATH_ID}}\",\r\n  \"CourseModuleId\": \"{{COURSE_MODULE_ID}}\",\r\n  \"CourseContentId\": \"{{COURSE_CONTENT_ID}}\",\r\n  \"UserId\": \"{{USER_ID}}\",\r\n  \"ActionId\": \"{{ACTION_ID}}\",\r\n  \"ProgressStatus\": \"InProgress\",\r\n  \"PercentageCompletion\": 9621\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "user-learnings",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "user-learnings"
+              ],
+              "query": null
+            },
+            "description": null
+          },
+          "response": []
+        },
+        {
+          "name": "Get",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "",
+                  "pm.test(\"Request is successfull\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Status).to.eql('success');",
+                  "});",
+                  "",
+                  "pm.test(\"User Learning retreived successfully\", function () {",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Data).to.have.property('id');",
+                  "    pm.expect(jsonRes.Data).to.have.property('ProgressStatus');\n    pm.expect(jsonRes.Data).to.have.property('PercentageCompletion');",
+                  "});",
+                  "\n"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "",
+                  "var phonenumber = (Math.floor(Math.random() * 9000000000) + 1000000000).toString();",
+                  "var rand = (Math.floor(Math.random() * 900000) + 100000).toString();",
+                  "var password = \"\";",
+                  "pm.environment.set(\"PHONE_NUMBER\", phonenumber);",
+                  "pm.environment.set(\"EMAIL\", `client.${rand}@nodomain.com`);",
+                  "pm.environment.set(\"PASSWORD\", password);",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "x-api-secret",
+                "value": "{{API_SECRET}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{USER_ACCESS_TOKEN}}",
+                "type": "text"
+              }
+            ],
+            "body": null,
+            "url": {
+              "raw": "user-learnings/{{USER_LEARNING_ID}}",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "user-learnings",
+                "{{USER_LEARNING_ID}}"
+              ],
+              "query": null
+            },
+            "description": null
+          },
+          "response": []
+        },
+        {
+          "name": "Search",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "",
+                  "pm.test(\"Request is successfull\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Status).to.eql('success');",
+                  "});",
+                  "",
+                  "pm.test('User Learning records retrieved successfully', function () {",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Data).to.have.property('Items');",
+                  "    pm.expect(jsonRes.Data.Items.length).to.be.at.least(0);",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "",
+                  "var phonenumber = (Math.floor(Math.random() * 9000000000) + 1000000000).toString();",
+                  "var rand = (Math.floor(Math.random() * 900000) + 100000).toString();",
+                  "var password = \"\";",
+                  "pm.environment.set(\"PHONE_NUMBER\", phonenumber);",
+                  "pm.environment.set(\"EMAIL\", `client.${rand}@nodomain.com`);",
+                  "pm.environment.set(\"PASSWORD\", password);",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "x-api-secret",
+                "value": "{{API_SECRET}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{USER_ACCESS_TOKEN}}",
+                "type": "text"
+              }
+            ],
+            "body": null,
+            "url": {
+              "raw": "user-learnings/search?userId=48ee48ef-bea3-c4b0-e818-a15b0cc5a3e4&actionId=3d3b5550-b881-c2f1-3cd1-ff19485cd0d4&progressStatus=consequatur&percentageCompletion=4645",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "user-learnings",
+                "search?userId=48ee48ef-bea3-c4b0-e818-a15b0cc5a3e4&actionId=3d3b5550-b881-c2f1-3cd1-ff19485cd0d4&progressStatus=consequatur&percentageCompletion=4645"
+              ],
+              "query": null
+            },
+            "description": null
+          },
+          "response": []
+        },
+        {
+          "name": "Update",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "",
+                  "pm.test(\"Request is successfull\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Status).to.eql('success');",
+                  "});",
+                  "",
+                  "pm.test(\"User Learning updated successfully\", function () {",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Data).to.have.property('id');",
+                  "    pm.expect(jsonRes.Data).to.have.property('CourseId');\n    pm.expect(jsonRes.Data).to.have.property('LearningPathId');\n    pm.expect(jsonRes.Data).to.have.property('CourseModuleId');\n    pm.expect(jsonRes.Data).to.have.property('CourseContentId');\n    pm.expect(jsonRes.Data).to.have.property('ProgressStatus');\n    pm.expect(jsonRes.Data).to.have.property('PercentageCompletion');\n\n    pm.expect(jsonRes.Data.CourseId).to.eql('{{COURSE_ID}}');\n    pm.expect(jsonRes.Data.LearningPathId).to.eql('{{LEARNING_PATH_ID}}');\n    pm.expect(jsonRes.Data.CourseModuleId).to.eql('{{COURSE_MODULE_ID}}');\n    pm.expect(jsonRes.Data.CourseContentId).to.eql('{{COURSE_CONTENT_ID}}');\n    pm.expect(jsonRes.Data.ProgressStatus).to.eql(\"Pending\");\n    pm.expect(jsonRes.Data.PercentageCompletion).to.eql(1649);",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "",
+                  "var phonenumber = (Math.floor(Math.random() * 9000000000) + 1000000000).toString();",
+                  "var rand = (Math.floor(Math.random() * 900000) + 100000).toString();",
+                  "var password = \"\";",
+                  "pm.environment.set(\"PHONE_NUMBER\", phonenumber);",
+                  "pm.environment.set(\"EMAIL\", `client.${rand}@nodomain.com`);",
+                  "pm.environment.set(\"PASSWORD\", password);",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "x-api-secret",
+                "value": "{{API_SECRET}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{USER_ACCESS_TOKEN}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"CourseId\": \"{{COURSE_ID}}\",\r\n  \"LearningPathId\": \"{{LEARNING_PATH_ID}}\",\r\n  \"CourseModuleId\": \"{{COURSE_MODULE_ID}}\",\r\n  \"CourseContentId\": \"{{COURSE_CONTENT_ID}}\",\r\n  \"UserId\": \"{{USER_ID}}\",\r\n  \"ActionId\": \"{{ACTION_ID}}\",\r\n  \"ProgressStatus\": \"Pending\",\r\n  \"PercentageCompletion\": 1649\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "user-learnings/{{USER_LEARNING_ID}}",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "user-learnings",
+                "{{USER_LEARNING_ID}}"
+              ],
+              "query": null
+            },
+            "description": null
+          },
+          "response": []
+        },
+        {
+          "name": "Delete",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "",
+                  "pm.test(\"Request is successfull\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Status).to.eql('success');",
+                  "});",
+                  "",
+                  "pm.test('User Learning deleted successfully', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Status).to.eql('success');",
+                  "    pm.expect(jsonRes.Data).to.have.property('deleted', true);",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "",
+                  "var phonenumber = (Math.floor(Math.random() * 9000000000) + 1000000000).toString();",
+                  "var rand = (Math.floor(Math.random() * 900000) + 100000).toString();",
+                  "var password = \"\";",
+                  "pm.environment.set(\"PHONE_NUMBER\", phonenumber);",
+                  "pm.environment.set(\"EMAIL\", `client.${rand}@nodomain.com`);",
+                  "pm.environment.set(\"PASSWORD\", password);",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "x-api-secret",
+                "value": "{{API_SECRET}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{USER_ACCESS_TOKEN}}",
+                "type": "text"
+              }
+            ],
+            "body": null,
+            "url": {
+              "raw": "user-learnings/{{USER_LEARNING_ID}}",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "user-learnings",
+                "{{USER_LEARNING_ID}}"
+              ],
+              "query": null
+            },
+            "description": null
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Certificates",
+      "item": [
+        {
+          "name": "Create",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "",
+                  "try {",
+                  "    var respData = pm.response.json();",
+                  "    pm.environment.set(\"CERTIFICATES_ID\", respData.Data.id);",
+                  "}",
+                  "catch (error) {",
+                  "    console.log(error.message);",
+                  "}",
+                  "",
+                  "pm.test(\"Request is successfull\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Status).to.eql('success');",
+                  "});",
+                  "",
+                  "pm.test(\"Certificates created successfully\", function () {",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Data).to.have.property('id');",
+                  "    pm.expect(jsonRes.Data).to.have.property('CourseId');\n    pm.expect(jsonRes.Data).to.have.property('CertificateNumber');\n    pm.expect(jsonRes.Data).to.have.property('CertificateName');\n    pm.expect(jsonRes.Data).to.have.property('CertificateType');\n    pm.expect(jsonRes.Data).to.have.property('IssuedDate');\n    pm.expect(jsonRes.Data).to.have.property('ExpiryDate');\n    pm.expect(jsonRes.Data).to.have.property('CertificateUrl');\n    pm.expect(jsonRes.Data).to.have.property('FinalGrade');\n    pm.expect(jsonRes.Data).to.have.property('CreditHours');\n    pm.expect(jsonRes.Data).to.have.property('Skills');\n    pm.expect(jsonRes.Data).to.have.property('IsVerified');\n    pm.expect(jsonRes.Data).to.have.property('VerificationUrl');\n    pm.expect(jsonRes.Data).to.have.property('IssuedBy');\n\n    pm.expect(jsonRes.Data.CourseId).to.eql('{{COURSE_ID}}');\n    pm.expect(jsonRes.Data.CertificateNumber).to.eql(\"Quia aut voluptas.\");\n    pm.expect(jsonRes.Data.CertificateName).to.eql(\"Dixie Lockman\");\n    pm.expect(jsonRes.Data.CertificateType).to.eql(\"Commodi molestiae ut.\");\n    pm.expect(jsonRes.Data.IssuedDate).to.eql(\"Et et est.\");\n    pm.expect(jsonRes.Data.ExpiryDate).to.eql(\"2025-02-22T17:06:57\");\n    pm.expect(jsonRes.Data.CertificateUrl).to.eql(\"https://thomas.info\");\n    pm.expect(jsonRes.Data.FinalGrade).to.eql(3719.2378);\n    pm.expect(jsonRes.Data.CreditHours).to.eql(1842);\n    pm.expect(jsonRes.Data.Skills).to.eql(\"Omnis assumenda aut.\");\n    pm.expect(jsonRes.Data.IsVerified).to.eql(true);\n    pm.expect(jsonRes.Data.VerificationUrl).to.eql(\"https://angie.name\");\n    pm.expect(jsonRes.Data.IssuedBy).to.eql(\"21094a05-21fa-3c40-57e2-35b3ea75f20d\");",
+                  "});",
+                  "\n"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "",
+                  "var phonenumber = (Math.floor(Math.random() * 9000000000) + 1000000000).toString();",
+                  "var rand = (Math.floor(Math.random() * 900000) + 100000).toString();",
+                  "var password = \"\";",
+                  "pm.environment.set(\"PHONE_NUMBER\", phonenumber);",
+                  "pm.environment.set(\"EMAIL\", `client.${rand}@nodomain.com`);",
+                  "pm.environment.set(\"PASSWORD\", password);",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "x-api-secret",
+                "value": "{{API_SECRET}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{USER_ACCESS_TOKEN}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"CourseId\": \"{{COURSE_ID}}\",\r\n  \"UserId\": \"{{USER_ID}}\",\r\n  \"CertificateNumber\": \"Quia aut voluptas.\",\r\n  \"CertificateName\": \"Dixie Lockman\",\r\n  \"CertificateType\": \"Commodi molestiae ut.\",\r\n  \"IssuedDate\": \"Et et est.\",\r\n  \"ExpiryDate\": \"2025-02-22T17:06:57\",\r\n  \"CertificateUrl\": \"https://thomas.info\",\r\n  \"FinalGrade\": 3719.2378,\r\n  \"CreditHours\": 1842,\r\n  \"Skills\": \"Omnis assumenda aut.\",\r\n  \"IsVerified\": true,\r\n  \"VerificationUrl\": \"https://angie.name\",\r\n  \"IssuedBy\": \"21094a05-21fa-3c40-57e2-35b3ea75f20d\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "certificates",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "certificates"
+              ],
+              "query": null
+            },
+            "description": null
+          },
+          "response": []
+        },
+        {
+          "name": "Get",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "",
+                  "pm.test(\"Request is successfull\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Status).to.eql('success');",
+                  "});",
+                  "",
+                  "pm.test(\"Certificates retreived successfully\", function () {",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Data).to.have.property('id');",
+                  "    pm.expect(jsonRes.Data).to.have.property('CertificateNumber');\n    pm.expect(jsonRes.Data).to.have.property('CertificateName');\n    pm.expect(jsonRes.Data).to.have.property('CertificateType');\n    pm.expect(jsonRes.Data).to.have.property('IssuedDate');\n    pm.expect(jsonRes.Data).to.have.property('ExpiryDate');\n    pm.expect(jsonRes.Data).to.have.property('CertificateUrl');\n    pm.expect(jsonRes.Data).to.have.property('FinalGrade');\n    pm.expect(jsonRes.Data).to.have.property('CreditHours');\n    pm.expect(jsonRes.Data).to.have.property('Skills');\n    pm.expect(jsonRes.Data).to.have.property('IsVerified');\n    pm.expect(jsonRes.Data).to.have.property('VerificationUrl');\n    pm.expect(jsonRes.Data).to.have.property('IssuedBy');",
+                  "});",
+                  "\n"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "",
+                  "var phonenumber = (Math.floor(Math.random() * 9000000000) + 1000000000).toString();",
+                  "var rand = (Math.floor(Math.random() * 900000) + 100000).toString();",
+                  "var password = \"\";",
+                  "pm.environment.set(\"PHONE_NUMBER\", phonenumber);",
+                  "pm.environment.set(\"EMAIL\", `client.${rand}@nodomain.com`);",
+                  "pm.environment.set(\"PASSWORD\", password);",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "x-api-secret",
+                "value": "{{API_SECRET}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{USER_ACCESS_TOKEN}}",
+                "type": "text"
+              }
+            ],
+            "body": null,
+            "url": {
+              "raw": "certificates/{{CERTIFICATES_ID}}",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "certificates",
+                "{{CERTIFICATES_ID}}"
+              ],
+              "query": null
+            },
+            "description": null
+          },
+          "response": []
+        },
+        {
+          "name": "Search",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "",
+                  "pm.test(\"Request is successfull\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Status).to.eql('success');",
+                  "});",
+                  "",
+                  "pm.test('Certificates records retrieved successfully', function () {",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Data).to.have.property('Items');",
+                  "    pm.expect(jsonRes.Data.Items.length).to.be.at.least(0);",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "",
+                  "var phonenumber = (Math.floor(Math.random() * 9000000000) + 1000000000).toString();",
+                  "var rand = (Math.floor(Math.random() * 900000) + 100000).toString();",
+                  "var password = \"\";",
+                  "pm.environment.set(\"PHONE_NUMBER\", phonenumber);",
+                  "pm.environment.set(\"EMAIL\", `client.${rand}@nodomain.com`);",
+                  "pm.environment.set(\"PASSWORD\", password);",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "x-api-secret",
+                "value": "{{API_SECRET}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{USER_ACCESS_TOKEN}}",
+                "type": "text"
+              }
+            ],
+            "body": null,
+            "url": {
+              "raw": "certificates/search?userId=57229e2f-a265-8c40-4a6d-4b0580c91ecc&certificateNumber=Repudiandae fugit dolor.&certificateName=Ipsum iusto tempore.&certificateType=Nisi quasi enim.&issuedDate=Accusantium perspiciatis voluptas.&expiryDate=2025-08-08T17:13:26&certificateUrl=Odio expedita reprehenderit.&finalGrade=4248.1636&creditHours=3571&skills=Repellat voluptates pariatur.&isVerified=true&verificationUrl=Et laudantium libero.&issuedBy=9e1a8aac-de87-b5c1-8abb-74acfdcff265",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "certificates",
+                "search?userId=57229e2f-a265-8c40-4a6d-4b0580c91ecc&certificateNumber=Repudiandae fugit dolor.&certificateName=Ipsum iusto tempore.&certificateType=Nisi quasi enim.&issuedDate=Accusantium perspiciatis voluptas.&expiryDate=2025-08-08T17:13:26&certificateUrl=Odio expedita reprehenderit.&finalGrade=4248.1636&creditHours=3571&skills=Repellat voluptates pariatur.&isVerified=true&verificationUrl=Et laudantium libero.&issuedBy=9e1a8aac-de87-b5c1-8abb-74acfdcff265"
+              ],
+              "query": null
+            },
+            "description": null
+          },
+          "response": []
+        },
+        {
+          "name": "Update",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "",
+                  "pm.test(\"Request is successfull\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Status).to.eql('success');",
+                  "});",
+                  "",
+                  "pm.test(\"Certificates updated successfully\", function () {",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Data).to.have.property('id');",
+                  "    pm.expect(jsonRes.Data).to.have.property('CourseId');\n    pm.expect(jsonRes.Data).to.have.property('CertificateNumber');\n    pm.expect(jsonRes.Data).to.have.property('CertificateName');\n    pm.expect(jsonRes.Data).to.have.property('CertificateType');\n    pm.expect(jsonRes.Data).to.have.property('IssuedDate');\n    pm.expect(jsonRes.Data).to.have.property('ExpiryDate');\n    pm.expect(jsonRes.Data).to.have.property('CertificateUrl');\n    pm.expect(jsonRes.Data).to.have.property('FinalGrade');\n    pm.expect(jsonRes.Data).to.have.property('CreditHours');\n    pm.expect(jsonRes.Data).to.have.property('Skills');\n    pm.expect(jsonRes.Data).to.have.property('IsVerified');\n    pm.expect(jsonRes.Data).to.have.property('VerificationUrl');\n    pm.expect(jsonRes.Data).to.have.property('IssuedBy');\n\n    pm.expect(jsonRes.Data.CourseId).to.eql('{{COURSE_ID}}');\n    pm.expect(jsonRes.Data.CertificateNumber).to.eql(\"Officia non nihil.\");\n    pm.expect(jsonRes.Data.CertificateName).to.eql(\"Isaac Carter\");\n    pm.expect(jsonRes.Data.CertificateType).to.eql(\"Rerum ipsam ex.\");\n    pm.expect(jsonRes.Data.IssuedDate).to.eql(\"Illum consequatur qui.\");\n    pm.expect(jsonRes.Data.ExpiryDate).to.eql(\"2025-09-12T23:34:33\");\n    pm.expect(jsonRes.Data.CertificateUrl).to.eql(\"https://karson.info\");\n    pm.expect(jsonRes.Data.FinalGrade).to.eql(8788.839);\n    pm.expect(jsonRes.Data.CreditHours).to.eql(4271);\n    pm.expect(jsonRes.Data.Skills).to.eql(\"Beatae natus quisquam.\");\n    pm.expect(jsonRes.Data.IsVerified).to.eql(true);\n    pm.expect(jsonRes.Data.VerificationUrl).to.eql(\"https://lexie.info\");\n    pm.expect(jsonRes.Data.IssuedBy).to.eql(\"25c23064-630e-e9d0-f242-049ceb3e95d8\");",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "",
+                  "var phonenumber = (Math.floor(Math.random() * 9000000000) + 1000000000).toString();",
+                  "var rand = (Math.floor(Math.random() * 900000) + 100000).toString();",
+                  "var password = \"\";",
+                  "pm.environment.set(\"PHONE_NUMBER\", phonenumber);",
+                  "pm.environment.set(\"EMAIL\", `client.${rand}@nodomain.com`);",
+                  "pm.environment.set(\"PASSWORD\", password);",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "x-api-secret",
+                "value": "{{API_SECRET}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{USER_ACCESS_TOKEN}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"CourseId\": \"{{COURSE_ID}}\",\r\n  \"UserId\": \"{{USER_ID}}\",\r\n  \"CertificateNumber\": \"Officia non nihil.\",\r\n  \"CertificateName\": \"Isaac Carter\",\r\n  \"CertificateType\": \"Rerum ipsam ex.\",\r\n  \"IssuedDate\": \"Illum consequatur qui.\",\r\n  \"ExpiryDate\": \"2025-09-12T23:34:33\",\r\n  \"CertificateUrl\": \"https://karson.info\",\r\n  \"FinalGrade\": 8788.839,\r\n  \"CreditHours\": 4271,\r\n  \"Skills\": \"Beatae natus quisquam.\",\r\n  \"IsVerified\": true,\r\n  \"VerificationUrl\": \"https://lexie.info\",\r\n  \"IssuedBy\": \"25c23064-630e-e9d0-f242-049ceb3e95d8\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "certificates/{{CERTIFICATES_ID}}",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "certificates",
+                "{{CERTIFICATES_ID}}"
+              ],
+              "query": null
+            },
+            "description": null
+          },
+          "response": []
+        },
+        {
+          "name": "Delete",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "",
+                  "pm.test(\"Request is successfull\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Status).to.eql('success');",
+                  "});",
+                  "",
+                  "pm.test('Certificates deleted successfully', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var jsonRes = pm.response.json();",
+                  "    pm.expect(jsonRes.Status).to.eql('success');",
+                  "    pm.expect(jsonRes.Data).to.have.property('deleted', true);",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "",
+                  "var phonenumber = (Math.floor(Math.random() * 9000000000) + 1000000000).toString();",
+                  "var rand = (Math.floor(Math.random() * 900000) + 100000).toString();",
+                  "var password = \"\";",
+                  "pm.environment.set(\"PHONE_NUMBER\", phonenumber);",
+                  "pm.environment.set(\"EMAIL\", `client.${rand}@nodomain.com`);",
+                  "pm.environment.set(\"PASSWORD\", password);",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}",
+                "type": "text"
+              },
+              {
+                "key": "x-api-secret",
+                "value": "{{API_SECRET}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{USER_ACCESS_TOKEN}}",
+                "type": "text"
+              }
+            ],
+            "body": null,
+            "url": {
+              "raw": "certificates/{{CERTIFICATES_ID}}",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "certificates",
+                "{{CERTIFICATES_ID}}"
+              ],
+              "query": null
+            },
+            "description": null
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

@@ -16,7 +16,7 @@ export class CourseValidator extends BaseValidator {
                 Description: joi.string().max(2000).min(0).optional(),
                 ImageUrl: joi.string().max(1000).min(0).optional(),
                 DurationInDays: joi.number().integer().optional(),
-                ModuleSequence: joi.object().pattern(joi.string().uuid(), joi.number().integer().min(1)).optional(),
+                // ModuleSequence: joi.object().pattern(joi.string().uuid(), joi.number().integer().min(1)).optional(),
                 LearningPathIds: joi.array().items(joi.string().uuid()).optional(),
             });
             await courses.validateAsync(request.body);
@@ -26,8 +26,8 @@ export class CourseValidator extends BaseValidator {
                 Description: request.body.Description ? request.body.Description : null,
                 ImageUrl: request.body.ImageUrl ? request.body.ImageUrl : null,
                 DurationInDays: request.body.DurationInDays ? request.body.DurationInDays : null,
-                ModuleSequence: request.body.ModuleSequence ? request.body.ModuleSequence : null,
-                LearningPathIds: request.body.LearningPathIds ?? [],
+                // ModuleSequence: request.body.ModuleSequence ? request.body.ModuleSequence : null,
+                // LearningPathIds: request.body.LearningPathIds ?? [],
             };
             return model;
         } catch (error) {
@@ -43,7 +43,7 @@ export class CourseValidator extends BaseValidator {
                 Description: joi.string().max(2000).min(0).optional(),
                 ImageUrl: joi.string().max(1000).min(0).optional(),
                 DurationInDays: joi.number().integer().optional(),
-                ModuleSequence: joi.object().pattern(joi.string().uuid(), joi.number().integer().min(1)).optional(),
+                // ModuleSequence: joi.object().pattern(joi.string().uuid(), joi.number().integer().min(1)).optional(),
                 LearningPathIds: joi.array().items(joi.string().uuid()).optional(),
             });
             await courses.validateAsync(request.body);
@@ -65,9 +65,9 @@ export class CourseValidator extends BaseValidator {
             if (TypeUtils.hasProperty(request.body, 'DurationInDays')) {
                 model.DurationInDays = request.body.DurationInDays;
             }
-            if (TypeUtils.hasProperty(request.body, 'ModuleSequence')) {
-                model.ModuleSequence = request.body.ModuleSequence;
-            }
+            // if (TypeUtils.hasProperty(request.body, 'ModuleSequence')) {
+            //     model.ModuleSequence = request.body.ModuleSequence;
+            // }
             if (TypeUtils.hasProperty(request.body, 'LearningPathIds')) {
                 model.LearningPathIds = request.body.LearningPathIds ?? [];
             }

@@ -56,7 +56,7 @@ export class CourseService extends BaseService {
             Description: createModel.Description,
             ImageUrl: createModel.ImageUrl,
             DurationInDays: createModel.DurationInDays,
-            ModuleSequence: createModel.ModuleSequence,
+            // ModuleSequence: createModel.ModuleSequence, // Will be computed automatically when modules are added
         });
         var record = await this._courseRepository.save(course);
         
@@ -177,9 +177,9 @@ export class CourseService extends BaseService {
                 course.DurationInDays = model.DurationInDays;
             }
 
-            if (model.ModuleSequence !== undefined && model.ModuleSequence != null) {
-                course.ModuleSequence = model.ModuleSequence;
-            }
+            // if (model.ModuleSequence !== undefined && model.ModuleSequence != null) {
+            //     course.ModuleSequence = model.ModuleSequence;
+            // }
 
             // if (model.ClientId != null) {
             //     const client = await this.getClient(model.ClientId);

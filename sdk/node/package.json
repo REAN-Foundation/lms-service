@@ -1,0 +1,30 @@
+﻿{
+    "name": "lms service",
+    "version": "0.1.0",
+    "description": "SDK for lms service",
+    "main": "dist/api/sdk.js",
+    "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "postbuild": "ncp src/config.json dist/config.json"
+    },
+    "dependencies": {
+        "@faker-js/faker": "^9.5.0",
+        "axios": "^1.7.9",
+        "class-transformer": "^0.5.1",
+        "class-validator": "^0.14.1",
+        "dotenv": "^16.x.x"
+    },
+    "devDependencies": {
+        "@types/jest": "^29.5.14",
+        "@types/mocha": "^10.0.10",
+        "@types/node": "^16.18.126",
+        "@types/uuid": "^10.0.0",
+        "jest": "^29.7.0",
+        "ncp": "^2.0.0",
+        "typescript": "^5.7.3"
+    },
+    "engines": {
+        "node": ">=14.0.0"
+    }
+}

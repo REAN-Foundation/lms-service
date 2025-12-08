@@ -1,0 +1,11 @@
+﻿include src/lmsservice_db/*.py  # Include all Python files in the lmsservice_db folder
+include src/common/*.py
+include src/tests/*.py      # Include all Python files in the test folder
+include src/lmsservice_db/api/course_modules/*.py
+include src/lmsservice_db/api/course_contents/*.py
+include src/lmsservice_db/api/courses/*.py
+include src/lmsservice_db/api/learning_path_courses/*.py
+include src/lmsservice_db/api/learning_paths/*.py
+include src/lmsservice_db/api/user_learnings/*.py
+include src/lmsservice_db/api/certificates/*.py
+

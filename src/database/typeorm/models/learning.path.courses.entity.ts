@@ -1,4 +1,3 @@
-// import { IsUrl } from "class-validator";
 import 'reflect-metadata';
 import {
     Column,
@@ -6,16 +5,10 @@ import {
     DeleteDateColumn,
     Entity,
     JoinColumn,
-    OneToOne,
     ManyToOne,
-    OneToMany,
-    ManyToMany,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
-    JoinTable,
 } from 'typeorm';
-import { uuid } from '../../../domain.types/miscellaneous/system.types';
-import { IsEmail, Max, Min, IsUrl } from 'class-validator';
 import { Course } from './course.entity';
 import { LearningPath } from './learning.path.entity';
 
@@ -33,6 +26,9 @@ export class LearningPathCourses {
     @ManyToOne(() => LearningPath)
     @JoinColumn({ name: 'LearningPathId', referencedColumnName: 'id' })
     LearningPath: LearningPath;
+
+    @Column({ type: 'integer', nullable: true })
+    Sequence: number;
 
     @CreateDateColumn()
     CreatedAt: Date;

@@ -1,0 +1,51 @@
+meta {
+  name: Update Course Module - Update Content Sequence
+  type: http
+  seq: 6
+}
+
+put {
+  url: {{BASE_URL}}/course-modules/{{COURSE_MODULE_ID}}
+  body: json
+  auth: none
+}
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+body:json {
+  {
+    "ContentSequence": {
+      "{{COURSE_CONTENT_ID}}": 1,
+      "f8c44d8d-23fe-4572-9425-b5b87d9373e9": 2,
+      "b23c45d6-7890-1234-5678-901234567890": 3
+    }
+  }
+}
+
+tests {
+    test('Request is successful', function () {
+        expect(res.getStatus()).to.equal(200);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+
+    test('ContentSequence updated successfully', function () {
+        var jsonRes = res.getBody();
+
+        expect(jsonRes.Data).to.have.property('ContentSequence');
+        expect(jsonRes.Data.ContentSequence).to.be.an('object');
+        
+        // Verify the sequence was updated
+        var contentIds = Object.keys(jsonRes.Data.ContentSequence);
+        expect(contentIds.length).to.equal(3);
+        
+        // Verify sequence order
+        expect(jsonRes.Data.ContentSequence['{{COURSE_CONTENT_ID}}']).to.equal(1);
+    });
+}
+

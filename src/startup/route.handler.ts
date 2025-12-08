@@ -5,7 +5,6 @@ import { logger } from '../logger/logger';
 import { register as registerCourseModuleRoutes } from '../api/course.module/course.module.routes';
 import { register as registerCourseContentRoutes } from '../api/course.content/course.content.routes';
 import { register as registerCourseRoutes } from '../api/course/course.routes';
-import { register as registerLearningPathCoursesRoutes } from '../api/learning.path.courses/learning.path.courses.routes';
 import { register as registerLearningPathRoutes } from '../api/learning.path/learning.path.routes';
 import { register as registerLearningEnrollmentRoutes } from '../api/learning.enrollment/learning.enrollment.routes';
 import { register as registerUserLearningRoutes } from '../api/user.learning/user.learning.routes';
@@ -33,7 +32,6 @@ export class RouteHandler {
                 registerCourseModuleRoutes(expressApp);
                 registerCourseContentRoutes(expressApp);
                 registerCourseRoutes(expressApp);
-                registerLearningPathCoursesRoutes(expressApp);
                 registerLearningPathRoutes(expressApp);
                 registerLearningEnrollmentRoutes(expressApp);
                 registerUserLearningRoutes(expressApp);

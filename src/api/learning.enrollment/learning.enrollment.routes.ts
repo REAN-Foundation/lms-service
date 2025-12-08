@@ -7,18 +7,27 @@ export const register = (app: express.Application): void => {
     const router = express.Router();
     const controller = new LearningEnrollmentController();
 
-    router.post('/users/:userId/enroll', auth(LearningEnrollmentAuth.enroll), controller.enroll);
-    router.get('/search', auth(LearningEnrollmentAuth.search), controller.search);
-    router.get('/users/:userId/enrollments', auth(LearningEnrollmentAuth.getUserEnrollments), controller.getUserEnrollments);
+    router.post(
+        '/users/:userId/learning-paths/:learningPathId',
+        auth(LearningEnrollmentAuth.enroll),
+        controller.enrollToLearningPath
+    );
+    router.post('/users/:userId/courses/:courseId', auth(LearningEnrollmentAuth.enroll), controller.enrollToCourse);
     router.get(
-        '/users/:userId/active-enrollments',
-        auth(LearningEnrollmentAuth.getUserActiveEnrollments),
+        '/users/:userId/active',
+        auth(LearningEnrollmentAuth.getUserEnrollments),
         controller.getUserActiveEnrollments
     );
-    router.post('/:id/stop', auth(LearningEnrollmentAuth.stop), controller.stop);
+    router.get('/search', auth(LearningEnrollmentAuth.search), controller.search);
+    router.get('/users/:userId', auth(LearningEnrollmentAuth.getUserEnrollments), controller.getUserEnrollments);
     router.get('/:id', auth(LearningEnrollmentAuth.getById), controller.getById);
     router.delete('/:id', auth(LearningEnrollmentAuth.delete), controller.delete);
 
-    app.use('/api/v1/learning-enrollments', router);
-};
+    router.get(
+        '/tenants/:tenantId/active',
+        auth(LearningEnrollmentAuth.getActiveEnrollments),
+        controller.getActiveEnrollments
+    );
 
+    app.use('/api/v1/enrollments', router);
+};

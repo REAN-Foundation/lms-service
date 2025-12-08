@@ -65,6 +65,8 @@ tests {
         expect(jsonRes.Data).to.have.property('IsVerified');
         expect(jsonRes.Data).to.have.property('VerificationUrl');
         expect(jsonRes.Data).to.have.property('IssuedBy');
+        expect(jsonRes.Data).to.have.property('CreatedAt');
+        expect(jsonRes.Data).to.have.property('UpdatedAt');
 
         expect(jsonRes.Data.CourseId).equals('{{COURSE_ID}}');
         expect(jsonRes.Data.CertificateNumber).equals("Ad qui quibusdam.");

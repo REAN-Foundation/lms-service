@@ -16,10 +16,10 @@ export class CourseModuleValidator extends BaseValidator {
         try {
             const course_modules = joi.object({
                 Name: joi.string().max(64).min(0).required(),
-                Description: joi.string().max(2000).min(0).optional,
+                Description: joi.string().max(2000).min(0).optional(),
                 ImageUrl: joi.string().max(1000).min(0).optional(),
                 DurationInMins: joi.number().integer().optional(),
-                Sequence: joi.number().integer().optional(),
+                ContentSequence: joi.object().pattern(joi.string().uuid(), joi.number().integer().min(1)).optional(),
                 CourseId: joi.string().uuid().required(),
             });
             await course_modules.validateAsync(request.body);
@@ -28,7 +28,7 @@ export class CourseModuleValidator extends BaseValidator {
                 Description: request.body.Description ? request.body.Description : null,
                 ImageUrl: request.body.ImageUrl ? request.body.ImageUrl : null,
                 DurationInMins: request.body.DurationInMins ? request.body.DurationInMins : null,
-                Sequence: request.body.Sequence ? request.body.Sequence : null,
+                ContentSequence: request.body.ContentSequence ? request.body.ContentSequence : null,
                 CourseId: request.body.CourseId,
             };
             return model;
@@ -44,7 +44,7 @@ export class CourseModuleValidator extends BaseValidator {
                 Description: joi.string().max(2000).min(0).optional(),
                 ImageUrl: joi.string().max(1000).min(0).optional(),
                 DurationInMins: joi.number().integer().optional(),
-                Sequence: joi.number().integer().optional(),
+                ContentSequence: joi.object().pattern(joi.string().uuid(), joi.number().integer().min(1)).optional(),
                 CourseId: joi.string().uuid().optional(),
             });
             await course_modules.validateAsync(request.body);
@@ -63,8 +63,8 @@ export class CourseModuleValidator extends BaseValidator {
             if (TypeUtils.hasProperty(request.body, 'DurationInMins')) {
                 model.DurationInMins = request.body.DurationInMins;
             }
-            if (TypeUtils.hasProperty(request.body, 'Sequence')) {
-                model.Sequence = request.body.Sequence;
+            if (TypeUtils.hasProperty(request.body, 'ContentSequence')) {
+                model.ContentSequence = request.body.ContentSequence;
             }
             if (TypeUtils.hasProperty(request.body, 'CourseId')) {
                 model.CourseId = request.body.CourseId;
@@ -83,7 +83,6 @@ export class CourseModuleValidator extends BaseValidator {
                 description: joi.string().max(2000).min(0).optional(),
                 imageUrl: joi.string().max(1000).min(0).optional(),
                 durationInMins: joi.number().integer().optional(),
-                sequence: joi.number().integer().optional(),
                 courseId: joi.string().uuid().optional(),
                 pageIndex    : joi.number().min(0).optional(),
                 itemsPerPage : joi.number().min(1).optional(),
@@ -126,10 +125,6 @@ export class CourseModuleValidator extends BaseValidator {
         var durationInMins = query.durationInMins ? query.durationInMins : null;
         if (durationInMins != null) {
             filters['DurationInMins'] = durationInMins;
-        }
-        var sequence = query.sequence ? query.sequence : null;
-        if (sequence != null) {
-            filters['Sequence'] = sequence;
         }
         var courseId = query.courseId ? query.courseId : null;
         if (courseId != null) {

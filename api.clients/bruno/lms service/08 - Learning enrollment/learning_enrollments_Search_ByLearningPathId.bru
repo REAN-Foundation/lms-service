@@ -1,0 +1,41 @@
+meta {
+  name: Search Enrollments - Filter by Learning Path ID
+  type: http
+  seq: 12
+}
+
+get {
+  url: {{BASE_URL}}/enrollments/search?learningPathId={{LEARNING_PATH_ID}}&isActive=true&pageIndex=0&itemsPerPage=20
+  body: json
+  auth: none
+}
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+tests {
+
+    test('Request is successful', function () {
+        expect(res.getStatus()).to.equal(200);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+
+    test('Search filtered by learning path ID returns only learning path enrollments', function () {
+        var jsonRes = res.getBody();
+
+        expect(jsonRes.Data).to.have.property('LearningPathEnrollments');
+        
+        if (jsonRes.Data.LearningPathEnrollments && jsonRes.Data.LearningPathEnrollments.Items) {
+            jsonRes.Data.LearningPathEnrollments.Items.forEach(function(enrollment) {
+                expect(enrollment.LearningPathId).to.equal('{{LEARNING_PATH_ID}}');
+                expect(enrollment.IsActive).to.be.true;
+            });
+        }
+    });
+}
+

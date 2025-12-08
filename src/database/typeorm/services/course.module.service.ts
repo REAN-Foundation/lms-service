@@ -44,7 +44,7 @@ export class CourseModuleService extends BaseService {
             Description: createModel.Description,
             ImageUrl: createModel.ImageUrl,
             DurationInMins: createModel.DurationInMins,
-            Sequence: createModel.Sequence,
+            ContentSequence: createModel.ContentSequence,
         });
         var record = await this._courseModuleRepository.save(courseModule);
         return CourseModuleMapper.toResponseDto(record);
@@ -130,8 +130,8 @@ export class CourseModuleService extends BaseService {
                 courseModule.DurationInMins = model.DurationInMins;
             }
 
-            if (model.Sequence !== undefined && model.Sequence != null) {
-                courseModule.Sequence = model.Sequence;
+            if (model.ContentSequence !== undefined && model.ContentSequence != null) {
+                courseModule.ContentSequence = model.ContentSequence;
             }
 
             if (model.CourseId != null) {
@@ -181,7 +181,7 @@ export class CourseModuleService extends BaseService {
                 Description: true,
                 ImageUrl: true,
                 DurationInMins: true,
-                Sequence: true,
+                ContentSequence: true,
 
                 Course: {
                     id: true,
@@ -190,6 +190,7 @@ export class CourseModuleService extends BaseService {
                     Description: true,
                     ImageUrl: true,
                     DurationInDays: true,
+                    ModuleSequence: true,
                 },
 
                 // Client       : {
@@ -218,8 +219,8 @@ export class CourseModuleService extends BaseService {
             search.where['DurationInMins'] = Like(`%${filters.DurationInMins}%`);
         }
 
-        if (filters.Sequence) {
-            search.where['Sequence'] = Like(`%${filters.Sequence}%`);
+        if (filters.courseId) {
+            search.where['Course'] = { id: filters.courseId };
         }
 
         return search;

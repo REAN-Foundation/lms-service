@@ -20,21 +20,8 @@ export class CourseContentMapper {
             Sequence: courseContent.Sequence,
             CourseId: courseContent.Course?.id,
             CourseModuleId: courseContent.CourseModule?.id,
-            /*
-			Course: courseContent.Course? {
-			TenantId: courseContent.Course.TenantId,
-			Name: courseContent.Course.Name,
-			Description: courseContent.Course.Description,
-			ImageUrl: courseContent.Course.ImageUrl,
-			DurationInDays: courseContent.Course.DurationInDays,			} : null,
-			CourseModule: courseContent.CourseModule? {
-			Name: courseContent.CourseModule.Name,
-			Description: courseContent.CourseModule.Description,
-			ImageUrl: courseContent.CourseModule.ImageUrl,
-			DurationInMins: courseContent.CourseModule.DurationInMins,
-			Sequence: courseContent.CourseModule.Sequence,
-			CourseId: courseContent.CourseModule.Course?.id,			} : null
-*/
+            CreatedAt: courseContent.CreatedAt,
+            UpdatedAt: courseContent.UpdatedAt,
         };
         return dto;
     };

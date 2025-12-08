@@ -7,11 +7,12 @@ export interface CourseCreateModel {
     /** @minLength 0 @maxLength 64 */
     Name: string;
     /** @minLength 0 @maxLength 2000 */
-    Description: string;
+    Description?: string;
     /** @minLength 0 @maxLength 1000 */
-    ImageUrl: string;
-    DurationInDays: number;
-    Sequence?: number;
+    ImageUrl?: string;
+    DurationInDays?: number;
+    /** JSON object: { "module-uuid": sequence_number } */
+    ModuleSequence?: Record<string, number>;
     LearningPathIds?: uuid[];
 }
 
@@ -25,18 +26,22 @@ export interface CourseUpdateModel {
     /** @minLength 0 @maxLength 1000 */
     ImageUrl?: string;
     DurationInDays?: number;
-    Sequence?: number;
+    /** JSON object: { "module-uuid": sequence_number } */
+    ModuleSequence?: Record<string, number>;
     LearningPathIds?: uuid[];
 }
 
 export interface CourseResponseDto {
     id: uuid;
-    TenantId: string;
-    Name: string;
-    Description: string;
-    ImageUrl: string;
-    DurationInDays: number;
-    Sequence?: number;
+    TenantId?: string;
+    Name?: string;
+    Description?: string;
+    ImageUrl?: string;
+    DurationInDays?: number;
+    /** JSON object: { "module-uuid": sequence_number } */
+    ModuleSequence?: Record<string, number>;
+    CreatedAt: Date;
+    UpdatedAt: Date;
 }
 
 export interface CourseSearchFilters extends BaseSearchFilters {
@@ -49,7 +54,7 @@ export interface CourseSearchFilters extends BaseSearchFilters {
     /** @minLength 0 @maxLength 1000 */
     ImageUrl?: string;
     DurationInDays?: number;
-    sequence?: number;
+    LearningPathId?: uuid;
 }
 
 export interface CourseSearchResults extends BaseSearchResults {

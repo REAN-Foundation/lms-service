@@ -1,0 +1,63 @@
+meta {
+  name: Get Active Enrollments by Tenant
+  type: http
+  seq: 8
+}
+
+get {
+  url: {{BASE_URL}}/enrollments/tenants/{{TENANT_ID}}/active
+  body: json
+  auth: none
+}
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+tests {
+
+    test('Request is successful', function () {
+        expect(res.getStatus()).to.equal(200);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+
+    test('Active enrollments retrieved for tenant with both types', function () {
+        var jsonRes = res.getBody();
+        
+        expect(jsonRes.Data).to.have.property('CourseEnrollments');
+        expect(jsonRes.Data).to.have.property('LearningPathEnrollments');
+        expect(jsonRes.Data.CourseEnrollments).to.be.an('array');
+        expect(jsonRes.Data.LearningPathEnrollments).to.be.an('array');
+    });
+
+    test('All enrollments belong to the specified tenant and are active', function () {
+        var jsonRes = res.getBody();
+        
+        jsonRes.Data.CourseEnrollments.forEach(function(enrollment) {
+            expect(enrollment.TenantId).to.equal('{{TENANT_ID}}');
+            expect(enrollment.IsActive).to.be.true;
+        });
+        
+        jsonRes.Data.LearningPathEnrollments.forEach(function(enrollment) {
+            expect(enrollment.TenantId).to.equal('{{TENANT_ID}}');
+            expect(enrollment.IsActive).to.be.true;
+        });
+    });
+
+    test('Enrollments are sorted by creation date (newest first)', function () {
+        var jsonRes = res.getBody();
+        
+        if (jsonRes.Data.CourseEnrollments.length > 1) {
+            for (var i = 0; i < jsonRes.Data.CourseEnrollments.length - 1; i++) {
+                var current = new Date(jsonRes.Data.CourseEnrollments[i].CreatedAt);
+                var next = new Date(jsonRes.Data.CourseEnrollments[i + 1].CreatedAt);
+                expect(current.getTime()).to.be.at.least(next.getTime());
+            }
+        }
+    });
+}
+

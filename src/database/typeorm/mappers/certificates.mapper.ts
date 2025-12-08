@@ -24,14 +24,8 @@ export class CertificatesMapper {
             VerificationUrl: certificates.VerificationUrl,
             IssuedBy: certificates.IssuedBy,
             CourseId: certificates.Course?.id,
-            /*
-			Course: certificates.Course? {
-			TenantId: certificates.Course.TenantId,
-			Name: certificates.Course.Name,
-			Description: certificates.Course.Description,
-			ImageUrl: certificates.Course.ImageUrl,
-			DurationInDays: certificates.Course.DurationInDays,			} : null
-*/
+            CreatedAt: certificates.CreatedAt,
+            UpdatedAt: certificates.UpdatedAt,
         };
         return dto;
     };

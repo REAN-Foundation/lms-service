@@ -43,8 +43,8 @@ export class LearningPathService extends BaseService {
         });
         var record = await this._learningPathRepository.save(learningPath);
         
-        // Add courses via junction table
-        await this.addCourses(record.id, createModel.CourseIds);
+        // Add courses via junction table with sequence
+        await this.addCoursesWithSequence(record.id, createModel.CourseSequence);
         
         return LearningPathMapper.toResponseDto(record);
     };
@@ -147,9 +147,9 @@ export class LearningPathService extends BaseService {
             // }
             var record = await this._learningPathRepository.save(learningPath);
 
-            // Update courses via junction table
-            if (model.CourseIds !== undefined) {
-                await this.addCourses(record.id, model.CourseIds);
+            // Update courses via junction table with sequence
+            if (model.CourseSequence !== undefined) {
+                await this.addCoursesWithSequence(record.id, model.CourseSequence);
             }
 
             // Pipeline: Enrich DTO with courses (matching reancare-service updateDto pattern)
@@ -253,15 +253,24 @@ export class LearningPathService extends BaseService {
         return dto;
     };
 
-    private async addCourses(learningPathId: uuid, courseIds: uuid[]) {
-        if (courseIds && courseIds.length > 0) {
-            for (const courseId of courseIds) {
-                await this.addCourse(learningPathId, courseId);
+    private async addCoursesWithSequence(learningPathId: uuid, courseSequence: Record<string, number>) {
+        if (courseSequence && Object.keys(courseSequence).length > 0) {
+            // First, remove all existing course associations for this learning path
+            const existingAssociations = await this._learningPathCoursesRepository.find({
+                where: { LearningPath: { id: learningPathId } },
+            });
+            if (existingAssociations.length > 0) {
+                await this._learningPathCoursesRepository.remove(existingAssociations);
+            }
+
+            // Add courses with their specified sequences
+            for (const [courseId, sequence] of Object.entries(courseSequence)) {
+                await this.addCourseWithSequence(learningPathId, courseId as uuid, sequence);
             }
         }
     }
 
-    private async addCourse(learningPathId: uuid, courseId: uuid): Promise<boolean> {
+    private async addCourseWithSequence(learningPathId: uuid, courseId: uuid, sequence: number): Promise<boolean> {
         try {
             // Check if course exists
             const course = await this._courseRepository.findOne({
@@ -287,6 +296,7 @@ export class LearningPathService extends BaseService {
             const association = this._learningPathCoursesRepository.create({
                 LearningPath: { id: learningPathId } as any,
                 Course: { id: courseId } as any,
+                Sequence: sequence,
             });
             await this._learningPathCoursesRepository.save(association);
             return true;
@@ -295,4 +305,201 @@ export class LearningPathService extends BaseService {
             throw error;
         }
     }
+
+    // Public method to add a course to learning path
+    public addCourseToLearningPath = async (learningPathId: uuid, courseId: uuid): Promise<LearningPathResponseDto> => {
+        try {
+            // Verify learning path exists
+            const learningPath = await this._learningPathRepository.findOne({
+                where: { id: learningPathId },
+            });
+            if (!learningPath) {
+                ErrorHandler.throwNotFoundError('Learning path not found!');
+            }
+
+            // Check if course exists
+            const course = await this._courseRepository.findOne({
+                where: { id: courseId },
+            });
+            if (!course) {
+                ErrorHandler.throwNotFoundError(`Course with id ${courseId} not found`);
+            }
+
+            // Check if association already exists
+            const existingAssociation = await this._learningPathCoursesRepository.findOne({
+                where: {
+                    LearningPath: { id: learningPathId },
+                    Course: { id: courseId },
+                },
+            });
+
+            if (existingAssociation) {
+                ErrorHandler.throwConflictError('Course is already added to this learning path');
+            }
+
+            // Get all current courses ordered by sequence
+            const currentCourses = await this._learningPathCoursesRepository.find({
+                where: { LearningPath: { id: learningPathId } },
+                order: { Sequence: 'ASC' },
+            });
+
+            // Reorder existing courses to ensure continuous sequence (1, 2, 3, ...)
+            for (let i = 0; i < currentCourses.length; i++) {
+                currentCourses[i].Sequence = i + 1;
+                await this._learningPathCoursesRepository.save(currentCourses[i]);
+            }
+
+            // Add new course at the end
+            const newSequence = currentCourses.length + 1;
+            const association = this._learningPathCoursesRepository.create({
+                LearningPath: { id: learningPathId } as any,
+                Course: { id: courseId } as any,
+                Sequence: newSequence,
+            });
+            await this._learningPathCoursesRepository.save(association);
+
+            // Return updated learning path with courses
+            return await this.getById(learningPathId);
+        } catch (error) {
+            logger.error(error.message);
+            ErrorHandler.throwInternalServerError(error.message, error);
+        }
+    };
+
+    // Public method to remove a course from learning path
+    public removeCourseFromLearningPath = async (learningPathId: uuid, courseId: uuid): Promise<LearningPathResponseDto> => {
+        try {
+            // Verify learning path exists
+            const learningPath = await this._learningPathRepository.findOne({
+                where: { id: learningPathId },
+            });
+            if (!learningPath) {
+                ErrorHandler.throwNotFoundError('Learning path not found!');
+            }
+
+            // Find the association
+            const association = await this._learningPathCoursesRepository.findOne({
+                where: {
+                    LearningPath: { id: learningPathId },
+                    Course: { id: courseId },
+                },
+            });
+
+            if (!association) {
+                ErrorHandler.throwNotFoundError('Course is not associated with this learning path');
+            }
+
+            // Remove the association
+            await this._learningPathCoursesRepository.remove(association);
+
+            // Get all remaining courses ordered by sequence
+            const remainingCourses = await this._learningPathCoursesRepository.find({
+                where: { LearningPath: { id: learningPathId } },
+                order: { Sequence: 'ASC' },
+            });
+
+            // Reorder remaining courses to ensure continuous sequence (1, 2, 3, ...)
+            for (let i = 0; i < remainingCourses.length; i++) {
+                remainingCourses[i].Sequence = i + 1;
+                await this._learningPathCoursesRepository.save(remainingCourses[i]);
+            }
+
+            // Return updated learning path with courses
+            return await this.getById(learningPathId);
+        } catch (error) {
+            logger.error(error.message);
+            ErrorHandler.throwInternalServerError(error.message, error);
+        }
+    };
+
+    // Public method to reorder courses in learning path
+    public reorderCoursesInLearningPath = async (learningPathId: uuid, courseSequence: Record<string, number>): Promise<LearningPathResponseDto> => {
+        try {
+            // Verify learning path exists
+            const learningPath = await this._learningPathRepository.findOne({
+                where: { id: learningPathId },
+            });
+            if (!learningPath) {
+                ErrorHandler.throwNotFoundError('Learning path not found!');
+            }
+
+            // Get all current course associations, ordered by current sequence
+            const currentAssociations = await this._learningPathCoursesRepository.find({
+                where: { LearningPath: { id: learningPathId } },
+                relations: { Course: true },
+                order: { Sequence: 'ASC' },
+            });
+
+            // Extract course IDs from the CourseSequence object
+            const providedCourseIds = Object.keys(courseSequence);
+            const providedSequences = new Set(Object.values(courseSequence));
+
+            // Verify all provided course IDs exist in the learning path
+            const existingCourseIds = currentAssociations.map((a) => a.Course.id);
+            const invalidCourseIds = providedCourseIds.filter((id) => !existingCourseIds.includes(id));
+            if (invalidCourseIds.length > 0) {
+                ErrorHandler.throwInputValidationError([
+                    `The following course IDs are not associated with this learning path: ${invalidCourseIds.join(', ')}`
+                ]);
+            }
+
+            // Create a map of courseId to association for quick lookup
+            const associationMap = new Map<uuid, LearningPathCourses>();
+            currentAssociations.forEach((assoc) => {
+                associationMap.set(assoc.Course.id, assoc);
+            });
+
+            // Find the maximum sequence number from the provided CourseSequence
+            const maxProvidedSequence = providedSequences.size > 0 ? Math.max(...Array.from(providedSequences)) : 0;
+
+            // Separate courses into two groups: those with explicit sequences and those without
+            const coursesWithSequence: { association: LearningPathCourses; sequence: number }[] = [];
+            const coursesWithoutSequence: LearningPathCourses[] = [];
+
+            for (const association of currentAssociations) {
+                const courseId = association.Course.id;
+                if (providedCourseIds.includes(courseId)) {
+                    // Course has explicit sequence
+                    coursesWithSequence.push({
+                        association,
+                        sequence: courseSequence[courseId],
+                    });
+                } else {
+                    // Course doesn't have explicit sequence - will be auto-assigned
+                    coursesWithoutSequence.push(association);
+                }
+            }
+
+            // Sort courses with explicit sequences by their sequence number
+            coursesWithSequence.sort((a, b) => a.sequence - b.sequence);
+
+            // Assign sequences to courses without explicit sequences
+            // They will be placed after the explicitly sequenced courses, maintaining their relative order
+            let nextSequence = maxProvidedSequence + 1;
+            for (const association of coursesWithoutSequence) {
+                // Check if this sequence conflicts with any explicitly provided sequence
+                while (providedSequences.has(nextSequence)) {
+                    nextSequence++;
+                }
+                association.Sequence = nextSequence;
+                nextSequence++;
+            }
+
+            // Update all courses with their new sequences
+            for (const { association, sequence } of coursesWithSequence) {
+                association.Sequence = sequence;
+                await this._learningPathCoursesRepository.save(association);
+            }
+
+            for (const association of coursesWithoutSequence) {
+                await this._learningPathCoursesRepository.save(association);
+            }
+
+            // Return updated learning path with courses
+            return await this.getById(learningPathId);
+        } catch (error) {
+            logger.error(error.message);
+            ErrorHandler.throwInternalServerError(error.message, error);
+        }
+    };
 }

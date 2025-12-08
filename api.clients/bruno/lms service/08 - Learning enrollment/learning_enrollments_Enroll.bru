@@ -1,11 +1,11 @@
 meta {
-  name: Enroll Learning enrollment
+  name: Enroll to Course
   type: http
   seq: 1
 }
 
 post {
-  url: {{BASE_URL}}/learning-enrollments/users/{{USER_ID}}/enroll
+  url: {{BASE_URL}}/enrollments/users/{{USER_ID}}/courses/{{COURSE_ID}}
   body: json
   auth: none
 }
@@ -19,10 +19,8 @@ headers {
 
 body:json {
   {
-    "CourseId": "{{COURSE_ID}}",
-    "TenantId": "{{TENANT_ID}}",
-    "StartDate": "2025-01-01T00:00:00.000Z",
-    "ProgressStatus": "InProgress"
+    "StartDate": "2025-01-15T09:00:00.000Z",
+    "ExpectedEndDate": "2025-02-15T18:00:00.000Z"
   }
 }
 
@@ -30,7 +28,7 @@ tests {
     try {
         var respData = res.getBody();
         if (respData.Data && respData.Data.id) {
-            bru.setEnvVar('LEARNING_ENROLLMENT_ID', respData.Data.id);
+            bru.setEnvVar('COURSE_ENROLLMENT_ID', respData.Data.id);
         }
     }
     catch (error) {
@@ -43,16 +41,19 @@ tests {
         expect(jsonRes.Status).to.eql('success');
     });
 
-    test('Learning enrollment created successfully', function () {
+    test('Course enrollment created successfully', function () {
         var jsonRes = res.getBody();
 
+        expect(jsonRes.Data).to.have.property('id');
         expect(jsonRes.Data).to.have.property('UserId');
         expect(jsonRes.Data).to.have.property('CourseId');
-        expect(jsonRes.Data).to.have.property('ProgressStatus');
         expect(jsonRes.Data).to.have.property('IsActive');
+        expect(jsonRes.Data).to.have.property('StartDate');
+        expect(jsonRes.Data).to.have.property('ExpectedEndDate');
+        expect(jsonRes.Data).to.have.property('EnrolledAt');
 
-        expect(jsonRes.Data.CourseId).equals('{{COURSE_ID}}');
         expect(jsonRes.Data.UserId).equals('{{USER_ID}}');
+        expect(jsonRes.Data.CourseId).equals('{{COURSE_ID}}');
         expect(jsonRes.Data.IsActive).to.be.true;
     });
 }

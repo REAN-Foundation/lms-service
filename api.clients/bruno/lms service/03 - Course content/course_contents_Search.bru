@@ -11,7 +11,7 @@ get {
 }
 
 params:query {
-  contentType: Video
+  ~contentType: Video
   ~title: Sit repellat laborum
   ~description: Dolorem voluptates incidunt.
   ~imageUrl: Pariatur odio distinctio.
@@ -19,6 +19,12 @@ params:query {
   ~resourceLink: Quia doloribus quaerat.
   ~actionTemplateId: f63887b4-b75c-59cc-fd0a-d88bf5d5a703
   ~sequence: 9579
+  ~courseId: {{COURSE_ID}}
+  ~courseModuleId: {{COURSE_MODULE_ID}}
+  ~pageIndex: 0
+  ~itemsPerPage: 10
+  ~orderBy: CreatedAt
+  ~order: descending
 }
 
 headers {

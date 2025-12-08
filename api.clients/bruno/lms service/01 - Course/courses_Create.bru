@@ -1,0 +1,66 @@
+meta {
+  name: Create Course
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{BASE_URL}}/courses
+  body: json
+  auth: none
+}
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+body:json {
+  {
+    "TenantId": "{{TENANT_ID}}",
+    "Name": "Dewey Leannon",
+    "Description": "minus ea",
+    "ImageUrl": "https://pink.org",
+    "DurationInDays": 100
+  }
+}
+
+tests {
+    try {
+        var respData = res.getBody();
+        bru.setEnvVar('COURSE_ID', respData.Data.id);
+    }
+    catch (error) {
+        console.log(error.message);
+    }
+    test('Request is successfully', function () {
+        expect(res.getStatus()).to.equal(201);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+  
+    test('Courses created successfully', function () {
+        var jsonRes = res.getBody();
+  
+        expect(jsonRes.Data).to.have.property('id');
+        
+        expect(jsonRes.Data).to.have.property('TenantId');
+        expect(jsonRes.Data).to.have.property('Name');
+        expect(jsonRes.Data).to.have.property('Description');
+        expect(jsonRes.Data).to.have.property('ImageUrl');
+        expect(jsonRes.Data).to.have.property('DurationInDays');
+        expect(jsonRes.Data).to.have.property('ModuleSequence');
+        expect(jsonRes.Data).to.have.property('CreatedAt');
+        expect(jsonRes.Data).to.have.property('UpdatedAt');
+  
+        expect(jsonRes.Data.Name).equals("Dewey Leannon");
+        expect(jsonRes.Data.Description).equals("minus ea");
+        expect(jsonRes.Data.ImageUrl).equals("https://pink.org");
+        expect(jsonRes.Data.DurationInDays).equals(100);
+        expect(jsonRes.Data.ModuleSequence).to.be.an('object');
+  
+    });
+    
+}

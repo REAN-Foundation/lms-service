@@ -61,7 +61,7 @@ export class CourseService extends BaseService {
         var record = await this._courseRepository.save(course);
         
         // Add learning paths via junction table
-        await this.addLearningPaths(record.id, createModel.LearningPathIds);
+        // await this.addLearningPaths(record.id, createModel.LearningPathIds);
         
         return CourseMapper.toResponseDto(record);
     };

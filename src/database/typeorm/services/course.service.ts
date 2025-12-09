@@ -60,9 +60,6 @@ export class CourseService extends BaseService {
         });
         var record = await this._courseRepository.save(course);
         
-        // Add learning paths via junction table
-        await this.addLearningPaths(record.id, createModel.LearningPathIds);
-        
         return CourseMapper.toResponseDto(record);
     };
 
@@ -80,13 +77,11 @@ export class CourseService extends BaseService {
                 ErrorHandler.throwNotFoundError('Course not found!');
             }
 
-            // Pipeline: Get modules for course
             const modules = await this._courseModuleRepository.find({
                 where: { Course: { id: course.id } },
                 relations: { Course: true },
             });
 
-            // Pipeline: For each module, get contents
             for (const module of modules) {
                 const contents = await this._courseContentRepository.find({
                     where: { CourseModule: { id: module.id } },
@@ -95,14 +90,12 @@ export class CourseService extends BaseService {
                 module['Contents'] = contents.map((x) => CourseContentMapper.toResponseDto(x));
             }
 
-            // Pipeline: Get learning paths for course
             const learningPathCourses = await this._learningPathCoursesRepository.find({
                 where: { Course: { id: course.id } },
                 relations: { LearningPath: true },
             });
             const learningPaths = learningPathCourses.map((lpc) => lpc.LearningPath);
 
-            // Enrich course object
             const courseDto = CourseMapper.toResponseDto(course);
             courseDto['Modules'] = modules.map((x) => CourseModuleMapper.toResponseDto(x));
             courseDto['LearningPaths'] = learningPaths.map((x) => LearningPathMapper.toResponseDto(x));
@@ -181,10 +174,6 @@ export class CourseService extends BaseService {
                 course.ModuleSequence = model.ModuleSequence;
             }
 
-            // if (model.ClientId != null) {
-            //     const client = await this.getClient(model.ClientId);
-            //     course.Client = client;
-            // }
             var record = await this._courseRepository.save(course);
             
             // Update learning paths via junction table
@@ -346,7 +335,6 @@ export class CourseService extends BaseService {
 
     private async addLearningPath(courseId: uuid, learningPathId: uuid): Promise<boolean> {
         try {
-            // Check if learning path exists
             const learningPath = await this._learningPathRepository.findOne({
                 where: { id: learningPathId },
             });
@@ -354,7 +342,6 @@ export class CourseService extends BaseService {
                 ErrorHandler.throwNotFoundError(`LearningPath with id ${learningPathId} not found`);
             }
 
-            // Check if association already exists
             const existingAssociation = await this._learningPathCoursesRepository.findOne({
                 where: {
                     Course: { id: courseId },
@@ -363,10 +350,9 @@ export class CourseService extends BaseService {
             });
 
             if (existingAssociation) {
-                return false; // Already exists, skip
+                return false; 
             }
 
-            // Create new association
             const association = this._learningPathCoursesRepository.create({
                 Course: { id: courseId } as any,
                 LearningPath: { id: learningPathId } as any,

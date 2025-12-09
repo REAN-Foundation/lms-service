@@ -44,9 +44,11 @@ export class CourseModuleService extends BaseService {
             Description: createModel.Description,
             ImageUrl: createModel.ImageUrl,
             DurationInMins: createModel.DurationInMins,
-            ContentSequence: createModel.ContentSequence,
         });
         var record = await this._courseModuleRepository.save(courseModule);
+        
+        await this.updateCourseModuleSequence(course.id);
+        
         return CourseModuleMapper.toResponseDto(record);
     };
 
@@ -128,10 +130,6 @@ export class CourseModuleService extends BaseService {
 
             if (model.DurationInMins !== undefined && model.DurationInMins != null) {
                 courseModule.DurationInMins = model.DurationInMins;
-            }
-
-            if (model.ContentSequence !== undefined && model.ContentSequence != null) {
-                courseModule.ContentSequence = model.ContentSequence;
             }
 
             if (model.CourseId != null) {
@@ -238,6 +236,26 @@ export class CourseModuleService extends BaseService {
             ErrorHandler.throwNotFoundError('Course cannot be found');
         }
         return course;
+    }
+
+    private async updateCourseModuleSequence(courseId: uuid): Promise<void> {
+        try {
+            const modules = await this._courseModuleRepository.find({
+                where: { Course: { id: courseId } },
+                order: { CreatedAt: 'ASC' },
+            });
+
+            const moduleSequence: Record<string, number> = {};
+            modules.forEach((module, index) => {
+                moduleSequence[module.id] = index + 1;
+            });
+
+            await this._courseRepository.update(courseId, {
+                ModuleSequence: moduleSequence,
+            });
+        } catch (error) {
+            logger.error(`Error updating ModuleSequence for course ${courseId}: ${error.message}`);
+        }
     }
 
 }

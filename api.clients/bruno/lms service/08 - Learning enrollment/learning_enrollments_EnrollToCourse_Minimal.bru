@@ -1,0 +1,53 @@
+meta {
+  name: Enroll to Course - Minimal Data
+  type: http
+  seq: 9
+}
+
+post {
+  url: {{BASE_URL}}/enrollments/users/{{USER_ID}}/courses/{{COURSE_ID}}
+  body: json
+  auth: none
+}
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+body:json {
+  {}
+}
+
+tests {
+    try {
+        var respData = res.getBody();
+        if (respData.Data && respData.Data.id) {
+            bru.setEnvVar('COURSE_ENROLLMENT_ID', respData.Data.id);
+        }
+    }
+    catch (error) {
+        console.log(error.message);
+    }
+
+    test('Request is successful with minimal data', function () {
+        expect(res.getStatus()).to.equal(201);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+
+    test('Enrollment created with default values', function () {
+        var jsonRes = res.getBody();
+
+        expect(jsonRes.Data).to.have.property('id');
+        expect(jsonRes.Data).to.have.property('UserId');
+        expect(jsonRes.Data).to.have.property('CourseId');
+        expect(jsonRes.Data).to.have.property('IsActive');
+        expect(jsonRes.Data.IsActive).to.be.true;
+        expect(jsonRes.Data).to.have.property('StartDate');
+        expect(jsonRes.Data).to.have.property('EnrolledAt');
+    });
+}
+

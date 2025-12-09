@@ -1,0 +1,46 @@
+meta {
+  name: Search Enrollments - Filter by Tenant ID
+  type: http
+  seq: 18
+}
+
+get {
+  url: {{BASE_URL}}/enrollments/search?tenantId={{TENANT_ID}}&isActive=true&pageIndex=0&itemsPerPage=50
+  body: json
+  auth: none
+}
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+tests {
+
+    test('Request is successful', function () {
+        expect(res.getStatus()).to.equal(200);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+
+    test('Search filtered by tenant ID returns only that tenant\'s enrollments', function () {
+        var jsonRes = res.getBody();
+
+        if (jsonRes.Data.CourseEnrollments && jsonRes.Data.CourseEnrollments.Items) {
+            jsonRes.Data.CourseEnrollments.Items.forEach(function(enrollment) {
+                expect(enrollment.TenantId).to.equal('{{TENANT_ID}}');
+                expect(enrollment.IsActive).to.be.true;
+            });
+        }
+        
+        if (jsonRes.Data.LearningPathEnrollments && jsonRes.Data.LearningPathEnrollments.Items) {
+            jsonRes.Data.LearningPathEnrollments.Items.forEach(function(enrollment) {
+                expect(enrollment.TenantId).to.equal('{{TENANT_ID}}');
+                expect(enrollment.IsActive).to.be.true;
+            });
+        }
+    });
+}
+

@@ -1,0 +1,54 @@
+meta {
+  name: Update Course - Update Module Sequence
+  type: http
+  seq: 6
+}
+
+put {
+  url: {{BASE_URL}}/courses/{{COURSE_ID}}
+  body: json
+  auth: none
+}
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+body:json {
+  {
+    "ModuleSequence": {
+      "{{COURSE_MODULE_ID}}": 1,
+      "c89b9cc1-8384-4940-928a-57183f0ea88c": 2,
+      "a12b34c5-6789-0123-4567-890123456789": 3
+    },
+    "LearningPathIds": [
+      "{{LEARNING_PATH_ID}}"
+    ]
+  }
+}
+
+tests {
+    test('Request is successful', function () {
+        expect(res.getStatus()).to.equal(200);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+
+    test('ModuleSequence updated successfully', function () {
+        var jsonRes = res.getBody();
+
+        expect(jsonRes.Data).to.have.property('ModuleSequence');
+        expect(jsonRes.Data.ModuleSequence).to.be.an('object');
+        
+        // Verify the sequence was updated
+        var moduleIds = Object.keys(jsonRes.Data.ModuleSequence);
+        expect(moduleIds.length).to.equal(3);
+        
+        // Verify sequence order
+        expect(jsonRes.Data.ModuleSequence['{{COURSE_MODULE_ID}}']).to.equal(1);
+    });
+}
+

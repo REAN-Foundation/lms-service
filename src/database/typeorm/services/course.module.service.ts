@@ -132,10 +132,6 @@ export class CourseModuleService extends BaseService {
                 courseModule.DurationInMins = model.DurationInMins;
             }
 
-            // if (model.ContentSequence !== undefined && model.ContentSequence != null) {
-            //     courseModule.ContentSequence = model.ContentSequence;
-            // }
-
             if (model.CourseId != null) {
                 const course = await this.getCourse(model.CourseId);
                 courseModule.Course = course;

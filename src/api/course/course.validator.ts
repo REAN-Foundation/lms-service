@@ -21,7 +21,7 @@ export class CourseValidator extends BaseValidator {
             });
             await courses.validateAsync(request.body);
             const model: CourseCreateModel = {
-                TenantId: request.body.TenantId ? request.body.TenantId : null,
+                TenantId: request.body.TenantId ?? request.currentUser.TenantId,
                 Name: request.body.Name ? request.body.Name : null,
                 Description: request.body.Description ? request.body.Description : null,
                 ImageUrl: request.body.ImageUrl ? request.body.ImageUrl : null,

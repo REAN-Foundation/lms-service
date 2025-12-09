@@ -26,7 +26,7 @@ export class LearningPathValidator extends BaseValidator {
             });
             await learning_paths.validateAsync(request.body);
             const model: LearningPathCreateModel = {
-                TenantId: request.body.TenantId ? request.body.TenantId : null,
+                TenantId: request.body.TenantId ?? request.currentUser.TenantId,
                 Name: request.body.Name ? request.body.Name : null,
                 Description: request.body.Description ? request.body.Description : null,
                 ImageUrl: request.body.ImageUrl ? request.body.ImageUrl : null,

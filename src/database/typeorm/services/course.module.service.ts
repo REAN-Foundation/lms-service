@@ -44,11 +44,9 @@ export class CourseModuleService extends BaseService {
             Description: createModel.Description,
             ImageUrl: createModel.ImageUrl,
             DurationInMins: createModel.DurationInMins,
-            // ContentSequence: createModel.ContentSequence, // Will be computed automatically when contents are added
         });
         var record = await this._courseModuleRepository.save(courseModule);
         
-        // Update course's ModuleSequence field
         await this.updateCourseModuleSequence(course.id);
         
         return CourseModuleMapper.toResponseDto(record);
@@ -246,26 +244,21 @@ export class CourseModuleService extends BaseService {
 
     private async updateCourseModuleSequence(courseId: uuid): Promise<void> {
         try {
-            // Get all modules for this course, ordered by creation time (oldest first)
             const modules = await this._courseModuleRepository.find({
                 where: { Course: { id: courseId } },
                 order: { CreatedAt: 'ASC' },
             });
 
-            // Create ModuleSequence object: { "module-uuid": sequence_number }
-            // Sequence is assigned based on creation order (1, 2, 3, 4, ...)
             const moduleSequence: Record<string, number> = {};
             modules.forEach((module, index) => {
                 moduleSequence[module.id] = index + 1;
             });
 
-            // Update the course's ModuleSequence field
             await this._courseRepository.update(courseId, {
                 ModuleSequence: moduleSequence,
             });
         } catch (error) {
             logger.error(`Error updating ModuleSequence for course ${courseId}: ${error.message}`);
-            // Don't throw error, just log it - module creation should still succeed
         }
     }
 

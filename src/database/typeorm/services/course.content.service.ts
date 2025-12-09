@@ -51,10 +51,10 @@ export class CourseContentService extends BaseService {
             Sequence: createModel.Sequence,
         });
         var record = await this._courseContentRepository.save(courseContent);
-        
+
         // Update module's ContentSequence field
         await this.updateModuleContentSequence(courseModule.id);
-        
+
         return CourseContentMapper.toResponseDto(record);
     };
 
@@ -327,26 +327,21 @@ export class CourseContentService extends BaseService {
 
     private async updateModuleContentSequence(moduleId: uuid): Promise<void> {
         try {
-            // Get all contents for this module, ordered by creation time (oldest first)
             const contents = await this._courseContentRepository.find({
                 where: { CourseModule: { id: moduleId } },
                 order: { CreatedAt: 'ASC' },
             });
 
-            // Create ContentSequence object: { "content-uuid": sequence_number }
-            // Sequence is assigned based on creation order (1, 2, 3, 4, ...)
             const contentSequence: Record<string, number> = {};
             contents.forEach((content, index) => {
                 contentSequence[content.id] = index + 1;
             });
 
-            // Update the module's ContentSequence field
             await this._courseModuleRepository.update(moduleId, {
                 ContentSequence: contentSequence,
             });
         } catch (error) {
             logger.error(`Error updating ContentSequence for module ${moduleId}: ${error.message}`);
-            // Don't throw error, just log it - content creation should still succeed
         }
     }
 }

@@ -51,6 +51,10 @@ export class CourseContentService extends BaseService {
             Sequence: createModel.Sequence,
         });
         var record = await this._courseContentRepository.save(courseContent);
+
+        // Update module's ContentSequence field
+        await this.updateModuleContentSequence(courseModule.id);
+
         return CourseContentMapper.toResponseDto(record);
     };
 
@@ -319,5 +323,25 @@ export class CourseContentService extends BaseService {
             ErrorHandler.throwNotFoundError('CourseModule cannot be found');
         }
         return courseModule;
+    }
+
+    private async updateModuleContentSequence(moduleId: uuid): Promise<void> {
+        try {
+            const contents = await this._courseContentRepository.find({
+                where: { CourseModule: { id: moduleId } },
+                order: { CreatedAt: 'ASC' },
+            });
+
+            const contentSequence: Record<string, number> = {};
+            contents.forEach((content, index) => {
+                contentSequence[content.id] = index + 1;
+            });
+
+            await this._courseModuleRepository.update(moduleId, {
+                ContentSequence: contentSequence,
+            });
+        } catch (error) {
+            logger.error(`Error updating ContentSequence for module ${moduleId}: ${error.message}`);
+        }
     }
 }

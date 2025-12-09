@@ -1,0 +1,45 @@
+meta {
+  name: Search Course module
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{BASE_URL}}/course-modules/search
+  body: json
+  auth: none
+}
+
+params:query {
+  ~name: Rerum aliquam nemo
+  ~description: Veniam incidunt sint.
+  ~imageUrl: Dolor aspernatur saepe.
+  ~durationInMins: 4100
+  ~courseId: {{COURSE_ID}}
+  ~pageIndex: 0
+  ~itemsPerPage: 10
+  ~orderBy: CreatedAt
+  ~order: descending
+}
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+tests {
+    test('Request is successfully', function () {
+        expect(res.getStatus()).to.equal(200);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+  
+    test('Course modules records retrieved successfully', function () {
+         var jsonRes = res.getBody();
+          expect(jsonRes.Data).to.have.property('Items');
+          expect(jsonRes.Data.Items.length).to.be.at.least(0);
+    });
+    
+}

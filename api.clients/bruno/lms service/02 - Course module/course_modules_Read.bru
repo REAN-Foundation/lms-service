@@ -1,0 +1,48 @@
+
+meta {
+  name: Read Course module
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{BASE_URL}}/course-modules/{{COURSE_MODULE_ID}}
+  body: json
+  auth: none
+}
+
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+tests {
+
+    test('Request is successfully', function () {
+        expect(res.getStatus()).to.equal(200);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+
+    test('Course modules retrieved successfully', function () {
+        var jsonRes = res.getBody();
+        
+        expect(jsonRes.Data).to.have.property('CourseId');
+        expect(jsonRes.Data).to.have.property('Name');
+        expect(jsonRes.Data).to.have.property('Description');
+        expect(jsonRes.Data).to.have.property('ImageUrl');
+        expect(jsonRes.Data).to.have.property('DurationInMins');
+        expect(jsonRes.Data).to.have.property('ContentSequence');
+        expect(jsonRes.Data).to.have.property('CreatedAt');
+        expect(jsonRes.Data).to.have.property('UpdatedAt');
+        
+        if (jsonRes.Data.ContentSequence) {
+            expect(jsonRes.Data.ContentSequence).to.be.an('object');
+        }
+
+    });
+    
+}

@@ -1,0 +1,72 @@
+meta {
+  name: Create Course Module - With Content Sequence
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{BASE_URL}}/course-modules
+  body: json
+  auth: none
+}
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+body:json {
+  {
+    "CourseId": "{{COURSE_ID}}",
+    "Name": "Introduction to React",
+    "Description": "Learn the fundamentals of React",
+    "ImageUrl": "https://example.com/module-image.jpg",
+    "DurationInMins": 120,
+    "ContentSequence": {
+      "{{COURSE_CONTENT_ID}}": 1,
+      "f8c44d8d-23fe-4572-9425-b5b87d9373e9": 2,
+      "b23c45d6-7890-1234-5678-901234567890": 3,
+      "c34d56e7-8901-2345-6789-012345678901": 4,
+      "d45e67f8-9012-3456-7890-123456789012": 5
+    }
+  }
+}
+
+tests {
+    try {
+        var respData = res.getBody();
+        if (respData.Data && respData.Data.id) {
+            bru.setEnvVar('COURSE_MODULE_ID', respData.Data.id);
+        }
+    }
+    catch (error) {
+        console.log(error.message);
+    }
+
+    test('Request is successful', function () {
+        expect(res.getStatus()).to.equal(201);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+
+    test('Course module created with ContentSequence', function () {
+        var jsonRes = res.getBody();
+
+        expect(jsonRes.Data).to.have.property('id');
+        expect(jsonRes.Data).to.have.property('ContentSequence');
+        expect(jsonRes.Data.ContentSequence).to.be.an('object');
+        
+        // Verify sequence structure
+        var contentIds = Object.keys(jsonRes.Data.ContentSequence);
+        expect(contentIds.length).to.be.greaterThan(0);
+        
+        // Verify sequence values are numbers
+        contentIds.forEach(function(contentId) {
+            expect(jsonRes.Data.ContentSequence[contentId]).to.be.a('number');
+            expect(jsonRes.Data.ContentSequence[contentId]).to.be.greaterThan(0);
+        });
+    });
+}
+

@@ -1,0 +1,60 @@
+meta {
+  name: Enroll to Learning Path
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{BASE_URL}}/enrollments/users/{{USER_ID}}/learning-paths/{{LEARNING_PATH_ID}}
+  body: json
+  auth: none
+}
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+body:json {
+  {
+    "StartDate": "2025-01-20T10:00:00.000Z",
+    "ExpectedEndDate": "2025-04-20T17:00:00.000Z"
+  }
+}
+
+tests {
+    try {
+        var respData = res.getBody();
+        if (respData.Data && respData.Data.id) {
+            bru.setEnvVar('LEARNING_PATH_ENROLLMENT_ID', respData.Data.id);
+        }
+    }
+    catch (error) {
+        console.log(error.message);
+    }
+
+    test('Request is successful', function () {
+        expect(res.getStatus()).to.equal(201);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+
+    test('Learning path enrollment created successfully', function () {
+        var jsonRes = res.getBody();
+
+        expect(jsonRes.Data).to.have.property('id');
+        expect(jsonRes.Data).to.have.property('UserId');
+        expect(jsonRes.Data).to.have.property('LearningPathId');
+        expect(jsonRes.Data).to.have.property('IsActive');
+        expect(jsonRes.Data).to.have.property('StartDate');
+        expect(jsonRes.Data).to.have.property('ExpectedEndDate');
+        expect(jsonRes.Data).to.have.property('EnrolledAt');
+
+        expect(jsonRes.Data.UserId).equals('{{USER_ID}}');
+        expect(jsonRes.Data.LearningPathId).equals('{{LEARNING_PATH_ID}}');
+        expect(jsonRes.Data.IsActive).to.be.true;
+    });
+}
+

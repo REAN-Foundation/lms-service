@@ -11,7 +11,7 @@ export class CourseValidator extends BaseValidator {
     public validateCreateRequest = async (request: express.Request): Promise<CourseCreateModel> => {
         try {
             const courses = joi.object({
-                TenantId: joi.string().max(64).min(0).required(),
+                TenantId: joi.string().max(64).min(0).optional(),
                 Name: joi.string().max(64).min(0).required(),
                 Description: joi.string().max(2000).min(0).optional(),
                 ImageUrl: joi.string().max(1000).min(0).optional(),
@@ -21,7 +21,7 @@ export class CourseValidator extends BaseValidator {
             });
             await courses.validateAsync(request.body);
             const model: CourseCreateModel = {
-                TenantId: request.body.TenantId ? request.body.TenantId : null,
+                TenantId: request.body.TenantId ?? request.currentUser.TenantId,
                 Name: request.body.Name ? request.body.Name : null,
                 Description: request.body.Description ? request.body.Description : null,
                 ImageUrl: request.body.ImageUrl ? request.body.ImageUrl : null,

@@ -15,7 +15,7 @@ export class LearningPathValidator extends BaseValidator {
     public validateCreateRequest = async (request: express.Request): Promise<LearningPathCreateModel> => {
         try {
             const learning_paths = joi.object({
-                TenantId: joi.string().uuid().required(),
+                TenantId: joi.string().uuid().optional(),
                 Name: joi.string().max(64).min(0).required(),
                 Description: joi.string().max(2000).min(0).optional(),
                 ImageUrl: joi.string().max(1000).min(0).optional(),
@@ -26,7 +26,7 @@ export class LearningPathValidator extends BaseValidator {
             });
             await learning_paths.validateAsync(request.body);
             const model: LearningPathCreateModel = {
-                TenantId: request.body.TenantId ? request.body.TenantId : null,
+                TenantId: request.body.TenantId ?? request.currentUser.TenantId,
                 Name: request.body.Name ? request.body.Name : null,
                 Description: request.body.Description ? request.body.Description : null,
                 ImageUrl: request.body.ImageUrl ? request.body.ImageUrl : null,

@@ -3,7 +3,7 @@ import { uuid } from './miscellaneous/system.types';
 
 export interface CourseCreateModel {
     /** @minLength 0 @maxLength 64 */
-    TenantId: string;
+    TenantId?: string;
     /** @minLength 0 @maxLength 64 */
     Name: string;
     /** @minLength 0 @maxLength 2000 */

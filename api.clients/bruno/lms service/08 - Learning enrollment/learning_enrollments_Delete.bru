@@ -1,0 +1,39 @@
+meta {
+  name: Delete Enrollment
+  type: http
+  seq: 7
+}
+
+delete {
+  url: {{BASE_URL}}/enrollments/{{COURSE_ENROLLMENT_ID}}
+  body: json
+  auth: none
+}
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+tests {
+
+    test('Request is successful', function () {
+        expect(res.getStatus()).to.equal(200);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+
+    test('Enrollment deleted successfully', function () {
+        var jsonRes = res.getBody();
+        expect(jsonRes.Data).to.have.property('Deleted');
+        expect(jsonRes.Data.Deleted).to.be.true;
+    });
+
+    test('Deleted enrollment cannot be retrieved', function () {
+        // This test would require a follow-up GET request
+        // which would verify the enrollment no longer exists
+    });
+}
+

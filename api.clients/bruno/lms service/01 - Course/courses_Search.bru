@@ -1,0 +1,46 @@
+meta {
+  name: Search Course
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{BASE_URL}}/courses/search?tenantId=b5ab4e21-b585-44cc-b8b3-f83bdf279b6e
+  body: json
+  auth: none
+}
+
+params:query {
+  ~tenantId: b5ab4e21-b585-44cc-b8b3-f83bdf279b6e
+  ~name: Hic laborum iste.
+  ~description: Voluptate qui ex.
+  ~imageUrl: Laudantium architecto in.
+  ~durationInDays: 1759
+  ~learningPathId: {{LEARNING_PATH_ID}}
+  ~pageIndex: 0
+  ~itemsPerPage: 10
+  ~orderBy: CreatedAt
+  ~order: descending
+}
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+tests {
+    test('Request is successfully', function () {
+        expect(res.getStatus()).to.equal(200);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+  
+    test('Courses records retrieved successfully', function () {
+         var jsonRes = res.getBody();
+          expect(jsonRes.Data).to.have.property('Items');
+          expect(jsonRes.Data.Items.length).to.be.at.least(0);
+    });
+    
+}

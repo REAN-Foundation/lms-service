@@ -1,0 +1,41 @@
+meta {
+  name: Search Enrollments - Filter by Course ID
+  type: http
+  seq: 11
+}
+
+get {
+  url: {{BASE_URL}}/enrollments/search?courseId={{COURSE_ID}}&isActive=true&pageIndex=0&itemsPerPage=20
+  body: json
+  auth: none
+}
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+tests {
+
+    test('Request is successful', function () {
+        expect(res.getStatus()).to.equal(200);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+
+    test('Search filtered by course ID returns only course enrollments', function () {
+        var jsonRes = res.getBody();
+
+        expect(jsonRes.Data).to.have.property('CourseEnrollments');
+        
+        if (jsonRes.Data.CourseEnrollments && jsonRes.Data.CourseEnrollments.Items) {
+            jsonRes.Data.CourseEnrollments.Items.forEach(function(enrollment) {
+                expect(enrollment.CourseId).to.equal('{{COURSE_ID}}');
+                expect(enrollment.IsActive).to.be.true;
+            });
+        }
+    });
+}
+

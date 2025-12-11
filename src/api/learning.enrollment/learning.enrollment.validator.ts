@@ -12,6 +12,8 @@ import {
 } from '../../domain.types/learning.path.enrollment.types';
 import { uuid } from '../../domain.types/miscellaneous/system.types';
 
+///////////////////////////////////////////////////////////////////////////////////////////////
+
 export class LearningEnrollmentValidator extends BaseValidator {
 
     public validateEnrollToLearningPathRequest = async (
@@ -20,12 +22,11 @@ export class LearningEnrollmentValidator extends BaseValidator {
         try {
             const userId = await this.requestParamAsUUID(request, 'userId');
             const learningPathId = await this.requestParamAsUUID(request, 'learningPathId');
-            const schema = joi
-                .object({
-                    StartDate: joi.date().iso().optional(),
-                    ExpectedEndDate: joi.date().iso().optional(),
-                });
-            await schema.validateAsync(request.body);
+            const learning_path_enrollments = joi.object({
+                StartDate: joi.date().iso().optional(),
+                ExpectedEndDate: joi.date().iso().optional(),
+            });
+            await learning_path_enrollments.validateAsync(request.body);
 
             const model: LearningPathEnrollmentCreateModel = {
                 UserId: userId,
@@ -46,12 +47,11 @@ export class LearningEnrollmentValidator extends BaseValidator {
         try {
             const userId = await this.requestParamAsUUID(request, 'userId');
             const courseId = await this.requestParamAsUUID(request, 'courseId');
-            const schema = joi
-                .object({
-                    StartDate: joi.date().iso().optional(),
-                    ExpectedEndDate: joi.date().iso().optional(),
-                });
-            await schema.validateAsync(request.body);
+            const course_enrollments = joi.object({
+                StartDate: joi.date().iso().optional(),
+                ExpectedEndDate: joi.date().iso().optional(),
+            });
+            await course_enrollments.validateAsync(request.body);
 
             const model: CourseEnrollmentCreateModel = {
                 UserId: userId,
@@ -70,42 +70,92 @@ export class LearningEnrollmentValidator extends BaseValidator {
         request: express.Request
     ): Promise<{ courseFilters?: CourseEnrollmentSearchFilters; learningPathFilters?: LearningPathEnrollmentSearchFilters }> => {
         try {
-            const schema = joi.object({
+            const enrollments = joi.object({
                 userId: joi.string().uuid().optional(),
                 courseId: joi.string().uuid().optional(),
                 learningPathId: joi.string().uuid().optional(),
                 isActive: joi.boolean().optional(),
                 tenantId: joi.string().uuid().optional(),
+                pageIndex    : joi.number().min(0).optional(),
+                itemsPerPage : joi.number().min(1).optional(),
+                orderBy      : joi.string().max(256).optional(),
+                order        : joi
+                    .string()
+                    .valid('ascending', 'descending')
+                    .optional()
+                    .error(() => new Error("order param: 'ascending' and 'descending' are the only valid values.")),
             });
-            await schema.validateAsync(request.query);
-            const baseFilters = this.getBaseSearchFilters(request);
+            await enrollments.validateAsync(request.query);
             
-            const courseFilters: CourseEnrollmentSearchFilters = {
-                ...baseFilters,
+            const courseFilters = this.getCourseEnrollmentSearchFilters(request.query);
+            const learningPathFilters = this.getLearningPathEnrollmentSearchFilters(request.query);
+            const baseFilters = await this.getBaseSearchFilters(request);
+            
+            return {
+                courseFilters: {
+                    ...baseFilters,
+                    ...courseFilters,
+                },
+                learningPathFilters: {
+                    ...baseFilters,
+                    ...learningPathFilters,
+                },
             };
-            if (request.query.userId) courseFilters.UserId = request.query.userId as uuid;
-            if (request.query.courseId) courseFilters.CourseId = request.query.courseId as uuid;
-            if (request.query.isActive !== undefined) {
-                const isActiveValue = String(request.query.isActive);
-                courseFilters.IsActive = isActiveValue === 'true' || isActiveValue === '1';
-            }
-            if (request.query.tenantId) courseFilters.TenantId = request.query.tenantId as uuid;
-
-            const learningPathFilters: LearningPathEnrollmentSearchFilters = {
-                ...baseFilters,
-            };
-            if (request.query.userId) learningPathFilters.UserId = request.query.userId as uuid;
-            if (request.query.learningPathId) learningPathFilters.LearningPathId = request.query.learningPathId as uuid;
-            if (request.query.isActive !== undefined) {
-                const isActiveValue = String(request.query.isActive);
-                learningPathFilters.IsActive = isActiveValue === 'true' || isActiveValue === '1';
-            }
-            if (request.query.tenantId) learningPathFilters.TenantId = request.query.tenantId as uuid;
-
-            return { courseFilters, learningPathFilters };
         } catch (error) {
             ErrorHandler.handleValidationError(error);
         }
+    };
+
+    private getCourseEnrollmentSearchFilters = (query): CourseEnrollmentSearchFilters => {
+        var filters = {};
+
+        var userId = query.userId ? query.userId : null;
+        if (userId != null) {
+            filters['UserId'] = userId;
+        }
+
+        var courseId = query.courseId ? query.courseId : null;
+        if (courseId != null) {
+            filters['CourseId'] = courseId;
+        }
+
+        if (query.isActive !== undefined) {
+            const isActiveValue = String(query.isActive);
+            filters['IsActive'] = isActiveValue === 'true' || isActiveValue === '1';
+        }
+
+        var tenantId = query.tenantId ? query.tenantId : null;
+        if (tenantId != null) {
+            filters['TenantId'] = tenantId;
+        }
+
+        return filters;
+    };
+
+    private getLearningPathEnrollmentSearchFilters = (query): LearningPathEnrollmentSearchFilters => {
+        var filters = {};
+
+        var userId = query.userId ? query.userId : null;
+        if (userId != null) {
+            filters['UserId'] = userId;
+        }
+
+        var learningPathId = query.learningPathId ? query.learningPathId : null;
+        if (learningPathId != null) {
+            filters['LearningPathId'] = learningPathId;
+        }
+
+        if (query.isActive !== undefined) {
+            const isActiveValue = String(query.isActive);
+            filters['IsActive'] = isActiveValue === 'true' || isActiveValue === '1';
+        }
+
+        var tenantId = query.tenantId ? query.tenantId : null;
+        if (tenantId != null) {
+            filters['TenantId'] = tenantId;
+        }
+
+        return filters;
     };
 
     public async validateUserContext(request: express.Request): Promise<{ userId: uuid }> {

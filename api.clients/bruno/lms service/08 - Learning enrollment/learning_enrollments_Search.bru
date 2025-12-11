@@ -5,9 +5,16 @@ meta {
 }
 
 get {
-  url: {{BASE_URL}}/enrollments/search?pageIndex=0&itemsPerPage=10&isActive=true
+  url: {{BASE_URL}}/enrollments/search
   body: json
   auth: none
+}
+
+params:query {
+  ~pageIndex: 0
+  ~itemsPerPage: 10
+  ~orderBy: CreatedAt
+  ~order: descending
 }
 
 headers {
@@ -18,16 +25,15 @@ headers {
 }
 
 tests {
-
     test('Request is successful', function () {
         expect(res.getStatus()).to.equal(200);
         var jsonRes = res.getBody();
         expect(jsonRes.Status).to.eql('success');
     });
-
+  
     test('Search returned both course and learning path enrollments', function () {
         var jsonRes = res.getBody();
-
+  
         expect(jsonRes.Data).to.have.property('CourseEnrollments');
         expect(jsonRes.Data).to.have.property('LearningPathEnrollments');
         
@@ -43,7 +49,7 @@ tests {
             expect(jsonRes.Data.LearningPathEnrollments).to.have.property('TotalCount');
         }
     });
-
+  
     test('Pagination metadata is correct', function () {
         var jsonRes = res.getBody();
         
@@ -54,4 +60,3 @@ tests {
         }
     });
 }
-

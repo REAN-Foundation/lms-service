@@ -141,6 +141,14 @@ export class CertificatesValidator extends BaseValidator {
                 verificationUrl: joi.string().max(1000).min(0).optional(),
                 issuedBy: joi.string().uuid().optional(),
                 courseId: joi.string().uuid().optional(),
+                pageIndex: joi.number().min(0).optional(),
+                itemsPerPage: joi.number().min(1).optional(),
+                orderBy: joi.string().max(256).optional(),
+                order: joi
+                    .string()
+                    .valid('ascending', 'descending')
+                    .optional()
+                    .error(() => new Error("order param: 'ascending' and 'descending' are the only valid values.")),
             });
             await certificates.validateAsync(request.query);
             const filters = this.getSearchFilters(request.query);

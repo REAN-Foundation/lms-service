@@ -131,7 +131,6 @@ export class CourseContentValidator extends BaseValidator {
                     .valid('ascending', 'descending')
                     .optional()
                     .error(() => new Error("order param: 'ascending' and 'descending' are the only valid values.")),
-
             });
             await course_contents.validateAsync(request.query);
             const filters = this.getSearchFilters(request.query);

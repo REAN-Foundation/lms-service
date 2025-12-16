@@ -95,6 +95,14 @@ export class UserLearningValidator extends BaseValidator {
                 learningPathId: joi.string().uuid().optional(),
                 courseModuleId: joi.string().uuid().optional(),
                 courseContentId: joi.string().uuid().optional(),
+                pageIndex: joi.number().min(0).optional(),
+                itemsPerPage: joi.number().min(1).optional(),
+                orderBy: joi.string().max(256).optional(),
+                order: joi
+                    .string()
+                    .valid('ascending', 'descending')
+                    .optional()
+                    .error(() => new Error("order param: 'ascending' and 'descending' are the only valid values.")),
             });
             await user_learnings.validateAsync(request.query);
             const filters = this.getSearchFilters(request.query);

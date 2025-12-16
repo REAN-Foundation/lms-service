@@ -2,10 +2,7 @@ import joi from 'joi';
 import express from 'express';
 import { ErrorHandler } from '../../common/error.handling/error.handler';
 import BaseValidator from '../base.validator';
-import {
-    CourseEnrollmentCreateModel,
-    CourseEnrollmentSearchFilters,
-} from '../../domain.types/course.enrollment.types';
+import { CourseEnrollmentCreateModel, CourseEnrollmentSearchFilters } from '../../domain.types/course.enrollment.types';
 import {
     LearningPathEnrollmentCreateModel,
     LearningPathEnrollmentSearchFilters,
@@ -15,7 +12,6 @@ import { uuid } from '../../domain.types/miscellaneous/system.types';
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 export class LearningEnrollmentValidator extends BaseValidator {
-
     public validateEnrollToLearningPathRequest = async (
         request: express.Request
     ): Promise<LearningPathEnrollmentCreateModel> => {
@@ -41,9 +37,7 @@ export class LearningEnrollmentValidator extends BaseValidator {
         }
     };
 
-    public validateEnrollToCourseRequest = async (
-        request: express.Request
-    ): Promise<CourseEnrollmentCreateModel> => {
+    public validateEnrollToCourseRequest = async (request: express.Request): Promise<CourseEnrollmentCreateModel> => {
         try {
             const userId = await this.requestParamAsUUID(request, 'userId');
             const courseId = await this.requestParamAsUUID(request, 'courseId');
@@ -68,7 +62,10 @@ export class LearningEnrollmentValidator extends BaseValidator {
 
     public validateSearchRequest = async (
         request: express.Request
-    ): Promise<{ courseFilters?: CourseEnrollmentSearchFilters; learningPathFilters?: LearningPathEnrollmentSearchFilters }> => {
+    ): Promise<{
+        courseFilters?: CourseEnrollmentSearchFilters;
+        learningPathFilters?: LearningPathEnrollmentSearchFilters;
+    }> => {
         try {
             const enrollments = joi.object({
                 userId: joi.string().uuid().optional(),
@@ -76,21 +73,21 @@ export class LearningEnrollmentValidator extends BaseValidator {
                 learningPathId: joi.string().uuid().optional(),
                 isActive: joi.boolean().optional(),
                 tenantId: joi.string().uuid().optional(),
-                pageIndex    : joi.number().min(0).optional(),
-                itemsPerPage : joi.number().min(1).optional(),
-                orderBy      : joi.string().max(256).optional(),
-                order        : joi
+                pageIndex: joi.number().min(0).optional(),
+                itemsPerPage: joi.number().min(1).optional(),
+                orderBy: joi.string().max(256).optional(),
+                order: joi
                     .string()
                     .valid('ascending', 'descending')
                     .optional()
                     .error(() => new Error("order param: 'ascending' and 'descending' are the only valid values.")),
             });
             await enrollments.validateAsync(request.query);
-            
+
             const courseFilters = this.getCourseEnrollmentSearchFilters(request.query);
             const learningPathFilters = this.getLearningPathEnrollmentSearchFilters(request.query);
             const baseFilters = await this.getBaseSearchFilters(request);
-            
+
             return {
                 courseFilters: {
                     ...baseFilters,
@@ -168,4 +165,3 @@ export class LearningEnrollmentValidator extends BaseValidator {
         return { tenantId };
     }
 }
-

@@ -14,7 +14,7 @@ import {
 export class CourseModuleValidator extends BaseValidator {
     public validateCreateRequest = async (request: express.Request): Promise<CourseModuleCreateModel> => {
         try {
-            const course_modules = joi.object({
+            const courseModules = joi.object({
                 Name: joi.string().max(64).min(0).required(),
                 Description: joi.string().max(2000).min(0).optional(),
                 ImageUrl: joi.string().max(1000).min(0).optional(),
@@ -22,7 +22,7 @@ export class CourseModuleValidator extends BaseValidator {
                 ContentSequence: joi.object().pattern(joi.string().uuid(), joi.number().integer().min(1)).optional(),
                 CourseId: joi.string().uuid().required(),
             });
-            await course_modules.validateAsync(request.body);
+            await courseModules.validateAsync(request.body);
             const model: CourseModuleCreateModel = {
                 Name: request.body.Name ? request.body.Name : null,
                 Description: request.body.Description ? request.body.Description : null,
@@ -39,7 +39,7 @@ export class CourseModuleValidator extends BaseValidator {
 
     public validateUpdateRequest = async (request: express.Request): Promise<CourseModuleUpdateModel> => {
         try {
-            const course_modules = joi.object({
+            const courseModules = joi.object({
                 Name: joi.string().max(64).min(0).optional(),
                 Description: joi.string().max(2000).min(0).optional(),
                 ImageUrl: joi.string().max(1000).min(0).optional(),
@@ -47,7 +47,7 @@ export class CourseModuleValidator extends BaseValidator {
                 ContentSequence: joi.object().pattern(joi.string().uuid(), joi.number().integer().min(1)).optional(),
                 CourseId: joi.string().uuid().optional(),
             });
-            await course_modules.validateAsync(request.body);
+            await courseModules.validateAsync(request.body);
 
             const model: CourseModuleUpdateModel = {};
 
@@ -78,7 +78,7 @@ export class CourseModuleValidator extends BaseValidator {
 
     public validateSearchRequest = async (request: express.Request): Promise<CourseModuleSearchFilters> => {
         try {
-            const course_modules = joi.object({
+            const courseModules = joi.object({
                 name: joi.string().max(64).min(0).optional(),
                 description: joi.string().max(2000).min(0).optional(),
                 imageUrl: joi.string().max(1000).min(0).optional(),
@@ -93,7 +93,7 @@ export class CourseModuleValidator extends BaseValidator {
                     .optional()
                     .error(() => new Error("order param: 'ascending' and 'descending' are the only valid values.")),
             });
-            await course_modules.validateAsync(request.query);
+            await courseModules.validateAsync(request.query);
             const filters = this.getSearchFilters(request.query);
             const baseFilters = await this.getBaseSearchFilters(request);
             return {

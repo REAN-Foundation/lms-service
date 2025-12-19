@@ -15,7 +15,7 @@ import { CourseContentType } from '../../domain.types/enums/course.content.type.
 export class CourseContentValidator extends BaseValidator {
     public validateCreateRequest = async (request: express.Request): Promise<CourseContentCreateModel> => {
         try {
-            const course_contents = joi.object({
+            const courseContents = joi.object({
                 Title: joi.string().max(64).min(0).required(),
                 Description: joi.string().max(2000).min(0).optional(),
                 ImageUrl: joi.string().max(1000).min(0).optional(),
@@ -30,7 +30,7 @@ export class CourseContentValidator extends BaseValidator {
                 CourseId: joi.string().uuid().optional(),
                 CourseModuleId: joi.string().uuid().required(),
             });
-            await course_contents.validateAsync(request.body);
+            await courseContents.validateAsync(request.body);
             const model: CourseContentCreateModel = {
                 Title: request.body.Title ? request.body.Title : null,
                 Description: request.body.Description ? request.body.Description : null,
@@ -51,7 +51,7 @@ export class CourseContentValidator extends BaseValidator {
 
     public validateUpdateRequest = async (request: express.Request): Promise<CourseContentUpdateModel> => {
         try {
-            const course_contents = joi.object({
+            const courseContents = joi.object({
                 Title: joi.string().max(64).min(0).optional(),
                 Description: joi.string().max(2000).min(0).optional(),
                 ImageUrl: joi.string().max(1000).min(0).optional(),
@@ -66,7 +66,7 @@ export class CourseContentValidator extends BaseValidator {
                 CourseId: joi.string().uuid().optional(),
                 CourseModuleId: joi.string().uuid().optional(),
             });
-            await course_contents.validateAsync(request.body);
+            await courseContents.validateAsync(request.body);
 
             const model: CourseContentUpdateModel = {};
 
@@ -109,7 +109,7 @@ export class CourseContentValidator extends BaseValidator {
 
     public validateSearchRequest = async (request: express.Request): Promise<CourseContentSearchFilters> => {
         try {
-            const course_contents = joi.object({
+            const courseContents = joi.object({
                 title: joi.string().max(64).min(0).optional(),
                 description: joi.string().max(2000).min(0).optional(),
                 imageUrl: joi.string().max(1000).min(0).optional(),
@@ -132,7 +132,7 @@ export class CourseContentValidator extends BaseValidator {
                     .optional()
                     .error(() => new Error("order param: 'ascending' and 'descending' are the only valid values.")),
             });
-            await course_contents.validateAsync(request.query);
+            await courseContents.validateAsync(request.query);
             const filters = this.getSearchFilters(request.query);
             const baseFilters = await this.getBaseSearchFilters(request);
             return {

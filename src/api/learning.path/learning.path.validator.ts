@@ -14,7 +14,7 @@ import {
 export class LearningPathValidator extends BaseValidator {
     public validateCreateRequest = async (request: express.Request): Promise<LearningPathCreateModel> => {
         try {
-            const learning_paths = joi.object({
+            const learningPaths = joi.object({
                 TenantId: joi.string().uuid().optional(),
                 Name: joi.string().max(64).min(0).required(),
                 Description: joi.string().max(2000).min(0).optional(),
@@ -24,7 +24,7 @@ export class LearningPathValidator extends BaseValidator {
                 Enabled: joi.boolean().optional(),
                 CourseSequence: joi.object().pattern(joi.string().uuid(), joi.number().integer().min(1)).optional(),
             });
-            await learning_paths.validateAsync(request.body);
+            await learningPaths.validateAsync(request.body);
             const model: LearningPathCreateModel = {
                 TenantId: request.body.TenantId ?? request.currentUser.TenantId,
                 Name: request.body.Name ? request.body.Name : null,
@@ -43,7 +43,7 @@ export class LearningPathValidator extends BaseValidator {
 
     public validateUpdateRequest = async (request: express.Request): Promise<LearningPathUpdateModel> => {
         try {
-            const learning_paths = joi.object({
+            const learningPaths = joi.object({
                 TenantId: joi.string().uuid().optional(),
                 Name: joi.string().max(64).min(0).optional(),
                 Description: joi.string().max(2000).min(0).optional(),
@@ -53,7 +53,7 @@ export class LearningPathValidator extends BaseValidator {
                 Enabled: joi.boolean().optional(),
                 CourseSequence: joi.object().pattern(joi.string().uuid(), joi.number().integer().min(1)).optional(),
             });
-            await learning_paths.validateAsync(request.body);
+            await learningPaths.validateAsync(request.body);
 
             const model: LearningPathUpdateModel = {};
 
@@ -90,7 +90,7 @@ export class LearningPathValidator extends BaseValidator {
 
     public validateSearchRequest = async (request: express.Request): Promise<LearningPathSearchFilters> => {
         try {
-            const learning_paths = joi.object({
+            const learningPaths = joi.object({
                 tenantId: joi.string().uuid().optional(),
                 name: joi.string().max(64).min(0).optional(),
                 description: joi.string().max(2000).min(0).optional(),
@@ -107,7 +107,7 @@ export class LearningPathValidator extends BaseValidator {
                     .optional()
                     .error(() => new Error("order param: 'ascending' and 'descending' are the only valid values.")),
             });
-            await learning_paths.validateAsync(request.query);
+            await learningPaths.validateAsync(request.query);
             const filters = this.getSearchFilters(request.query);
             const baseFilters = await this.getBaseSearchFilters(request);
             return {

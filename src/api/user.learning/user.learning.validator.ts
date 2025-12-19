@@ -15,7 +15,7 @@ import { ProgressStatus } from '../../domain.types/enums/progress.status.enum';
 export class UserLearningValidator extends BaseValidator {
     public validateCreateRequest = async (request: express.Request): Promise<UserLearningCreateModel> => {
         try {
-            const user_learnings = joi.object({
+            const userLearnings = joi.object({
                 UserId: joi.string().uuid().required(),
                 ProgressStatus: joi
                     .string()
@@ -26,7 +26,7 @@ export class UserLearningValidator extends BaseValidator {
                 CourseModuleId: joi.string().uuid().required(),
                 CourseContentId: joi.string().uuid().required(),
             });
-            await user_learnings.validateAsync(request.body);
+            await userLearnings.validateAsync(request.body);
             const model: UserLearningCreateModel = {
                 UserId: request.body.UserId ? request.body.UserId : null,
                 ProgressStatus: request.body.ProgressStatus ? request.body.ProgressStatus : null,
@@ -43,7 +43,7 @@ export class UserLearningValidator extends BaseValidator {
 
     public validateUpdateRequest = async (request: express.Request): Promise<UserLearningUpdateModel> => {
         try {
-            const user_learnings = joi.object({
+            const userLearnings = joi.object({
                 UserId: joi.string().uuid().optional(),
                 ProgressStatus: joi
                     .string()
@@ -54,7 +54,7 @@ export class UserLearningValidator extends BaseValidator {
                 CourseModuleId: joi.string().uuid().optional(),
                 CourseContentId: joi.string().uuid().optional(),
             });
-            await user_learnings.validateAsync(request.body);
+            await userLearnings.validateAsync(request.body);
 
             const model: UserLearningUpdateModel = {};
 
@@ -85,7 +85,7 @@ export class UserLearningValidator extends BaseValidator {
 
     public validateSearchRequest = async (request: express.Request): Promise<UserLearningSearchFilters> => {
         try {
-            const user_learnings = joi.object({
+            const userLearnings = joi.object({
                 userId: joi.string().uuid().optional(),
                 progressStatus: joi
                     .string()
@@ -104,7 +104,7 @@ export class UserLearningValidator extends BaseValidator {
                     .optional()
                     .error(() => new Error("order param: 'ascending' and 'descending' are the only valid values.")),
             });
-            await user_learnings.validateAsync(request.query);
+            await userLearnings.validateAsync(request.query);
             const filters = this.getSearchFilters(request.query);
             const baseFilters = await this.getBaseSearchFilters(request);
             return {

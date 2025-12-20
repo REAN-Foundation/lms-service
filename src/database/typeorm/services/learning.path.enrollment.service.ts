@@ -31,13 +31,7 @@ export class LearningPathEnrollmentService extends BaseService {
             const learningPath = await this.getLearningPath(model.LearningPathId);
             await this.ensureNoActiveDuplicate(model.UserId, model.LearningPathId);
 
-            // Fetch and sync user details from Reancare service
-            try {
-                await this._userService.fetchAndSyncUserFromReancare(model.UserId, accessToken);
-            } catch (userSyncError) {
-                logger.warn(`Failed to sync user ${model.UserId} from Reancare, continuing with enrollment: ${userSyncError.message}`);
-                // Continue with enrollment even if user sync fails
-            }
+            await this._userService.fetchAndSyncUserFromReancare(model.UserId, accessToken);
 
             const enrollment = this._enrollmentRepository.create({
                 UserId: model.UserId,

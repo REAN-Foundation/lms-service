@@ -164,32 +164,60 @@ export class UserService extends BaseService {
 
     /**
      * Fetches user details from Reancare service and creates/updates the user in local database
+     * Fetches UserName from users table and FirstName, LastName, ProfileImageUrl from persons table
      * @param userId - The user ID to fetch from Reancare
      * @param accessToken - Optional access token for Reancare API
      * @returns UserResponseDto of the created/updated user
      */
     public fetchAndSyncUserFromReancare = async (userId: uuid, accessToken?: string): Promise<UserResponseDto> => {
         try {
-            // Fetch user from Reancare service
-            const apiURL = `/users/${userId}`;
-            const reancareResponse = await NeedleService.needleRequestForREAN('get', apiURL, accessToken);
+            // Step 1: Fetch user from Reancare service to get UserName and PersonId
+            const userApiURL = `/users/${userId}`;
+            const userResponse = await NeedleService.needleRequestForREAN('get', userApiURL, accessToken);
 
-            if (!reancareResponse || reancareResponse.Status !== 'success' || !reancareResponse.Data) {
+            if (!userResponse || userResponse.Status !== 'success' || !userResponse.Data) {
                 logger.warn(`Failed to fetch user ${userId} from Reancare service`);
                 // Don't throw error, just log warning - enrollment should still proceed
                 return null;
             }
 
-            const reancareUser = reancareResponse.Data;
+            const reancareUser = userResponse.Data;
+            const userName = reancareUser.UserName || '';
+            const personId = reancareUser.PersonId || reancareUser.personId || null;
 
-            // Map Reancare user data to our User model
-            // Adjust these mappings based on actual Reancare user response structure
+            // Step 2: Fetch person details from persons table to get FirstName, LastName, ProfileImageUrl
+            let firstName = null;
+            let lastName = null;
+            let profileImageUrl = null;
+
+            if (personId) {
+                try {
+                    const personApiURL = `/persons/${personId}`;
+                    const personResponse = await NeedleService.needleRequestForREAN('get', personApiURL, accessToken);
+
+                    if (personResponse && personResponse.Status === 'success' && personResponse.Data) {
+                        const reancarePerson = personResponse.Data;
+                        firstName = reancarePerson.FirstName || reancarePerson.firstName || null;
+                        lastName = reancarePerson.LastName || reancarePerson.lastName || null;
+                        profileImageUrl = reancarePerson.ImageResourceId || reancarePerson.imageResourceId || null;
+                    } else {
+                        logger.warn(`Failed to fetch person ${personId} from Reancare service for user ${userId}`);
+                    }
+                } catch (personError) {
+                    logger.warn(`Error fetching person ${personId} for user ${userId}: ${personError.message}`);
+                    // Continue without person data
+                }
+            } else {
+                logger.warn(`No PersonId found for user ${userId} in Reancare service`);
+            }
+
+            // Map Reancare user and person data to our User model
             const userData: UserCreateModel = {
                 id: reancareUser.id || userId,
-                UserName: reancareUser.UserName || reancareUser.userName || reancareUser.email || '',
-                FirstName: reancareUser.FirstName || reancareUser.firstName || reancareUser.Person?.FirstName || null,
-                LastName: reancareUser.LastName || reancareUser.lastName || reancareUser.Person?.LastName || null,
-                ProfileImageUrl: reancareUser.ProfileImageUrl || reancareUser.profileImageUrl || reancareUser.Person?.ProfileImageUrl || null,
+                UserName: userName,
+                FirstName: firstName,
+                LastName: lastName,
+                ProfileImageUrl: profileImageUrl,
             };
 
             // Check if user already exists in local database
@@ -205,7 +233,7 @@ export class UserService extends BaseService {
                 if (userData.ProfileImageUrl !== undefined) existingUser.ProfileImageUrl = userData.ProfileImageUrl;
 
                 const updatedUser = await this._userRepository.save(existingUser);
-                logger.info(`User ${userId} updated from Reancare service`);
+                logger.info(`User ${userId} updated from Reancare service (user + person data)`);
                 return UserMapper.toResponseDto(updatedUser);
             } else {
                 // Create new user
@@ -217,7 +245,7 @@ export class UserService extends BaseService {
                     ProfileImageUrl: userData.ProfileImageUrl,
                 });
                 const savedUser = await this._userRepository.save(newUser);
-                logger.info(`User ${userId} created from Reancare service`);
+                logger.info(`User ${userId} created from Reancare service (user + person data)`);
                 return UserMapper.toResponseDto(savedUser);
             }
         } catch (error) {

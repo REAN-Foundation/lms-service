@@ -171,13 +171,11 @@ export class UserService extends BaseService {
      */
     public fetchAndSyncUserFromReancare = async (userId: uuid, accessToken?: string): Promise<UserResponseDto> => {
         try {
-            // Step 1: Fetch user from Reancare service to get UserName and PersonId
             const userApiURL = `/users/${userId}`;
             const userResponse = await NeedleService.needleRequestForREAN('get', userApiURL, accessToken);
 
             if (!userResponse || userResponse.Status !== 'success' || !userResponse.Data) {
                 logger.warn(`Failed to fetch user ${userId} from Reancare service`);
-                // Don't throw error, just log warning - enrollment should still proceed
                 return null;
             }
 
@@ -185,7 +183,6 @@ export class UserService extends BaseService {
             const userName = reancareUser.UserName || '';
             const personId = reancareUser.PersonId || reancareUser.personId || null;
 
-            // Step 2: Fetch person details from persons table to get FirstName, LastName, ProfileImageUrl
             let firstName = null;
             let lastName = null;
             let profileImageUrl = null;
@@ -205,13 +202,11 @@ export class UserService extends BaseService {
                     }
                 } catch (personError) {
                     logger.warn(`Error fetching person ${personId} for user ${userId}: ${personError.message}`);
-                    // Continue without person data
                 }
             } else {
                 logger.warn(`No PersonId found for user ${userId} in Reancare service`);
             }
 
-            // Map Reancare user and person data to our User model
             const userData: UserCreateModel = {
                 id: reancareUser.id || userId,
                 UserName: userName,
@@ -220,13 +215,11 @@ export class UserService extends BaseService {
                 ProfileImageUrl: profileImageUrl,
             };
 
-            // Check if user already exists in local database
             const existingUser = await this._userRepository.findOne({
                 where: { id: userData.id },
             });
 
             if (existingUser) {
-                // Update existing user
                 if (userData.UserName) existingUser.UserName = userData.UserName;
                 if (userData.FirstName !== undefined) existingUser.FirstName = userData.FirstName;
                 if (userData.LastName !== undefined) existingUser.LastName = userData.LastName;
@@ -236,7 +229,6 @@ export class UserService extends BaseService {
                 logger.info(`User ${userId} updated from Reancare service (user + person data)`);
                 return UserMapper.toResponseDto(updatedUser);
             } else {
-                // Create new user
                 const newUser = this._userRepository.create({
                     id: userData.id,
                     UserName: userData.UserName,
@@ -250,7 +242,6 @@ export class UserService extends BaseService {
             }
         } catch (error) {
             logger.error(`Error fetching user ${userId} from Reancare service: ${error.message}`);
-            // Don't throw error - enrollment should still proceed even if user sync fails
             return null;
         }
     };

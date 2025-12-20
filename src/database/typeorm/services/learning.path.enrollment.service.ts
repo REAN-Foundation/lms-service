@@ -13,6 +13,7 @@ import {
 import { LearningPathEnrollmentMapper } from '../mappers/learning.path.enrollment.mapper';
 import { LearningPath } from '../models/learning.path.entity';
 import { LearningPathEnrollment } from '../models/learning.path.enrollment.entity';
+import { UserService } from './user.service';
 
 export class LearningPathEnrollmentService extends BaseService {
     //#region Repositories
@@ -21,12 +22,22 @@ export class LearningPathEnrollmentService extends BaseService {
 
     _enrollmentRepository: Repository<LearningPathEnrollment> = Source.getRepository(LearningPathEnrollment);
 
+    _userService: UserService = new UserService();
+
     //#endregion
 
-    public enroll = async (model: LearningPathEnrollmentCreateModel): Promise<LearningPathEnrollmentResponseDto> => {
+    public enroll = async (model: LearningPathEnrollmentCreateModel, accessToken?: string): Promise<LearningPathEnrollmentResponseDto> => {
         try {
             const learningPath = await this.getLearningPath(model.LearningPathId);
             await this.ensureNoActiveDuplicate(model.UserId, model.LearningPathId);
+
+            // Fetch and sync user details from Reancare service
+            try {
+                await this._userService.fetchAndSyncUserFromReancare(model.UserId, accessToken);
+            } catch (userSyncError) {
+                logger.warn(`Failed to sync user ${model.UserId} from Reancare, continuing with enrollment: ${userSyncError.message}`);
+                // Continue with enrollment even if user sync fails
+            }
 
             const enrollment = this._enrollmentRepository.create({
                 UserId: model.UserId,

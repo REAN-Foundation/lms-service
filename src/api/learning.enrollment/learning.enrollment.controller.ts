@@ -12,7 +12,10 @@ export class LearningEnrollmentController {
     enrollToCourse = async (request: express.Request, response: express.Response) => {
         try {
             const model = await this._validator.validateEnrollToCourseRequest(request);
-            const record = await this._courseEnrollmentService.enroll(model);
+            // Get access token from request headers for Reancare API call
+            const authHeader = request.headers['authorization'];
+            const accessToken = authHeader && authHeader.split(' ')[1];
+            const record = await this._courseEnrollmentService.enroll(model, accessToken);
             ResponseHandler.success(request, response, 'Course enrollment created successfully!', 201, record);
         } catch (error) {
             ResponseHandler.handleError(request, response, error);
@@ -22,7 +25,10 @@ export class LearningEnrollmentController {
     enrollToLearningPath = async (request: express.Request, response: express.Response) => {
         try {
             const model = await this._validator.validateEnrollToLearningPathRequest(request);
-            const record = await this._learningPathEnrollmentService.enroll(model);
+            // Get access token from request headers for Reancare API call
+            const authHeader = request.headers['authorization'];
+            const accessToken = authHeader && authHeader.split(' ')[1];
+            const record = await this._learningPathEnrollmentService.enroll(model, accessToken);
             ResponseHandler.success(request, response, 'Learning path enrollment created successfully!', 201, record);
         } catch (error) {
             ResponseHandler.handleError(request, response, error);

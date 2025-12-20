@@ -9,6 +9,7 @@ import { register as registerLearningPathRoutes } from '../api/learning.path/lea
 import { register as registerLearningEnrollmentRoutes } from '../api/learning.enrollment/learning.enrollment.routes';
 import { register as registerUserLearningRoutes } from '../api/user.learning/user.learning.routes';
 import { register as registerCertificatesRoutes } from '../api/certificates/certificates.routes';
+import { register as registerUserRoutes } from '../api/user/user.routes';
 // Routes imports end here <--
 
 ////////////////////////////////////////////////////////////////////////////////////
@@ -36,6 +37,7 @@ export class RouteHandler {
                 registerLearningEnrollmentRoutes(expressApp);
                 registerUserLearningRoutes(expressApp);
                 registerCertificatesRoutes(expressApp);
+                registerUserRoutes(expressApp);
                 // Routes end here <--
 
                 resolve(true);

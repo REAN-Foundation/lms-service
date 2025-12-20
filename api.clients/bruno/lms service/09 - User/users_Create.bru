@@ -1,0 +1,63 @@
+meta {
+  name: Create User
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{BASE_URL}}/user
+  body: json
+  auth: none
+}
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+body:json {
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "UserName": "john.doe",
+    "FirstName": "John",
+    "LastName": "Doe",
+    "ProfileImageUrl": "https://example.com/profile/john.jpg"
+  }
+}
+
+tests {
+    try {
+        var respData = res.getBody();
+        bru.setEnvVar('USER_ID', respData.Data.id);
+    }
+    catch (error) {
+        console.log(error.message);
+    }
+    test('Request is successfully', function () {
+        expect(res.getStatus()).to.equal(201);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+  
+    test('User created successfully', function () {
+        var jsonRes = res.getBody();
+  
+        expect(jsonRes.Data).to.have.property('id');
+        
+        expect(jsonRes.Data).to.have.property('UserName');
+        expect(jsonRes.Data).to.have.property('FirstName');
+        expect(jsonRes.Data).to.have.property('LastName');
+        expect(jsonRes.Data).to.have.property('ProfileImageUrl');
+        expect(jsonRes.Data).to.have.property('CreatedAt');
+        expect(jsonRes.Data).to.have.property('UpdatedAt');
+  
+        expect(jsonRes.Data.UserName).equals("john.doe");
+        expect(jsonRes.Data.FirstName).equals("John");
+        expect(jsonRes.Data.LastName).equals("Doe");
+        expect(jsonRes.Data.ProfileImageUrl).equals("https://example.com/profile/john.jpg");
+  
+    });
+    
+}

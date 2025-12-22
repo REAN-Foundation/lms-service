@@ -1,4 +1,4 @@
-import { FindManyOptions, Like, Repository } from 'typeorm';
+import { FindManyOptions, In, Like, Repository } from 'typeorm';
 import { logger } from '../../../logger/logger';
 import { ErrorHandler } from '../../../common/error.handling/error.handler';
 import { uuid } from '../../../domain.types/miscellaneous/system.types';
@@ -13,8 +13,9 @@ import {
 } from '../../../domain.types/certificates.types';
 import { CertificatesMapper } from '../mappers/certificates.mapper';
 import { Course } from '../models/course.entity';
-
 import { Certificates } from '../models/certificates.entity';
+import { UserLearningService } from './user.learning.service';
+import { LearningPathCourses } from '../models/learning.path.courses.entity';
 
 ///////////////////////////////////////////////////////////////////////
 
@@ -24,6 +25,10 @@ export class CertificatesService extends BaseService {
     _courseRepository: Repository<Course> = Source.getRepository(Course);
 
     _certificatesRepository: Repository<Certificates> = Source.getRepository(Certificates);
+
+    _learningPathCoursesRepository: Repository<LearningPathCourses> = Source.getRepository(LearningPathCourses);
+
+    _userLearningService: UserLearningService = new UserLearningService();
 
     //#endregion
 
@@ -286,6 +291,88 @@ export class CertificatesService extends BaseService {
     };
 
     //#endregion
+
+    public getCertificateForCourse = async (userId: uuid, courseId: uuid): Promise<CertificatesResponseDto> => {
+        try {
+            // Check if course is completed
+            const completionState = await this._userLearningService.getCourseCompletionState(userId, courseId);
+            if (!completionState.IsCompleted) {
+                ErrorHandler.throwFailedPreconditionError('Course is not completed. Certificate can only be downloaded for completed courses.');
+            }
+
+            // Find certificate for this course and user
+            const certificate = await this._certificatesRepository.findOne({
+                where: {
+                    UserId: userId,
+                    Course: { id: courseId },
+                },
+                relations: {
+                    Course: true,
+                },
+            });
+
+            if (!certificate) {
+                ErrorHandler.throwNotFoundError('Certificate not found for this completed course.');
+            }
+
+            return CertificatesMapper.toResponseDto(certificate);
+        } catch (error) {
+            logger.error(error.message);
+            if (error.statusCode) {
+                throw error;
+            }
+            ErrorHandler.throwInternalServerError(error.message, error);
+        }
+    };
+
+    public getCertificatesForLearningPath = async (userId: uuid, learningPathId: uuid): Promise<CertificatesResponseDto[]> => {
+        try {
+            // Check if learning path is completed
+            const completionState = await this._userLearningService.getLearningPathCompletionState(userId, learningPathId);
+            if (!completionState.IsCompleted) {
+                ErrorHandler.throwFailedPreconditionError('Learning path is not completed. Certificates can only be downloaded for completed learning paths.');
+            }
+
+            // Get all courses in the learning path
+            const learningPathCourses = await this._learningPathCoursesRepository.find({
+                where: {
+                    LearningPath: { id: learningPathId },
+                },
+                relations: {
+                    Course: true,
+                },
+            });
+
+            if (learningPathCourses.length === 0) {
+                ErrorHandler.throwNotFoundError('No courses found in this learning path.');
+            }
+
+            const courseIds = learningPathCourses.map((lpc) => lpc.Course.id);
+
+            // Get all certificates for courses in this learning path
+            const certificates = await this._certificatesRepository.find({
+                where: {
+                    UserId: userId,
+                    Course: { id: In(courseIds) },
+                },
+                relations: {
+                    Course: true,
+                },
+            });
+
+            if (certificates.length === 0) {
+                ErrorHandler.throwNotFoundError('No certificates found for courses in this completed learning path.');
+            }
+
+            return certificates.map((cert) => CertificatesMapper.toResponseDto(cert));
+        } catch (error) {
+            logger.error(error.message);
+            if (error.statusCode) {
+                throw error;
+            }
+            ErrorHandler.throwInternalServerError(error.message, error);
+        }
+    };
 
     private async getCourse(courseId: uuid) {
         const course = await this._courseRepository.findOne({

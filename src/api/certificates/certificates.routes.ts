@@ -11,6 +11,8 @@ export const register = (app: express.Application): void => {
 
     router.post('/', auth(CertificatesAuth.create), controller.create);
     router.get('/search', auth(CertificatesAuth.search), controller.search);
+    router.get('/courses/:courseId/download', auth(CertificatesAuth.downloadCourseCertificate), controller.downloadCourseCertificate);
+    router.get('/learning-paths/:learningPathId/download', auth(CertificatesAuth.downloadLearningPathCertificates), controller.downloadLearningPathCertificates);
     router.get('/:id', auth(CertificatesAuth.getById), controller.getById);
     router.put('/:id', auth(CertificatesAuth.update), controller.update);
     router.delete('/:id', auth(CertificatesAuth.delete), controller.delete);

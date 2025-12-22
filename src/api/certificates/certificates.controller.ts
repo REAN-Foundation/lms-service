@@ -79,4 +79,28 @@ export class CertificatesController {
             ResponseHandler.handleError(request, response, error);
         }
     };
+
+    downloadCourseCertificate = async (request: express.Request, response: express.Response): Promise<void> => {
+        try {
+            const userId: uuid = request.currentUser.UserId;
+            const courseId: uuid = await this._validator.requestParamAsUUID(request, 'courseId');
+            const certificate = await this._service.getCertificateForCourse(userId, courseId);
+            const message = 'Course certificate retrieved successfully!';
+            ResponseHandler.success(request, response, message, 200, certificate);
+        } catch (error) {
+            ResponseHandler.handleError(request, response, error);
+        }
+    };
+
+    downloadLearningPathCertificates = async (request: express.Request, response: express.Response): Promise<void> => {
+        try {
+            const userId: uuid = request.currentUser.UserId;
+            const learningPathId: uuid = await this._validator.requestParamAsUUID(request, 'learningPathId');
+            const certificates = await this._service.getCertificatesForLearningPath(userId, learningPathId);
+            const message = 'Learning path certificates retrieved successfully!';
+            ResponseHandler.success(request, response, message, 200, { Certificates: certificates });
+        } catch (error) {
+            ResponseHandler.handleError(request, response, error);
+        }
+    };
 }

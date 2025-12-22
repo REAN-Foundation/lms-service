@@ -4,6 +4,8 @@
     "Certificates.GetById",
     "Certificates.Update",
     "Certificates.Delete",
+    "Certificates.DownloadCourseCertificate",
+    "Certificates.DownloadLearningPathCertificates",
     "Course.Create",
     "Course.Search",
     "Course.GetById",

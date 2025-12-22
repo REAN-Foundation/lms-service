@@ -44,4 +44,20 @@ export class CertificatesAuth {
         ActionScope: ActionScope.Tenant,
         RequestType: RequestType.GetOne,
     };
+
+    static readonly downloadCourseCertificate: AuthOptions = {
+        ...DefaultAuthOptions,
+        Context: `${this._baseContext}.DownloadCourseCertificate`,
+        Ownership: ResourceOwnership.System,
+        ActionScope: ActionScope.Tenant,
+        RequestType: RequestType.GetOne,
+    };
+
+    static readonly downloadLearningPathCertificates: AuthOptions = {
+        ...DefaultAuthOptions,
+        Context: `${this._baseContext}.DownloadLearningPathCertificates`,
+        Ownership: ResourceOwnership.System,
+        ActionScope: ActionScope.Tenant,
+        RequestType: RequestType.GetOne,
+    };
 }

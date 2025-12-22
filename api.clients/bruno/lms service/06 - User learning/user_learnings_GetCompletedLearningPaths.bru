@@ -1,0 +1,44 @@
+
+meta {
+  name: Get Completed Learning Paths
+  type: http
+  seq: 16
+}
+
+get {
+  url: {{BASE_URL}}/user-learnings/{{USER_ID}}/learning-paths
+  body: none
+  auth: none
+}
+
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+tests {
+
+    test('Request is successfully', function () {
+        expect(res.getStatus()).to.equal(200);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+
+    test('User learning paths retrieved successfully', function () {
+        var jsonRes = res.getBody();
+        expect(jsonRes.Data).to.have.property('UserLearningPaths');
+        expect(jsonRes.Data.UserLearningPaths).to.be.an('array');
+        
+        // Filter completed learning paths (PercentageCompletion >= 100)
+        var completedLearningPaths = jsonRes.Data.UserLearningPaths.filter(function(path) {
+            return path.PercentageCompletion >= 100;
+        });
+        
+        console.log('Completed learning paths:', completedLearningPaths.length);
+        console.log('Total learning paths:', jsonRes.Data.UserLearningPaths.length);
+    });
+    
+}

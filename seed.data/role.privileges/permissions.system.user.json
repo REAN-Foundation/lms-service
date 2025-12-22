@@ -4,7 +4,9 @@
         "Search": true,
         "GetById": true,
         "Update": false,
-        "Delete": false
+        "Delete": false,
+        "DownloadCourseCertificate": true,
+        "DownloadLearningPathCertificates": true
     },
     "Course": {
         "Create": false,

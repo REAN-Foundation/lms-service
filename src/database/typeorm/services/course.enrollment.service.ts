@@ -13,7 +13,6 @@ import {
 import { CourseEnrollmentMapper } from '../mappers/course.enrollment.mapper';
 import { Course } from '../models/course.entity';
 import { CourseEnrollment } from '../models/course.enrollment.entity';
-import { UserService } from './user.service';
 
 export class CourseEnrollmentService extends BaseService {
     //#region Repositories
@@ -22,16 +21,12 @@ export class CourseEnrollmentService extends BaseService {
 
     _enrollmentRepository: Repository<CourseEnrollment> = Source.getRepository(CourseEnrollment);
 
-    _userService: UserService = new UserService();
-
     //#endregion
 
-    public enroll = async (model: CourseEnrollmentCreateModel, accessToken?: string): Promise<CourseEnrollmentResponseDto> => {
+    public enroll = async (model: CourseEnrollmentCreateModel): Promise<CourseEnrollmentResponseDto> => {
         try {
             const course = await this.getCourse(model.CourseId);
             await this.ensureNoActiveDuplicate(model.UserId, model.CourseId);
-
-            await this._userService.fetchAndSyncUserFromReancare(model.UserId, accessToken);
 
             const enrollment = this._enrollmentRepository.create({
                 UserId: model.UserId,

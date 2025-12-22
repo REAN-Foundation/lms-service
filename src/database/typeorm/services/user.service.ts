@@ -53,6 +53,15 @@ export class UserService extends BaseService {
         }
     };
 
+    public userExists = async (id: uuid): Promise<boolean> => {
+        const user = await this._userRepository.findOne({
+            where: {
+                id: id,
+            },
+        });
+        return user !== null;
+    };
+
     public search = async (filters: UserSearchFilters): Promise<UserSearchResults> => {
         try {
             var search = this.getSearchObject(filters);
@@ -162,7 +171,7 @@ export class UserService extends BaseService {
 
     //#endregion
 
-    public fetchAndSyncUserFromReancare = async (userId: uuid, accessToken?: string): Promise<UserResponseDto> => {
+    public fetchAndSyncUser = async (userId: uuid, accessToken?: string): Promise<UserResponseDto> => {
         try {
             const userApiURL = `/users/${userId}`;
             const userResponse = await NeedleService.needleRequestForREAN('get', userApiURL, accessToken);

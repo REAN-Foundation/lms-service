@@ -1,0 +1,50 @@
+meta {
+  name: Create User (Minimal)
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{BASE_URL}}/user
+  body: json
+  auth: none
+}
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+body:json {
+  {
+    "id": "660e8400-e29b-41d4-a716-446655440001",
+    "UserName": "jane.smith"
+  }
+}
+
+tests {
+    try {
+        var respData = res.getBody();
+        bru.setEnvVar('USER_ID', respData.Data.id);
+    }
+    catch (error) {
+        console.log(error.message);
+    }
+    test('Request is successfully', function () {
+        expect(res.getStatus()).to.equal(201);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+  
+    test('User created successfully', function () {
+        var jsonRes = res.getBody();
+  
+        expect(jsonRes.Data).to.have.property('id');
+        expect(jsonRes.Data).to.have.property('UserName');
+        expect(jsonRes.Data.UserName).equals("jane.smith");
+  
+    });
+    
+}

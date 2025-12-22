@@ -7,6 +7,7 @@ import { Course } from './course.entity';
 import { LearningPathCourses } from './learning.path.courses.entity';
 import { LearningPath } from './learning.path.entity';
 import { UserLearning } from './user.learning.entity';
+import { User } from './user.entity';
 import { Certificates } from './certificates.entity';
 import { RolePermission } from './role.permission.entity';
 import { CourseEnrollment } from './course.enrollment.entity';
@@ -19,6 +20,7 @@ export const Entities = [
     LearningPathCourses,
     LearningPath,
     UserLearning,
+    User,
     Certificates,
     CourseEnrollment,
     LearningPathEnrollment,

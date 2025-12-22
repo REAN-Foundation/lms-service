@@ -1,0 +1,45 @@
+meta {
+  name: Search User
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{BASE_URL}}/user/search?userName=john
+  body: json
+  auth: none
+}
+
+params:query {
+  ~userName: john
+  ~firstName: John
+  ~lastName: Doe
+  ~profileImageUrl: https://example.com
+  ~pageIndex: 0
+  ~itemsPerPage: 10
+  ~orderBy: CreatedAt
+  ~order: descending
+}
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+tests {
+    test('Request is successfully', function () {
+        expect(res.getStatus()).to.equal(200);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+  
+    test('User records retrieved successfully', function () {
+         var jsonRes = res.getBody();
+          expect(jsonRes.Data).to.have.property('UserRecords');
+          expect(jsonRes.Data.UserRecords).to.have.property('Items');
+          expect(jsonRes.Data.UserRecords.Items.length).to.be.at.least(0);
+    });
+    
+}

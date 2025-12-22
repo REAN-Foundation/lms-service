@@ -1,0 +1,42 @@
+meta {
+  name: Read User
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{BASE_URL}}/user/{{USER_ID}}
+  body: json
+  auth: none
+}
+
+
+headers {
+  x-api-key: {{API_KEY}}
+  x-api-secret: {{API_SECRET}}
+  content-type: application/json
+  Authorization: Bearer {{USER_ACCESS_TOKEN}}
+}
+
+tests {
+
+    test('Request is successfully', function () {
+        expect(res.getStatus()).to.equal(200);
+        var jsonRes = res.getBody();
+        expect(jsonRes.Status).to.eql('success');
+    });
+
+    test('User retrieved successfully', function () {
+        var jsonRes = res.getBody();
+        
+        expect(jsonRes.Data).to.have.property('id');
+        expect(jsonRes.Data).to.have.property('UserName');
+        expect(jsonRes.Data).to.have.property('FirstName');
+        expect(jsonRes.Data).to.have.property('LastName');
+        expect(jsonRes.Data).to.have.property('ProfileImageUrl');
+        expect(jsonRes.Data).to.have.property('CreatedAt');
+        expect(jsonRes.Data).to.have.property('UpdatedAt');
+
+    });
+    
+}

@@ -2,15 +2,26 @@ import express from 'express';
 import { ResponseHandler } from '../../common/handlers/response.handler';
 import { CourseEnrollmentService } from '../../database/typeorm/services/course.enrollment.service';
 import { LearningPathEnrollmentService } from '../../database/typeorm/services/learning.path.enrollment.service';
+import { UserService } from '../../database/typeorm/services/user.service';
 import { LearningEnrollmentValidator } from './learning.enrollment.validator';
 
 export class LearningEnrollmentController {
     _courseEnrollmentService: CourseEnrollmentService = new CourseEnrollmentService();
     _learningPathEnrollmentService: LearningPathEnrollmentService = new LearningPathEnrollmentService();
+    _userService: UserService = new UserService();
     _validator: LearningEnrollmentValidator = new LearningEnrollmentValidator();
 
     enrollToCourse = async (request: express.Request, response: express.Response) => {
         try {
+            const userId = await this._validator.requestParamAsUUID(request, 'userId');
+            
+            const userExists = await this._userService.userExists(userId);
+            if (!userExists) {
+                const authHeader = request.headers['authorization'];
+                const accessToken = authHeader && authHeader.split(' ')[1];
+                await this._userService.fetchAndSyncUser(userId, accessToken);
+            }
+
             const model = await this._validator.validateEnrollToCourseRequest(request);
             const record = await this._courseEnrollmentService.enroll(model);
             ResponseHandler.success(request, response, 'Course enrollment created successfully!', 201, record);
@@ -21,6 +32,15 @@ export class LearningEnrollmentController {
 
     enrollToLearningPath = async (request: express.Request, response: express.Response) => {
         try {
+            const userId = await this._validator.requestParamAsUUID(request, 'userId');
+            
+            const userExists = await this._userService.userExists(userId);
+            if (!userExists) {
+                const authHeader = request.headers['authorization'];
+                const accessToken = authHeader && authHeader.split(' ')[1];
+                await this._userService.fetchAndSyncUser(userId, accessToken);
+            }
+
             const model = await this._validator.validateEnrollToLearningPathRequest(request);
             const record = await this._learningPathEnrollmentService.enroll(model);
             ResponseHandler.success(request, response, 'Learning path enrollment created successfully!', 201, record);
